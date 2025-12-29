@@ -3,7 +3,7 @@
   "patterns": [
     {
       "name": "entity.name.recipe.pz",
-      "match": "(\\bcraftRecipe\\b)\\s+([\\w\\s]+?)(?=\\s*{)",
+      "match": "(\\bcraftRecipe\\b)\\s+([\\w\\s]+)(?:(?=\\s+\\{)|$)",
       "captures": {
         "1": {
           "name": "keyword.control"
@@ -59,11 +59,10 @@
     },
     {
       "name": "entity.name.property.pz",
-      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*[=:]",
+      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*([=])",
       "captures": {
-        "1": {
-          "name": "constant.language"
-        }
+        "1": { "name": "variable.parameter" },
+        "2": { "name": "keyword.operator.assignment" }
       }
     },
     {
@@ -72,12 +71,12 @@
       "end": "\\*/"
     },
     {
-      "name": "comment.line.double-slash.pz",
+      "name": "invalid.illegal.comment.double-slash.pz",
       "match": "//.*$"
     },
     {
-      "name": "constant.language.pz",
-      "match": "\\b(TRUE|FALSE)\\b"
+      "name": "constant.language.boolean.pz",
+      "match": "\\b(true|false)\\b"
     },
     {
       "name": "string.quoted.double.pz",
@@ -87,6 +86,10 @@
     {
       "name": "constant.numeric.pz",
       "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    {
+      "name": "keyword.operator.assignment.pz",
+      "match": "[=:]"
     }
   ]
 }
