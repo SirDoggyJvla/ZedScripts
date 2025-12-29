@@ -51,7 +51,7 @@
     },
     {
       "name": "support.type.property-name",
-      "match": "\\bBase\\.[\\w.]+\\b"
+      "match": "\\b[\\w.]+\\.[\\w.]+\\b"
     },
     {
       "name": "entity.name.class",
