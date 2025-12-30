@@ -21,58 +21,58 @@ import { DocumentBlock } from "../utils/scriptBlocks";
 
 export class DiagnosticProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
-
+    
     constructor() {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection("pz-scripts");
     }
-
+    
     public updateDiagnostics(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
-
+        
         const documentBlock = new DocumentBlock(document, diagnostics);
-
+        
         this.diagnosticCollection.set(document.uri, diagnostics);
-
-
+        
+        
         return;
-
+        
         // const diagnostics: vscode.Diagnostic[] = [];
         const content = document.getText();
-    
+        
         // Validation des blocs item
         const itemBlocks = Array.from(content.matchAll(itemBlockRegex));
         itemBlocks.forEach(match => {
             this.validateItemBlock(match, document, diagnostics);
         });
-    
+        
         // Validation des blocs craftRecipe
         const craftBlocks = Array.from(content.matchAll(craftRecipeBlockRegex));
         craftBlocks.forEach(match => {
             this.validateCraftRecipeBlock(match, document, diagnostics);
         });
-    
+        
         // Validation des blocs fixing
         const fixingBlocks = Array.from(content.matchAll(fixingBlockRegex));
         fixingBlocks.forEach(match => {
             this.validateFixingBlock(match, document, diagnostics);
         });
-    
+        
         this.diagnosticCollection.set(document.uri, diagnostics);
     }
-
-
+    
+    
     
     private validateItemBlock(match: RegExpMatchArray, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {
         const blockContent = match[2];
         const itemStart = match.index!;
         const cleanedContent = blockContent.replace(/component\s+\w+\s*\{[\s\S]*?\}/g, '');
-
+        
         // Validation des propriétés de l'item
         const properties = Array.from(cleanedContent.matchAll(itemPropertiesRegex));
         properties.forEach(prop => {
             const propName = prop[1];
             const hasComma = prop[3].trim().startsWith(',');
-
+            
             // Validation du mot-clé
             if (!this.isValidKeyword(propName, 'item')) {
                 const propStart = document.positionAt(itemStart + match[0].indexOf(prop[1]));
@@ -86,7 +86,7 @@ export class DiagnosticProvider {
                     vscode.DiagnosticSeverity.Warning
                 ));
             }
-
+            
             // Validation de la virgule
             if (!hasComma) {
                 const valueEnd = document.positionAt(itemStart + match[0].indexOf(prop[0]) + prop[0].length);
@@ -101,7 +101,7 @@ export class DiagnosticProvider {
                 ));
             }
         });
-    
+        
         // Validation des sous-blocs (component, Fluids, etc.)
         this.validateComponents(blockContent, itemStart, document, diagnostics);
     }
@@ -109,16 +109,16 @@ export class DiagnosticProvider {
     private validateCraftRecipeBlock(match: RegExpMatchArray, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {
         const blockContent = match[2];
         const craftRecipeStart = match.index!;
-
+        
         console.debug('Validating craftRecipe block: ', match);
-    
+        
         // Validation of main craftRecipe properties
         const properties = Array.from(blockContent.matchAll(craftRecipePropertiesRegex));
         console.debug('CraftRecipe properties found: ', properties);
         properties.forEach(prop => {
             const propName = prop[1];
             const hasComma = prop[3].trim().startsWith(',');
-
+            
             // Validation of the keyword
             if (!this.isValidKeyword(propName, 'craftRecipe')) {
                 const propStart = document.positionAt(craftRecipeStart + match[0].indexOf(prop[0]));
@@ -132,7 +132,7 @@ export class DiagnosticProvider {
                     vscode.DiagnosticSeverity.Warning
                 ));
             }
-
+            
             // Validation de la virgule
             if (!hasComma) {
                 const valueEnd = document.positionAt(craftRecipeStart + match[0].indexOf(prop[0]) + prop[0].length);
@@ -147,7 +147,7 @@ export class DiagnosticProvider {
                 ));
             }
         });
-    
+        
         // Validation des sous-blocs inputs/outputs
         const inputsOutputs = Array.from(blockContent.matchAll(inputsOutputsBlockRegex));
         inputsOutputs.forEach(ioBlock => {
@@ -158,7 +158,7 @@ export class DiagnosticProvider {
                 this.validateInputOutputEntry(entry, document, craftRecipeStart + match[0].indexOf(entry[0]), diagnostics);
             });
         });
-    
+        
         // Validation des mappers
         const itemMappers = Array.from(blockContent.matchAll(itemMapperBlockRegex));
         itemMappers.forEach(mapperBlock => {
@@ -174,13 +174,13 @@ export class DiagnosticProvider {
     private validateFixingBlock(match: RegExpMatchArray, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {
         const blockContent = match[2];
         const fixingStart = match.index!;
-    
+        
         // Validation des propriétés dans le bloc fixing
         const properties = Array.from(blockContent.matchAll(fixingPropertiesRegex));
         properties.forEach(prop => {
             const propName = prop[1];
             const hasComma = prop[3].trim().startsWith(',');
-
+            
             // Validation du mot-clé
             if (!this.isValidKeyword(propName, 'fixing')) {
                 const propStart = document.positionAt(fixingStart + match[0].indexOf(propName));
@@ -194,7 +194,7 @@ export class DiagnosticProvider {
                     vscode.DiagnosticSeverity.Warning
                 ));
             }
-
+            
             // Validation de la virgule
             if (!hasComma) {
                 const valueEnd = document.positionAt(fixingStart + match[0].indexOf(prop[0]) + prop[0].length);
@@ -210,28 +210,28 @@ export class DiagnosticProvider {
             }
         });
     }
-
+    
     private isValidKeyword(word: string, block: string): boolean {
         if (/^[{},\[\]"0-9]+$/.test(word) || word.includes('"')) {
             return true;
         }
-
+        
         if (isScriptBlock(word)) {
             return true;
         }
-
+        
         if (word.startsWith("Base.") || word.includes("tags[")) {
             return true;
         }
-
+        
         const keywords = VALID_KEYWORDS[block as keyof typeof VALID_KEYWORDS];
         return keywords ? keywords.some(k => k.toLowerCase() === word.toLowerCase()) : true;
     }
-
+    
     public dispose(): void {
         this.diagnosticCollection.dispose();
     }
-
+    
     private validateComponents(blockContent: string, blockStart: number, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {
         // Validation des blocs component
         const components = Array.from(blockContent.matchAll(componentBlockRegex));
@@ -239,9 +239,9 @@ export class DiagnosticProvider {
             const componentName = componentBlock[1]; // Capture du nom du component
             const componentContent = componentBlock[2]; // Contenu du component
             const componentStart = blockStart + blockContent.indexOf(componentBlock[0]);
-    
+            
             const withoutBraces = componentContent.replace(/\{[^}]*\}/g, '');
-
+            
             // Validation des propriétés du component
             const componentEntries = Array.from(withoutBraces.matchAll(componentPropertiesRegex));
             componentEntries.forEach(entry => {
@@ -259,13 +259,13 @@ export class DiagnosticProvider {
                     ));
                 }
             });
-    
+            
             // Validation des blocs Fluids
             const fluidsBlocks = Array.from(componentContent.matchAll(fluidsBlockRegex));
             fluidsBlocks.forEach(fluidsBlock => {
                 const fluidsContent = fluidsBlock[1];
                 const fluidsStart = componentStart + componentContent.indexOf(fluidsBlock[0]);
-    
+                
                 const entries = Array.from(fluidsContent.matchAll(fluidsPropertiesRegex));
                 entries.forEach(entry => {
                     const propName = entry[1];
@@ -285,7 +285,7 @@ export class DiagnosticProvider {
             });
         });
     }
-
+    
     private validateMapperEntry(entry: RegExpMatchArray, document: vscode.TextDocument, startOffset: number, diagnostics: vscode.Diagnostic[]): void {
         const propName = entry[1];
         if (!this.isValidKeyword(propName, 'itemMapper')) {

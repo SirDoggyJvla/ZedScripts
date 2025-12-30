@@ -3,9 +3,9 @@ import path from "path";
 import { ThemeColorType } from "../models/enums";
 
 /**
- * Retrieves token colors for a given theme.
- * https://github.com/microsoft/vscode/issues/32813#issuecomment-3236474810
- */
+* Retrieves token colors for a given theme.
+* https://github.com/microsoft/vscode/issues/32813#issuecomment-3236474810
+*/
 export function getTokenColorsForTheme(themeName: string) {
     const tokenColors = new Map();
     let currentThemePath;

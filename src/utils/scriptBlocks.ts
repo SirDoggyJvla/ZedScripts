@@ -2,8 +2,7 @@ import * as vscode from 'vscode';
 import { Position, TextDocument, Diagnostic } from "vscode";
 import { scriptBlockRegex } from '../models/regexPatterns';
 import { DiagnosticType, formatDiagnostic } from '../models/enums';
-import { isScriptBlock, getScriptBlockData } from '../models/scriptData';
-import { type } from 'os';
+import { isScriptBlock, getScriptBlockData, ScriptBlockData } from '../models/scriptData';
 
 /**
  * Represents a script block in a PZ script file. Handles nested blocks and diagnostics.
@@ -12,16 +11,19 @@ export class ScriptBlock {
     // members
     document: TextDocument;
     diagnostics: Diagnostic[];
+    
+    // block data
     parent: ScriptBlock | null = null;
-    type: string = "";
-    name: string | null = null;
+    scriptBlock: string = "";
+    id: string | null = null;
+    children: ScriptBlock[] = [];
+
+    // positions
     start: number = 0;
     end: number = 0;
     lineStart: number = 0;
     lineEnd: number = 0;
     headerStart: number = 0;
-
-    children: ScriptBlock[] = [];
 
     // constructors
     constructor(
@@ -37,8 +39,8 @@ export class ScriptBlock {
         this.document = document;
         this.diagnostics = diagnostics;
         this.parent = parent;
-        this.type = type;
-        this.name = name;
+        this.scriptBlock = type;
+        this.id = name;
         this.start = start;
         this.end = end;
         this.headerStart = headerStart;
@@ -50,6 +52,7 @@ export class ScriptBlock {
         }
         this.children = this.findChildBlocks();
         this.validateChildren();
+        this.validateID();
     }
 
     public findChildBlocks(): ScriptBlock[] {
@@ -123,17 +126,16 @@ export class ScriptBlock {
 
 // CHECKERS
 
-    private validateBlock(): boolean {
-        const type = this.type;
-        if (type === "_DOCUMENT") {
-            return true;
-        }
+    protected validateBlock(): boolean {
+        const type = this.scriptBlock;
 
+        // verify it's a script block
         if (!isScriptBlock(type)) {
-            this.diagnosticNotValidBlock(type, this.name, this.headerStart);
+            this.diagnosticNotValidBlock(type, this.id, this.headerStart);
             return false;
         }
 
+        // verify parent block
         if (!this.validateParent()) {
             return false;
         }
@@ -141,26 +143,22 @@ export class ScriptBlock {
         return true;
     }
 
-    private validateParent(): boolean {
-        const blockData = getScriptBlockData(this.type);
-        if (!blockData) {
-            // abnormal case, because we already validate the block type exists before creating the ScriptBlock
-            throw new Error(`Block data not found for type ${this.type} but should have been validated earlier (validateParent)`);
-        }
+    protected validateParent(): boolean {
+        const blockData = getScriptBlockData(this.scriptBlock) as ScriptBlockData;
 
         // check should have parent
         const shouldHaveParent = blockData.shouldHaveParent;
         if (shouldHaveParent) {
             if (!this.parent) {
-                this.diagnosticNoParentBlock(this.type, this.name, this.headerStart);
+                this.diagnosticNoParentBlock(this.scriptBlock, this.id, this.headerStart);
                 return false;
             }
         
         // shouldn't have parent
         } else {
             // but has one when shouldn't
-            if (this.parent && this.parent.type !== "_DOCUMENT") {
-                this.diagnosticHasParentBlock(this.type, this.name, this.headerStart);
+            if (this.parent && this.parent.scriptBlock !== "_DOCUMENT") {
+                this.diagnosticHasParentBlock(this.scriptBlock, this.id, this.headerStart);
                 return false;
             }
             // all good, no parent as expected
@@ -170,9 +168,9 @@ export class ScriptBlock {
         // check parent type
         const validParents = blockData.parents;
         if (validParents) {
-            const parentType = this.parent.type;
+            const parentType = this.parent.scriptBlock;
             if (!validParents.includes(parentType)) {
-                this.diagnosticWrongParentBlock(this.type, this.name, parentType, this.headerStart);
+                this.diagnosticWrongParentBlock(this.scriptBlock, this.id, parentType, this.headerStart);
                 return false;
             }
         }
@@ -180,27 +178,60 @@ export class ScriptBlock {
         return true;
     }
 
-    private validateChildren(): boolean {
-        if (this.type === "_DOCUMENT") {
-            return true;
-        }
+    protected validateChildren(): boolean {
+        const blockData = getScriptBlockData(this.scriptBlock) as ScriptBlockData;
 
-        const blockData = getScriptBlockData(this.type);
-        if (!blockData) {
-            // abnormal case, because we already validate the block type exists before creating the ScriptBlock
-            throw new Error(`Block data not found for type ${this.type} but should have been validated earlier (validateChildren)`);
-        }
         const validChildren = blockData.needsChildren;
         if (validChildren) {
-            const childTypes = this.children.map(child => child.type);
+            const childTypes = this.children.map(child => child.scriptBlock);
             for (const neededChild of validChildren) {
                 if (!childTypes.includes(neededChild)) {
-                    this.diagnosticMissingChildBlock(this.type, this.name, this.headerStart);
+                    this.diagnosticMissingChildBlock(this.scriptBlock, this.id, this.headerStart);
                     return false;
                 }
             }
         }
 
+        return true;
+    }
+
+    protected validateID(): boolean {
+        if (this.scriptBlock === "_DOCUMENT") {
+            return true;
+        }
+
+        const blockData = getScriptBlockData(this.scriptBlock) as ScriptBlockData;
+
+        // retrieve ID info
+        const id = this.id;
+        const hasID = id !== null && id !== undefined;
+
+        // no ID data, means there shouldn't be any ID
+        const IDData = blockData.ID;
+        if (!IDData) {
+            if (hasID) {
+                this.diagnosticHasID(this.scriptBlock, this.headerStart);
+                return false;
+            }
+            return true;
+        
+        // check if ID is required
+        } else {
+            if (!hasID) {
+                this.diagnosticMissingID(this.scriptBlock, this.headerStart);
+                return false;
+            }
+        }
+
+        // check if the ID has a valid value
+        const validIDs = IDData.values;
+        if (validIDs && id) {
+            if (!validIDs.includes(id)) {
+                this.diagnosticInvalidID(this.scriptBlock, id, validIDs, this.headerStart);
+                return false;
+            }
+        }
+        
         return true;
     }
 
@@ -284,10 +315,46 @@ export class ScriptBlock {
         this.diagnostics.push(diagnostic);
         console.warn(message);
     }
+
+    private diagnosticMissingID(block: string, index: number): void {
+        const position = this.document.positionAt(index);
+        const message = formatDiagnostic(DiagnosticType.missingID, { scriptBlock: `${block}` });
+        const diagnostic = new vscode.Diagnostic(
+            new vscode.Range(position, position),
+            message,
+            vscode.DiagnosticSeverity.Error
+        );
+        this.diagnostics.push(diagnostic);
+        console.warn(message);
+    }
+
+    private diagnosticHasID(block: string, index: number): void {
+        const position = this.document.positionAt(index);
+        const message = formatDiagnostic(DiagnosticType.hasID, { scriptBlock: `${block}` });
+        const diagnostic = new vscode.Diagnostic(
+            new vscode.Range(position, position),
+            message,
+            vscode.DiagnosticSeverity.Error
+        );
+        this.diagnostics.push(diagnostic);
+        console.warn(message);
+    }
+
+    private diagnosticInvalidID(block: string, id: string, validIDs: string[], index: number): void {
+        const position = this.document.positionAt(index);
+        const message = formatDiagnostic(DiagnosticType.invalidID, { scriptBlock: `${block}`, id: id, validIDs: validIDs.join(", ") });
+        const diagnostic = new vscode.Diagnostic(
+            new vscode.Range(position, position),
+            message,
+            vscode.DiagnosticSeverity.Error
+        );
+        this.diagnostics.push(diagnostic);
+        console.warn(message);
+    }
 }
 
 /**
- * A ScriptBlock that represents the entire document.
+ * A ScriptBlock that represents the entire document. This is more a convenience class to handle everything easily.
  */
 export class DocumentBlock extends ScriptBlock {
     constructor(document: TextDocument, diagnostics: Diagnostic[]) {
@@ -299,4 +366,9 @@ export class DocumentBlock extends ScriptBlock {
         const end = document.getText().length;
         super(document, diagnostics, parent, type, name, start, end, start);
     }
+
+    // overwrite validates for this class since the rules aren't the same
+    protected validateBlock(): boolean { return true; }
+    protected validateChildren(): boolean { return true; }
+    protected validateID(): boolean { return true; }
 }

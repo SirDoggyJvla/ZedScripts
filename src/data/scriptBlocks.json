@@ -7,6 +7,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "meshfile": {
         "name": "meshFile"
@@ -34,6 +35,7 @@
       "vehicle",
       "model"
     ],
+    "ID": {},
     "parameters": {}
   },
   "model": {
@@ -45,6 +47,11 @@
       "module",
       "vehicle"
     ],
+    "ID": {
+      "parents": [
+        "module"
+      ]
+    },
     "parameters": {
       "mesh": {
         "name": "mesh"
@@ -104,6 +111,7 @@
     "parents": [
       "passenger"
     ],
+    "ID": {},
     "parameters": {}
   },
   "timedAction": {
@@ -114,6 +122,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "metabolics": {
         "name": "metabolics"
@@ -159,6 +168,7 @@
     "description": "A module holds different types of script definitions.",
     "shouldHaveParent": false,
     "parents": [],
+    "ID": {},
     "parameters": {}
   },
   "passenger": {
@@ -169,6 +179,7 @@
     "parents": [
       "vehicle"
     ],
+    "ID": {},
     "parameters": {}
   },
   "energy": {
@@ -179,6 +190,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "craftRecipe": {
@@ -192,6 +204,7 @@
     "needsChildren": [
       "inputs"
     ],
+    "ID": {},
     "parameters": {
       "inputs": {
         "name": "inputs"
@@ -276,6 +289,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "category": {
         "name": "category"
@@ -312,6 +326,7 @@
     "parents": [
       "vehicle"
     ],
+    "ID": {},
     "parameters": {}
   },
   "entity": {
@@ -322,6 +337,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "name": {
         "name": "name"
@@ -462,6 +478,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "baseitem": {
         "name": "BaseItem"
@@ -503,6 +520,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "ragdoll": {
@@ -513,6 +531,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "itemMapper": {
@@ -523,6 +542,7 @@
     "parents": [
       "craftRecipe"
     ],
+    "ID": {},
     "parameters": {}
   },
   "vehicle": {
@@ -533,6 +553,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "neverspawnkey": {
         "name": "neverSpawnKey"
@@ -752,6 +773,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "colorreference": {
         "name": "ColorReference"
@@ -781,6 +803,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "displaycategory": {
         "name": "DisplayCategory",
@@ -3291,6 +3314,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "physicsHitReaction": {
@@ -3301,6 +3325,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "template": {
@@ -3311,6 +3336,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {}
   },
   "mannequin": {
@@ -3321,6 +3347,7 @@
     "parents": [
       "module"
     ],
+    "ID": {},
     "parameters": {
       "female": {
         "name": "female"
@@ -3353,6 +3380,20 @@
     "parents": [
       "item"
     ],
+    "ID": {
+      "values": [
+        "CraftRecipe",
+        "SpriteConfig",
+        "UiConfig",
+        "CraftBenchSounds",
+        "Resources",
+        "DryingCraftLogic",
+        "SpriteOverlayConfig",
+        "Durability",
+        "FluidContainer",
+        "ContextMenuConfig"
+      ]
+    },
     "parameters": {}
   }
 }
