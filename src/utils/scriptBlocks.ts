@@ -52,7 +52,6 @@ export class ScriptBlock {
         }
         this.children = this.findChildBlocks();
         this.validateChildren();
-        this.validateID();
     }
 
     public findChildBlocks(): ScriptBlock[] {
@@ -93,7 +92,11 @@ export class ScriptBlock {
 
             // unmatched braces
             if (braceCount !== 0) {
-                this.diagnosticBlockBraces(blockType, id ?? null, headerStart);
+                this.diagnostic(
+                    DiagnosticType.unmatchedBrace,
+                    { scriptBlock: blockType },
+                    headerStart
+                );
                 break;
             }
 
@@ -131,12 +134,21 @@ export class ScriptBlock {
 
         // verify it's a script block
         if (!isScriptBlock(type)) {
-            this.diagnosticNotValidBlock(type, this.id, this.headerStart);
+            this.diagnostic(
+                DiagnosticType.notValidBlock,
+                { scriptBlock: type },
+                this.headerStart
+            )
             return false;
         }
 
         // verify parent block
         if (!this.validateParent()) {
+            return false;
+        }
+
+        // verify ID
+        if (!this.validateID()) {
             return false;
         }
 
@@ -150,7 +162,12 @@ export class ScriptBlock {
         const shouldHaveParent = blockData.shouldHaveParent;
         if (shouldHaveParent) {
             if (!this.parent) {
-                this.diagnosticNoParentBlock(this.scriptBlock, this.id, this.headerStart);
+                const parentBlocks = blockData?.parents?.join(", ") || "unknown";
+                this.diagnostic(
+                    DiagnosticType.missingParentBlock,
+                    { scriptBlock: this.scriptBlock, parentBlocks: parentBlocks },
+                    this.headerStart
+                )
                 return false;
             }
         
@@ -158,7 +175,11 @@ export class ScriptBlock {
         } else {
             // but has one when shouldn't
             if (this.parent && this.parent.scriptBlock !== "_DOCUMENT") {
-                this.diagnosticHasParentBlock(this.scriptBlock, this.id, this.headerStart);
+                this.diagnostic(
+                    DiagnosticType.hasParentBlock,
+                    { scriptBlock: this.scriptBlock }, 
+                    this.headerStart
+                )
                 return false;
             }
             // all good, no parent as expected
@@ -170,7 +191,11 @@ export class ScriptBlock {
         if (validParents) {
             const parentType = this.parent.scriptBlock;
             if (!validParents.includes(parentType)) {
-                this.diagnosticWrongParentBlock(this.scriptBlock, this.id, parentType, this.headerStart);
+                this.diagnostic(
+                    DiagnosticType.wrongParentBlock,
+                    { scriptBlock: this.scriptBlock, parentBlock: parentType, parentBlocks: validParents.join(", ") },
+                    this.headerStart
+                )
                 return false;
             }
         }
@@ -186,7 +211,11 @@ export class ScriptBlock {
             const childTypes = this.children.map(child => child.scriptBlock);
             for (const neededChild of validChildren) {
                 if (!childTypes.includes(neededChild)) {
-                    this.diagnosticMissingChildBlock(this.scriptBlock, this.id, this.headerStart);
+                    this.diagnostic(
+                        DiagnosticType.missingChildBlock,
+                        { scriptBlock: this.scriptBlock, childBlocks: validChildren.join(", ") },
+                        this.headerStart
+                    )
                     return false;
                 }
             }
@@ -210,25 +239,69 @@ export class ScriptBlock {
         const IDData = blockData.ID;
         if (!IDData) {
             if (hasID) {
-                this.diagnosticHasID(this.scriptBlock, this.headerStart);
+                this.diagnostic(
+                    DiagnosticType.hasID,
+                    { scriptBlock: this.scriptBlock }, 
+                    this.headerStart
+                )
                 return false;
             }
             return true;
         
         // check if ID is required
-        } else {
-            if (!hasID) {
-                this.diagnosticMissingID(this.scriptBlock, this.headerStart);
-                return false;
+        }
+
+        // used to check if the parent block requires an ID for this subblock
+        const validParentBlocks = IDData.parents;
+        let shouldHaveIDfromParent = true;
+        if (validParentBlocks && this.parent) {
+            if (!validParentBlocks.includes(this.parent.scriptBlock)) {
+                shouldHaveIDfromParent = false;
             }
         }
 
-        // check if the ID has a valid value
-        const validIDs = IDData.values;
-        if (validIDs && id) {
-            if (!validIDs.includes(id)) {
-                this.diagnosticInvalidID(this.scriptBlock, id, validIDs, this.headerStart);
+        // should have an ID
+        if (!hasID && shouldHaveIDfromParent) {
+            this.diagnostic(
+                DiagnosticType.missingID,
+                { scriptBlock: this.scriptBlock }, 
+                this.headerStart
+            )
+            return false;
+        }
+
+        if (hasID) {
+            if (!shouldHaveIDfromParent) {
+                this.diagnostic(
+                    DiagnosticType.hasIDinParent,
+                    { 
+                        scriptBlock: this.scriptBlock, 
+                        parentBlock: this.parent ? this.parent.scriptBlock : "unknown", 
+                        validParentBlocks: validParentBlocks ? validParentBlocks.join(", ") : "unknown" }, 
+                    this.headerStart
+                )
                 return false;
+            }
+
+            // check if the ID has one or more valid value
+            const validIDs = IDData.values;
+            if (validIDs) {
+                // verify the ID is valid
+                if (!validIDs.includes(id)) {
+                    this.diagnostic(
+                        DiagnosticType.invalidID,
+                        { scriptBlock: this.scriptBlock, id: id, validIDs: validIDs.join(", ") },
+                        this.headerStart
+                    )
+                    return false;
+                }
+
+                // consider the ID as part of the script block type
+                // this means it will be a script block in itself with its own data
+                if (IDData.asType) {
+                    this.scriptBlock = this.scriptBlock + " " + id;
+                    this.id = null; // reset ID to null
+                }
             }
         }
         
@@ -238,115 +311,19 @@ export class ScriptBlock {
 
 // DIAGNOSTICS HELPERS
 
-    private diagnosticBlockBraces(block: string, id: string | null, index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.unmatchedBrace, { scriptBlock: `${block}` });
+    private diagnostic(
+        type: DiagnosticType,
+        params: Record<string, string>,
+        index_start: number,index_end?: number,
+        severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
+    ): void {
+        const positionStart = this.document.positionAt(index_start);
+        const positionEnd = index_end ? this.document.positionAt(index_end) : positionStart;
+        const message = formatDiagnostic(type, params);
         const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
+            new vscode.Range(positionStart, positionEnd),
             message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticNotValidBlock(block: string, id: string | null, index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.notValidBlock, { scriptBlock: `${block}` });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticNoParentBlock(block: string, id: string | null, index: number): void {
-        const position = this.document.positionAt(index);
-        const blockData = getScriptBlockData(block);
-        const parentBlocks = blockData?.parents?.join(", ") || "unknown";
-        const message = formatDiagnostic(DiagnosticType.missingParentBlock, { scriptBlock: `${block}`, parentBlocks: parentBlocks });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticHasParentBlock(block: string, id: string | null, index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.hasParentBlock, { scriptBlock: `${block}` });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticWrongParentBlock(block: string, id: string | null, parentBlock: string, index: number): void {
-        const position = this.document.positionAt(index);
-        const blockData = getScriptBlockData(block);
-        const parentBlocks = blockData?.parents?.join(", ") || "unknown";
-        const message = formatDiagnostic(DiagnosticType.wrongParentBlock, { scriptBlock: `${block}`, parentBlock: parentBlock, parentBlocks: parentBlocks });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticMissingChildBlock(block: string, id: string | null, index: number): void {
-        const position = this.document.positionAt(index);
-        const blockData = getScriptBlockData(block);
-        const childBlocks = blockData?.needsChildren?.join(", ") || "unknown";
-        const message = formatDiagnostic(DiagnosticType.missingChildBlock, { scriptBlock: `${block}`, childBlocks: childBlocks });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticMissingID(block: string, index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.missingID, { scriptBlock: `${block}` });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticHasID(block: string, index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.hasID, { scriptBlock: `${block}` });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
-        );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
-    }
-
-    private diagnosticInvalidID(block: string, id: string, validIDs: string[], index: number): void {
-        const position = this.document.positionAt(index);
-        const message = formatDiagnostic(DiagnosticType.invalidID, { scriptBlock: `${block}`, id: id, validIDs: validIDs.join(", ") });
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(position, position),
-            message,
-            vscode.DiagnosticSeverity.Error
+            severity
         );
         this.diagnostics.push(diagnostic);
         console.warn(message);

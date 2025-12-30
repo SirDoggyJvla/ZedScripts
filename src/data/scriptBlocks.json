@@ -1,6 +1,7 @@
 {
   "animationsMesh": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "animationsMesh",
     "description": "Defines an animated mesh, usually for characters or animals.",
     "shouldHaveParent": true,
@@ -26,8 +27,20 @@
       }
     }
   },
+  "component DryingCraftLogic": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component DryingCraftLogic",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "attachment": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "attachment",
     "description": "",
     "shouldHaveParent": true,
@@ -40,6 +53,7 @@
   },
   "model": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "model",
     "description": "Defines a 3D model properties.",
     "shouldHaveParent": true,
@@ -105,6 +119,7 @@
   },
   "position": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "position",
     "description": "",
     "shouldHaveParent": true,
@@ -116,6 +131,7 @@
   },
   "timedAction": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "timedAction",
     "description": "Defines a callable action sound and/or animation.",
     "shouldHaveParent": true,
@@ -164,6 +180,7 @@
   },
   "module": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "module",
     "description": "A module holds different types of script definitions.",
     "shouldHaveParent": false,
@@ -171,8 +188,20 @@
     "ID": {},
     "parameters": {}
   },
+  "contextEntry": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "contextEntry",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component ContextMenuConfig"
+    ],
+    "parameters": {}
+  },
   "passenger": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "passenger",
     "description": "Defines a passenger position in a vehicle script.",
     "shouldHaveParent": true,
@@ -182,8 +211,20 @@
     "ID": {},
     "parameters": {}
   },
+  "component Resources": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component Resources",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "energy": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "energy",
     "description": "",
     "shouldHaveParent": true,
@@ -195,6 +236,7 @@
   },
   "craftRecipe": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "craftRecipe",
     "description": "Defines a crafting recipe.",
     "shouldHaveParent": true,
@@ -283,6 +325,7 @@
   },
   "sound": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "sound",
     "description": "Defines a sound properties.",
     "shouldHaveParent": true,
@@ -308,8 +351,20 @@
       }
     }
   },
+  "component FluidContainer": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component FluidContainer",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "parameters": {}
+  },
   "outputs": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "ouputs",
     "description": "",
     "shouldHaveParent": true,
@@ -318,8 +373,34 @@
     ],
     "parameters": {}
   },
+  "component SpriteConfig": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component SpriteConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "needsChildren": [
+      "face"
+    ],
+    "parameters": {}
+  },
+  "component Durability": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component Durability",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "parameters": {}
+  },
   "area": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "area",
     "description": "",
     "shouldHaveParent": true,
@@ -329,8 +410,50 @@
     "ID": {},
     "parameters": {}
   },
+  "group": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "group",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component Resources"
+    ],
+    "ID": {
+      "values": [
+        "craft_inputs",
+        "craft_outputs"
+      ]
+    },
+    "parameters": {}
+  },
+  "face": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "face",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component SpriteConfig"
+    ],
+    "ID": {
+      "values": [
+        "SINGLE",
+        "S",
+        "E",
+        "W",
+        "N",
+        "S_OPEN",
+        "E_OPEN",
+        "W_OPEN",
+        "N_OPEN"
+      ]
+    },
+    "parameters": {}
+  },
   "entity": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "entity",
     "description": "Defines a tile with special properties.",
     "shouldHaveParent": true,
@@ -472,6 +595,7 @@
   },
   "evolvedrecipe": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "evolvedrecipe",
     "description": "Defines a dynamic recipe.",
     "shouldHaveParent": true,
@@ -514,6 +638,7 @@
   },
   "animation": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "animation",
     "description": "",
     "shouldHaveParent": true,
@@ -523,8 +648,23 @@
     "ID": {},
     "parameters": {}
   },
+  "component CraftRecipe": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component CraftRecipe",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "needsChildren": [
+      "inputs"
+    ],
+    "parameters": {}
+  },
   "ragdoll": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "ragdoll",
     "description": "Defines the ragdoll properties of a bone.",
     "shouldHaveParent": true,
@@ -534,8 +674,34 @@
     "ID": {},
     "parameters": {}
   },
+  "component ContextMenuConfig": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component ContextMenuConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "needsChildren": [
+      "contextEntry"
+    ],
+    "parameters": {}
+  },
+  "layer": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "layer",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "face"
+    ],
+    "parameters": {}
+  },
   "itemMapper": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "itemMapper",
     "description": "",
     "shouldHaveParent": true,
@@ -545,8 +711,20 @@
     "ID": {},
     "parameters": {}
   },
+  "clip": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "clip",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "sound"
+    ],
+    "parameters": {}
+  },
   "vehicle": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "vehicle",
     "description": "Defines a vehicle.",
     "shouldHaveParent": true,
@@ -755,18 +933,32 @@
       }
     }
   },
+  "component CraftBenchSounds": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component CraftBenchSounds",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "inputs": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "inputs",
     "description": "",
     "shouldHaveParent": true,
     "parents": [
-      "craftRecipe"
+      "craftRecipe",
+      "component CraftRecipe"
     ],
     "parameters": {}
   },
   "fluid": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "fluid",
     "description": "Defines a fluid.",
     "shouldHaveParent": true,
@@ -797,6 +989,7 @@
   },
   "item": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "item",
     "description": "Defines an item to register.",
     "shouldHaveParent": true,
@@ -3306,8 +3499,20 @@
       }
     }
   },
+  "component UiConfig": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component UiConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "fixing": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "fixing",
     "description": "Defines how an item can be repaired or fixed.",
     "shouldHaveParent": true,
@@ -3319,6 +3524,7 @@
   },
   "physicsHitReaction": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "physicsHitReaction",
     "description": "Defines the physics reaction a bullet or bomb imposes to objects.",
     "shouldHaveParent": true,
@@ -3330,6 +3536,7 @@
   },
   "template": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "template",
     "description": "",
     "shouldHaveParent": true,
@@ -3339,8 +3546,20 @@
     "ID": {},
     "parameters": {}
   },
+  "component SpriteOverlayConfig": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "component SpriteOverlayConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "mannequin": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "mannequin",
     "description": "Defines a mannequin tile properties.",
     "shouldHaveParent": true,
@@ -3374,11 +3593,13 @@
   },
   "component": {
     "version": 1.0,
+    "$schema": "../../$schema.json",
     "name": "component",
     "description": "",
     "shouldHaveParent": true,
     "parents": [
-      "item"
+      "item",
+      "entity"
     ],
     "ID": {
       "values": [
@@ -3392,8 +3613,20 @@
         "Durability",
         "FluidContainer",
         "ContextMenuConfig"
-      ]
+      ],
+      "asType": true
     },
+    "parameters": {}
+  },
+  "Fluids": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "Fluids",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component FluidContainer"
+    ],
     "parameters": {}
   }
 }

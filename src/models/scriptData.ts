@@ -11,6 +11,7 @@ export interface ScriptBlockParameter {
 export interface ScriptBlockID {
     parents?: string[];
     values?: string[];
+    asType?: boolean;
 }
 
 export interface ScriptBlockData {
