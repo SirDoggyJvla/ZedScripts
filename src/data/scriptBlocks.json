@@ -62,8 +62,9 @@
       "vehicle"
     ],
     "ID": {
-      "parents": [
-        "module"
+      "parentsWithout": [
+        "vehicle",
+        "template"
       ]
     },
     "parameters": {
@@ -199,6 +200,29 @@
     ],
     "parameters": {}
   },
+  "CopyFrames": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "CopyFrames",
+    "description": "It is unknown what this block does.",
+    "shouldHaveParent": true,
+    "parents": [
+      "animation"
+    ],
+    "parameters": {}
+  },
+  "wheel": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "wheel",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "parameters": {}
+  },
   "passenger": {
     "version": 1.0,
     "$schema": "../../$schema.json",
@@ -330,9 +354,16 @@
     "description": "Defines a sound properties.",
     "shouldHaveParent": true,
     "parents": [
-      "module"
+      "module",
+      "vehicle",
+      "template"
     ],
-    "ID": {},
+    "ID": {
+      "parentsWithout": [
+        "vehicle",
+        "template"
+      ]
+    },
     "parameters": {
       "category": {
         "name": "category"
@@ -387,6 +418,17 @@
     ],
     "parameters": {}
   },
+  "CopyFrame": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "CopyFrame",
+    "description": "It is unknown what this block does.",
+    "shouldHaveParent": true,
+    "parents": [
+      "animation"
+    ],
+    "parameters": {}
+  },
   "component Durability": {
     "version": 1.0,
     "$schema": "../../$schema.json",
@@ -405,6 +447,7 @@
     "description": "",
     "shouldHaveParent": true,
     "parents": [
+      "template",
       "vehicle"
     ],
     "ID": {},
@@ -425,6 +468,18 @@
         "craft_outputs"
       ]
     },
+    "parameters": {}
+  },
+  "lightbar": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "lightbar",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
     "parameters": {}
   },
   "face": {
@@ -458,7 +513,8 @@
     "description": "Defines a tile with special properties.",
     "shouldHaveParent": true,
     "parents": [
-      "module"
+      "module",
+      "xuiSkin"
     ],
     "ID": {},
     "parameters": {
@@ -636,11 +692,28 @@
       }
     }
   },
+  "table": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "table",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "ID": {
+      "values": [
+        "install",
+        "uninstall"
+      ]
+    },
+    "parameters": {}
+  },
   "animation": {
     "version": 1.0,
     "$schema": "../../$schema.json",
     "name": "animation",
-    "description": "",
+    "description": "It is unknown what this block does.",
     "shouldHaveParent": true,
     "parents": [
       "module"
@@ -3534,6 +3607,18 @@
     "ID": {},
     "parameters": {}
   },
+  "part": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "part",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "parameters": {}
+  },
   "template": {
     "version": 1.0,
     "$schema": "../../$schema.json",
@@ -3590,6 +3675,21 @@
         "name": "outfit"
       }
     }
+  },
+  "xuiSkin": {
+    "version": 1.0,
+    "$schema": "../../$schema.json",
+    "name": "xuiSkin",
+    "description": "Defines a XUI interface skin.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "needsChildren": [
+      "entity"
+    ],
+    "ID": {},
+    "parameters": {}
   },
   "component": {
     "version": 1.0,

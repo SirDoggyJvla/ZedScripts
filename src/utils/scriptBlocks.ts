@@ -252,10 +252,10 @@ export class ScriptBlock {
         }
 
         // used to check if the parent block requires an ID for this subblock
-        const validParentBlocks = IDData.parents;
+        const invalidBlocks = IDData.parentsWithout;
         let shouldHaveIDfromParent = true;
-        if (validParentBlocks && this.parent) {
-            if (!validParentBlocks.includes(this.parent.scriptBlock)) {
+        if (invalidBlocks && this.parent) {
+            if (invalidBlocks.includes(this.parent.scriptBlock)) {
                 shouldHaveIDfromParent = false;
             }
         }
@@ -277,7 +277,7 @@ export class ScriptBlock {
                     { 
                         scriptBlock: this.scriptBlock, 
                         parentBlock: this.parent ? this.parent.scriptBlock : "unknown", 
-                        validParentBlocks: validParentBlocks ? validParentBlocks.join(", ") : "unknown" }, 
+                        invalidBlocks: invalidBlocks ? invalidBlocks.join(", ") : "unknown" }, 
                     this.headerStart
                 )
                 return false;

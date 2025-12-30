@@ -23,7 +23,7 @@ export enum DiagnosticType {
     missingID = "'{scriptBlock}' block is missing an ID",
     hasID = "'{scriptBlock}' block cannot have an ID",
     invalidID = "'{scriptBlock}' block has an invalid ID '{id}'. Valid IDs are: {validIDs}",
-    hasIDinParent = "'{scriptBlock}' block cannot have an ID when inside parent block '{parentBlock}', only for: {validParentBlocks}",
+    hasIDinParent = "'{scriptBlock}' block cannot have an ID when inside parent block '{parentBlock}', only for: {invalidBlocks}",
 }
 
 // Helper function to format

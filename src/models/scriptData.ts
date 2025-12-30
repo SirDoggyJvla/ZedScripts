@@ -9,7 +9,7 @@ export interface ScriptBlockParameter {
 }
 
 export interface ScriptBlockID {
-    parents?: string[];
+    parentsWithout?: string[];
     values?: string[];
     asType?: boolean;
 }
