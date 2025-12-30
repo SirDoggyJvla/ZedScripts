@@ -49,4 +49,5 @@ export const itemMapperEntriesRegex = /\s*([^=\s]+)\s*=\s*([^,\n]+)/g;
 
 // Detect script block
 //(?:(?:\s*inputs\s*{[^}]*})|(?:\s*outputs\s*{[^}]*})|(?:\s*itemMapper\s+\w+\s*{[^}]*}))*
-export const scriptBlockRegex = /^\s*(\w+)(?:\s+(\w+))?\s*{/gm;
+// Modified to capture all words after the block type as the ID (e.g., 'template vehicle PickUpVanLights')
+export const scriptBlockRegex = /^\s*(\w+)(?:\s+([\w\W\s]*?))?\s*{/gm;
