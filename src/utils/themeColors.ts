@@ -1,17 +1,11 @@
 import { extensions, workspace } from "vscode";
 import path from "path";
-
-export enum ThemeColorType {
-    ID = "entity.name.class",
-    ScriptBlock = "keyword.control",
-    Boolean = "constant.language.boolean",
-    Parameter = "variable.parameter"
-}
+import { ThemeColorType } from "../models/enums";
 
 /**
- * Retrieves token colors for a given theme.
- * https://github.com/microsoft/vscode/issues/32813#issuecomment-3236474810
- */
+* Retrieves token colors for a given theme.
+* https://github.com/microsoft/vscode/issues/32813#issuecomment-3236474810
+*/
 export function getTokenColorsForTheme(themeName: string) {
     const tokenColors = new Map();
     let currentThemePath;

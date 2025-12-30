@@ -2,7 +2,7 @@
   "name": "project-zomboid-scripts",
   "displayName": "Project Zomboid Scripts",
   "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "SimKDT",
   "engines": {
     "vscode": "^1.75.0"
