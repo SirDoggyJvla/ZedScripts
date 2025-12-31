@@ -81,4 +81,4 @@ export const scriptBlockRegex = /^\s*(?<type>\w+)\s+(?<name>[^\r\n]*?)\s*{/gm;
  * Tags = Epic;New,
  * ```
  */
-export const parameterRegex = /(?<name>\S+?)\s*=[^\S\r\n]*(?<value>[^\r\n,]+)\s*?(?<comma>,?)/g;
+export const parameterRegex = /(?<name>\S+?)\s*=[^\S\r\n]*(?<value>[^\r\n,]*)\s*?(?<comma>,*)/g;

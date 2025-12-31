@@ -63,11 +63,6 @@ export class DiagnosticProvider {
         this.diagnosticCollection.dispose();
     }
 
-    // Static method to retrieve cached DocumentBlock
-    public static getDocumentBlock(document: vscode.TextDocument): DocumentBlock | undefined {
-        return DiagnosticProvider.documentBlockCache.get(document.uri.toString());
-    }
-    
     
     
     private validateItemBlock(match: RegExpMatchArray, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {

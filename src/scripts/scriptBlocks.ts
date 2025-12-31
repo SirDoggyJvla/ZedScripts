@@ -71,8 +71,40 @@ export class ScriptBlock {
         return this.scriptBlock === word;
     }
 
-    public isParameterOf(word: string): boolean {
-        // TODO
+    public isIndexOf(index: number): boolean {
+        // check if in main block
+        if (index < this.start || index >= this.end) {
+            return false;
+        }
+
+        // check if in any child block
+        for (const child of this.children) {
+            if (index >= child.start && index < child.end) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public getParameter(name: string, parameters?: ScriptParameter[]): ScriptParameter | null {
+        const paramsToSearch = parameters || this.parameters;
+        for (const param of paramsToSearch) {
+            console.log(`Checking parameter '${param.name}' against '${name}'`);
+            if (param.name === name) {
+                console.log(`Found parameter '${name}' in block '${this.scriptBlock}'`);
+                return param;
+            }
+        }
+        return null;
+    }
+
+    public isParameterOf(name: string): boolean {
+        for (const param of this.parameters) {
+            if (param.name === name) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -205,18 +237,34 @@ export class ScriptBlock {
         const matches = Array.from(text.matchAll(parameterRegex));
 
         for (const match of matches) {
+            const groups = match.groups;
+            if (!groups) continue;
             const fullMatch = match[0];
-            const paramName = match[1];
-            const paramValue = match[2];
-            const comma = match[3];
+            const paramName = groups.name.trim();
+            const paramValue = groups.value.trim();
+            const comma = groups.comma.trim();
 
-            const parameterStart = this.start + fullMatch.indexOf(paramName);
+            console.log(`Full Match: '${fullMatch}'`);
+
+            const index = match.index!;
+
+            const parameterStart = this.start + index + fullMatch.indexOf(paramName);
             const parameterEnd = parameterStart + paramName.length;
-            const valueStart = this.start + fullMatch.indexOf(paramValue);
+            const valueStart = this.start + index + fullMatch.indexOf(paramValue);
             const valueEnd = valueStart + paramValue.length;
 
-            const line = document.positionAt(parameterStart).line;
-            console.log(`Found parameter '${paramName}' with value '${paramValue}' at line ${line + 1} in block '${this.scriptBlock}'`);
+            // verify it is within this block and not in a child block
+            if (!this.isIndexOf(parameterStart) || !this.isIndexOf(valueEnd - 1)) {
+                continue;
+            }
+
+            // verify it isn't already a parameter of the block
+            const param = this.getParameter(paramName, parameters);
+            let isDuplicate = false;
+            if (param) {
+                isDuplicate = true;
+                param.setAsDuplicate(); // set the other parameter as duplicate too
+            }
 
             const parameter = new ScriptParameter(
                 document,
@@ -227,7 +275,9 @@ export class ScriptBlock {
                 parameterStart,
                 parameterEnd,
                 valueStart,
-                valueEnd
+                valueEnd,
+                comma,
+                isDuplicate
             );
 
             parameters.push(parameter);
@@ -416,6 +466,11 @@ export class ScriptBlock {
             }
         }
         
+        return true;
+    }
+
+    protected validateParameters(): boolean {
+
         return true;
     }
 

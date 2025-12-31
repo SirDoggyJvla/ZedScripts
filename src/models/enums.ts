@@ -15,6 +15,7 @@ export enum DefaultText {
 export enum DiagnosticType {
     // formatting related diagnostics
     MISSING_COMMA = "Missing comma.",
+    INVALID_COMMA = "Invalid comma.",
     UNMATCHED_BRACE = "Missing closing bracket '}' for '{scriptBlock}' block.",
     NOT_VALID_BLOCK = "'{scriptBlock}' is an unknown script block.",
     
@@ -33,7 +34,9 @@ export enum DiagnosticType {
     // parameter related diagnostics
     UNKNOWN_PARAMETER = "'{parameter}' is not a valid parameter for '{scriptBlock}' block.",
     MISSING_PARAMETER = "'{scriptBlock}' block is missing required parameter(s): {parameters}.",
+    MISSING_VALUE = "Missing a value.",
     INVALID_PARAMETER_VALUE = "'{parameter}' has an invalid value '{value}'.",
+    DUPLICATE_PARAMETER = "'{parameter}' is defined multiple times in '{scriptBlock}' block.",
 }
 
 // Helper function to format

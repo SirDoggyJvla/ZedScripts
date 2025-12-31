@@ -1,11 +1,8 @@
 import * as vscode from "vscode";
 import { Position, TextDocument } from "vscode";
-import { getBlockType, getDescription } from "../scripts/scriptData";
 import { provideDefinition } from "./definition";
 import path from "path";
 import { itemBlockRegex } from "../models/regexPatterns";
-import { getColor } from "../utils/themeColors";
-import { ThemeColorType } from "../models/enums";
 import { DocumentBlock } from "../scripts/scriptBlocks";
 
 export class PZHoverProvider implements vscode.HoverProvider {

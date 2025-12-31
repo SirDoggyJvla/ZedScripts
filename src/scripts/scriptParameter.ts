@@ -14,6 +14,8 @@ export class ScriptParameter {
     parent: ScriptBlock;
     name: string;
     value: string;
+    comma: string;
+    isDuplicate: boolean;
 
     // positions
     parameterStart: number;
@@ -31,7 +33,9 @@ export class ScriptParameter {
         parameterStart: number,
         parameterEnd: number,
         valueStart: number,
-        valueEnd: number
+        valueEnd: number,
+        comma: string,
+        isDuplicate: boolean
     ) {
         this.document = document;
         this.parent = parent;
@@ -42,9 +46,37 @@ export class ScriptParameter {
         this.parameterEnd = parameterEnd;
         this.valueStart = valueStart;
         this.valueEnd = valueEnd;
+        this.comma = comma;
+        this.isDuplicate = isDuplicate;
     
         this.validateParameter();
+
+        // this.highlightPositions();
     }
+
+    private highlightPositions(): void {
+        const parameterRange = new vscode.Range(
+            this.document.positionAt(this.parameterStart),
+            this.document.positionAt(this.parameterEnd)
+        );
+        const valueRange = new vscode.Range(
+            this.document.positionAt(this.valueStart),
+            this.document.positionAt(this.valueEnd)
+        );
+
+        this.diagnostics.push(new vscode.Diagnostic(
+            parameterRange,
+            `Parameter: ${this.name}`,
+            vscode.DiagnosticSeverity.Information
+        ));
+
+        this.diagnostics.push(new vscode.Diagnostic(
+            valueRange,
+            `Value: ${this.value}`,
+            vscode.DiagnosticSeverity.Information
+        ));
+    }
+
 
 
 // CHECKERS
@@ -56,12 +88,55 @@ export class ScriptParameter {
         const lowerName = name.toLowerCase();
 
         // check if parameter exists in this block
-        const parameterData = parameters[lowerName];
-        if (!parameterData) {
+        if (parameters) {
+            const parameterData = parameters[lowerName];
+            if (!parameterData) {
+                this.diagnostic(
+                    DiagnosticType.UNKNOWN_PARAMETER,
+                    { parameter: name, scriptBlock: this.parent.scriptBlock },
+                    this.parameterStart
+                );
+                return false;
+            }
+        }
+
+        // check for duplicate
+        if (this.isDuplicate) {
             this.diagnostic(
-                DiagnosticType.UNKNOWN_PARAMETER,
+                DiagnosticType.DUPLICATE_PARAMETER,
                 { parameter: name, scriptBlock: this.parent.scriptBlock },
-                this.parameterStart
+                this.parameterStart,
+                this.parameterEnd
+            );
+            return false;
+        }
+
+        // check if value is missing
+        if (this.value === "") {
+            this.diagnostic(
+                DiagnosticType.MISSING_VALUE,
+                { parameter: name },
+                this.parameterStart,
+                this.valueEnd
+            );
+            return false;
+        }
+
+        // check if missing comma at the end
+        if (this.comma === "") {
+            this.diagnostic(
+                DiagnosticType.MISSING_COMMA,
+                {},
+                this.parameterStart,
+                this.valueEnd
+            );
+            return false;
+        } else if (this.comma !== ",") {
+            this.diagnostic(
+                DiagnosticType.INVALID_COMMA,
+                {},
+                this.parameterStart,
+                this.valueEnd + this.comma.length
             );
             return false;
         }
@@ -72,6 +147,18 @@ export class ScriptParameter {
 
 
 // DIAGNOSTICS HELPERS
+
+    public setAsDuplicate(): void {
+        if (!this.isDuplicate) {
+            this.isDuplicate = true;
+            this.diagnostic(
+                DiagnosticType.DUPLICATE_PARAMETER,
+                { parameter: this.name, scriptBlock: this.parent.scriptBlock },
+                this.parameterStart,
+                this.parameterEnd
+            );
+        }
+    }
 
     private diagnostic(
         type: DiagnosticType,

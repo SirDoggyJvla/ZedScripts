@@ -7,11 +7,15 @@ BLOCKS_DIR = os.path.join(SCRIPT_DIR, 'external', 'pz-scripts-data', 'data', 'bl
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, 'src', 'data', 'scriptBlocks.json')
 
 def prepare_parameters(data: dict) -> dict:
-    parameters = {}
-    for param_data in data.get('parameters', []):
-        name = param_data['name']
-        parameters[name.lower()] = param_data
-    data['parameters'] = parameters
+    data.pop('version')
+    data.pop('$schema')
+    parameters_data = data.get('parameters', [])
+    if parameters_data:
+        parameters = {}
+        for param_data in data.get('parameters', []):
+            name = param_data['name']
+            parameters[name.lower()] = param_data
+        data['parameters'] = parameters
     return data
 
 result = {}
