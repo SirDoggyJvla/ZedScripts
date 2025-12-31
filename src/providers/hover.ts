@@ -88,11 +88,7 @@ export class PZHoverProvider implements vscode.HoverProvider {
         
         return null;
     }
-    
-    private colorMarkdown(text: string, color: string): string {
-        return `<span style="color:${color};">${text}</span>`;
-    }
-    
+
     private extractItemContent(
         doc: TextDocument,
         startPosition: Position

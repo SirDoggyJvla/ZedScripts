@@ -47,5 +47,6 @@ export const itemMapperEntriesRegex = /\s*([^=\s]+)\s*=\s*([^,\n]+)/g;
 
 
 
-// Detect script block
-export const scriptBlockRegex = /^\s*(\w+)\s+([\w\s]*\W*?)(?:\s*{|$)/gm;
+// Script block and parameter regex
+export const scriptBlockRegex = /^\s*(\w+)\s+([\w\s]*\W*?)(?:\s*{)/gm;
+export const parameterRegex = /([\w.!]*)(?:\s*[=]\s*)([\w:;. +-]*)(,*)/g;
