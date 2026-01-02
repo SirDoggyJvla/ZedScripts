@@ -21,7 +21,6 @@ import { DocumentBlock } from "../scripts/scriptBlocks";
 
 export class DiagnosticProvider {
     // Static cache for DocumentBlock instances
-    private static documentBlockCache: Map<string, DocumentBlock> = new Map();
     private diagnosticCollection: vscode.DiagnosticCollection;
     
     constructor() {
@@ -30,9 +29,7 @@ export class DiagnosticProvider {
     
     public updateDiagnostics(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
-        const documentBlock = new DocumentBlock(document, diagnostics);
-        // Cache the DocumentBlock for this document URI
-        DiagnosticProvider.documentBlockCache.set(document.uri.toString(), documentBlock);
+        new DocumentBlock(document, diagnostics);
         this.diagnosticCollection.set(document.uri, diagnostics);
         return;
         
@@ -66,11 +63,6 @@ export class DiagnosticProvider {
         this.diagnosticCollection.dispose();
     }
 
-    // Static method to retrieve cached DocumentBlock
-    public static getDocumentBlock(document: vscode.TextDocument): DocumentBlock | undefined {
-        return DiagnosticProvider.documentBlockCache.get(document.uri.toString());
-    }
-    
     
     
     private validateItemBlock(match: RegExpMatchArray, document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void {

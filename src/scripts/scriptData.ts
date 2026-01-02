@@ -6,6 +6,8 @@ export interface ScriptBlockParameter {
     name: string;
     description?: string;
     itemTypes?: string[];
+    allowedDuplicate?: boolean;
+    canBeEmpty?: boolean;
 }
 
 export interface ScriptBlockID {
@@ -87,45 +89,6 @@ export function getScriptBlockData(blockType: string): ScriptBlockData {
     }
     const blockData = SCRIPTS_TYPES[blockType as keyof typeof SCRIPTS_TYPES] as ScriptBlockData;
     return blockData;
-}
-
-
-export function getDescription(word: string, blockType: string, isScriptBlock: boolean): string | null {
-    // if it's a script block, get its description
-    if (isScriptBlock) {
-        return getScriptBlockDescription(blockType);
-    }
-    return getParameterDescription(word, blockType);
-}
-
-function getScriptBlockDescription(blockType: string): string | null {
-    const blockData = getScriptBlockData(blockType);
-    if (blockData) {
-        if (blockData.description) {
-            return blockData.description;
-        } else {
-            return "No description available for this script block type.";
-        }
-    }
-    return null;
-}
-
-function getParameterDescription(word: string, blockType: string): string | null {
-    // check if word is a parameter of the block type
-    const blockData = SCRIPTS_TYPES[blockType as keyof typeof SCRIPTS_TYPES];
-    const lowerWord = word.toLowerCase();
-    if (blockData.parameters && lowerWord in blockData.parameters) {
-        const paramData = (blockData.parameters as Record<string, any>)[lowerWord];
-        if (paramData) {
-            if (paramData.description) {
-                return paramData.description;
-            } else {
-                return "No description available for this parameter.";
-            }
-        }
-    }
-    
-    return null;
 }
 
 

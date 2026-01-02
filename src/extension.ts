@@ -12,9 +12,10 @@ export const defaultDir = path.normalize(
 );
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
-    if (document.languageId === "plaintext") {
+    if (document.languageId === "pz-scripts") {
         const config = vscode.workspace.getConfiguration("pzSyntaxExtension");
         const pzFilenames = config.get<string[]>("pzFilenames", []);
+        console.debug(pzFilenames);
         
         // Vérification du nom de fichier avec regex
         const fileName = path.basename(document.fileName);
@@ -50,8 +51,18 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    vscode.workspace.onDidOpenTextDocument(handleOpenTextDocument);
+    // let documentLanguage = vscode.window.activeTextEditor?.document.languageId;
+    // console.debug(`Document language on activation: ${documentLanguage}`);
+
+    // vscode.workspace.onDidOpenTextDocument(handleOpenTextDocument);
     
+    // documentLanguage = vscode.window.activeTextEditor?.document.languageId;
+    // console.debug(`Document language on activation: ${documentLanguage}`);
+
+    // if (documentLanguage === "plaintext") {
+    //     return;
+    // }
+
     console.log('Extension "pz-syntax-extension" is now active!');
     const diagnosticProvider = new DiagnosticProvider();
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
@@ -77,11 +88,13 @@ export function activate(context: vscode.ExtensionContext) {
                 diagnosticProvider.updateDiagnostics(document);
             }
         }),
+        
         vscode.workspace.onDidChangeTextDocument((event) => {
             if (event.document.languageId === "pz-scripts") {
                 diagnosticProvider.updateDiagnostics(event.document);
             }
         }),
+
         vscode.languages.registerCompletionItemProvider(
             "pz-scripts",
             new PZCompletionItemProvider(),
@@ -89,6 +102,8 @@ export function activate(context: vscode.ExtensionContext) {
             " ",
             "\t" // Déclencheurs de complétion
         ),
+
+        // handle mouse hover words
         vscode.languages.registerHoverProvider(
             "pz-scripts",
             new PZHoverProvider()
