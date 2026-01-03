@@ -5,7 +5,8 @@ import {
     CompletionItemKind,
 } from "vscode";
 import * as vscode from "vscode";
-import { PROPERTY_DESCRIPTIONS } from "../scripts/scriptData";
+import { BLOCK_NAMES, getBlockType, getScriptBlockData } from "../scripts/scriptData";
+import { DocumentBlock } from "../scripts/scriptBlocks";
 
 export class PZCompletionItemProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(
@@ -15,54 +16,39 @@ export class PZCompletionItemProvider implements vscode.CompletionItemProvider {
         const linePrefix = document
         .lineAt(position)
         .text.substr(0, position.character);
-        
-        // Complétion dans les blocs d'items
-        if (this.isInsideItemBlock(document, position)) {
-            return Object.keys(PROPERTY_DESCRIPTIONS).map((prop) => {
-                const item = new CompletionItem(prop, CompletionItemKind.Property);
-                item.detail = PROPERTY_DESCRIPTIONS[prop];
-                return item;
-            });
+
+        const completion: CompletionItem[] = [];
+
+        // the document has been diagnosed and parsed
+        const documentBlock = DocumentBlock.getDocumentBlock(document);
+        if (documentBlock) {
+            // retrieve the block at the position of the word
+            const block = documentBlock.getBlock(document.offsetAt(position));
+            if (block) {
+                // parameter completion
+                const blockData = getScriptBlockData(block.scriptBlock);
+                for (const paramName in blockData.parameters) {
+                    const param = blockData.parameters[paramName];
+                    const canDuplicate = param.allowedDuplicate || false;
+                    if (canDuplicate || !block.isParameterOf(paramName)) {
+                        const item = new CompletionItem(paramName, CompletionItemKind.Field);
+                        item.detail = param.description;
+                        completion.push(item);
+                    }
+                }
+            }
         }
-        
-        // Complétion pour les mots-clés principaux
+
+        // script block completion
         if (/^\s*$/.test(linePrefix)) {
-            return [
-                new CompletionItem("item", CompletionItemKind.Keyword),
-                new CompletionItem("craftRecipe", CompletionItemKind.Keyword),
-                new CompletionItem("module", CompletionItemKind.Keyword),
-            ];
-        }
-        
-        return [];
-    }
-    
-    private isInsideItemBlock(
-        document: TextDocument,
-        position: Position
-    ): boolean {
-        const text = document.getText();
-        const offset = document.offsetAt(position);
-        
-        // Trouver le dernier bloc item avant la position actuelle
-        const itemBlockRegex = /item\s+\w+/g;
-        let match: RegExpExecArray | null;
-        let lastItemStart = -1;
-        
-        while ((match = itemBlockRegex.exec(text)) !== null) {
-            if (match.index < offset) {
-                lastItemStart = match.index;
-            } else {
-                break;
+            for (const blockName of BLOCK_NAMES) {
+                const item = new CompletionItem(blockName, CompletionItemKind.Keyword);
+                const blockData = getScriptBlockData(blockName);
+                item.detail = blockData.description;
+                completion.push(item);
             }
         }
         
-        // Vérifier si nous sommes à l'intérieur des accolades
-        if (lastItemStart > -1) {
-            const blockEnd = text.indexOf("}", lastItemStart);
-            return offset > lastItemStart && (blockEnd === -1 || offset < blockEnd);
-        }
-        
-        return false;
+        return completion;
     }
 }

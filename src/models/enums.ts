@@ -1,3 +1,5 @@
+import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
+
 export enum ThemeColorType {
     ID = "entity.name.class",
     SCRIPT_BLOCK = "keyword.control",
@@ -34,12 +36,50 @@ export enum DiagnosticType {
     // parameter related diagnostics
     UNKNOWN_PARAMETER = "'{parameter}' is an unknown parameter for '{scriptBlock}' block. [WIP: not every parameters are documented yet]",
     MISSING_PARAMETER = "'{scriptBlock}' block is missing required parameter(s): {parameters}.",
+    DUPLICATE_PARAMETER = "'{parameter}' is defined multiple times in '{scriptBlock}' block.",
     MISSING_VALUE = "Missing a value.",
     INVALID_PARAMETER_VALUE = "'{parameter}' has an invalid value '{value}'.",
-    DUPLICATE_PARAMETER = "'{parameter}' is defined multiple times in '{scriptBlock}' block.",
+
+    // craftRecipe related diagnostics
+    INVALID_AMOUNT = "'{amount}' is not a valid amount for '{type}'.",
+    INTEGER_AMOUNT = "'{amount}' should be an integer for '{type}'.",
+    DUPLICATE_PROPERTY = "'{property}' is provided multiple times.",
+    MISSING_ONEOF_PROPERTY = "'{type}' is missing at least one of the following properties: {properties}.",
+
+    NO_DOTS_ITEM = "An item type (ID) cannot have dots '.' in its name. ({value})",
+    MISSING_MODULE = "The provided item type (ID) is missing its module part: 'module.type'. ({value})",
+    ALL_WITH_OTHERS = "'*' was provided along with other item types. '*' must be used alone.",
+    SPACES_IN_ITEM = "An item full type (module and ID) cannot contain spaces. ({value})",
+    INVALID_VALUE = "'{value}' is not a valid value for '{property}'. Valid values are: {validValues}.",
 }
 
-// Helper function to format
-export function formatDiagnostic(message: string, params: Record<string, string>): string {
+
+
+
+
+
+
+// Diagnostic helpers
+function formatDiagnostic(message: string, params: Record<string, string>): string {
     return message.replace(/{(\w+)}/g, (_, key) => params[key] ?? "");
+}
+
+export function diagnostic(
+    document: TextDocument,
+    diagnostics: Diagnostic[],
+    type: DiagnosticType,
+    params: Record<string, string>,
+    index_start: number, index_end: number = index_start,
+    severity: DiagnosticSeverity = DiagnosticSeverity.Error
+): void {
+    const positionStart = document.positionAt(index_start);
+    const positionEnd = document.positionAt(index_end);
+    const message = formatDiagnostic(type, params);
+    const diagnostic = new Diagnostic(
+        new Range(positionStart, positionEnd),
+        message,
+        severity
+    );
+    diagnostics.push(diagnostic);
+    console.warn(message);
 }

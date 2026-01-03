@@ -1,4 +1,13 @@
 {
+  "overlayMapper": {
+    "name": "overlayMapper",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "craftRecipe"
+    ],
+    "parameters": {}
+  },
   "animationsMesh": {
     "name": "animationsMesh",
     "description": "Defines an animated mesh, usually for characters or animals.",
@@ -133,6 +142,16 @@
         "name": "undoCoreScale"
       }
     }
+  },
+  "door": {
+    "name": "door",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "ID": {},
+    "parameters": {}
   },
   "position": {
     "name": "position",
@@ -1173,6 +1192,96 @@
       "craftRecipe",
       "component CraftRecipe"
     ],
+    "properties": {
+      "item": {
+        "oneOf": [
+          "itemList",
+          "tags"
+        ],
+        "properties": {
+          "itemList": {
+            "name": "itemList",
+            "type": "array",
+            "description": "A list of items that can be used as input."
+          },
+          "mode": {
+            "name": "mode",
+            "type": "string",
+            "description": "Whenever the item gets consumed or not. Default is `destroy`.",
+            "values": [
+              "destroy",
+              "keep"
+            ]
+          },
+          "flags": {
+            "name": "flags",
+            "type": "array",
+            "description": "Provides information about how the recipe impacts the items used in the crafting recipe or identified as valid items."
+          },
+          "mappers": {
+            "name": "mappers",
+            "type": "array",
+            "description": "Used to associated a specific input item to another specific output item."
+          },
+          "overlayMapper": {
+            "name": "overlayMapper",
+            "type": "boolean",
+            "description": "If provided, this input entry is used to determine the overlayMapper of the `craftRecipe`."
+          },
+          "tags": {
+            "name": "tags",
+            "type": "array",
+            "description": "Tags are used to determine which items can be used as input."
+          }
+        }
+      },
+      "-fluid": {
+        "oneOf": [
+          "fluidList",
+          "categories"
+        ],
+        "properties": {
+          "fluidList": {
+            "name": "fluidList",
+            "type": "array",
+            "description": "A list of fluids that can be used as input."
+          },
+          "categories": {
+            "name": "categories",
+            "type": "array",
+            "description": "A category of fluid used to determine which fluids can be used as input."
+          },
+          "flags": {
+            "name": "flags",
+            "type": "array",
+            "description": "Flags determine how the fluid is impacted during the recipe or identified."
+          },
+          "mode": {
+            "name": "mode",
+            "type": "string",
+            "description": "",
+            "values": [
+              "mixture",
+              "exact",
+              "primary",
+              "anything"
+            ]
+          }
+        }
+      },
+      "+fluid": {
+        "oneOf": [
+          "singleValue"
+        ],
+        "properties": {
+          "singleValue": {
+            "name": "singleValue",
+            "type": "string",
+            "description": "A single fluid value defining the output fluid."
+          }
+        }
+      }
+    },
     "parameters": {}
   },
   "fluid": {
@@ -3773,6 +3882,30 @@
       },
       "category": {
         "name": "category"
+      },
+      "durability": {
+        "name": "durability"
+      }
+    }
+  },
+  "physics": {
+    "name": "part",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "ID": {},
+    "parameters": {
+      "offset": {
+        "name": "offset"
+      },
+      "extents": {
+        "name": "extents"
+      },
+      "rotate": {
+        "name": "rotate"
       }
     }
   },

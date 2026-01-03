@@ -3,10 +3,10 @@
   "displayName": "Project Zomboid Scripts",
   "icon": "images/pz-script.png",
   "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "SimKDT",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.107.0"
   },
   "editor.semanticHighlighting.enabled": true,
   "repository": {
@@ -95,7 +95,6 @@
     "compile": "tsc -p ./tsconfig.json",
     "watch": "tsc -watch -p ./tsconfig.json",
     "package": "npx @vscode/vsce package",
-    "vscode:prepublish": "npm run package",
     "publish": "npx @vscode/vsce publish"
   },
   "devDependencies": {
