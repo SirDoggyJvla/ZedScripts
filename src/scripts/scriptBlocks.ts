@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
-import { scriptBlockRegex } from '../models/regexPatterns';
-import { ThemeColorType, DiagnosticType, DefaultText, formatDiagnostic } from '../models/enums';
-import { getColor } from "../utils/themeColors";
-import { isScriptBlock, getScriptBlockData, ScriptBlockData } from './scriptData';
-import { colorText, underlineText } from '../utils/htmlFormat';
-import { ScriptParameter } from './scriptParameter';
+import { scriptBlockRegex, parameterRegex, inputsOutputsRegex } from '../models/regexPatterns';
+import { DOCUMENT_IDENTIFIER, ThemeColorType, DiagnosticType, DefaultText, diagnostic } from '../models/enums';
+import { getColor, getFontStyle } from "../utils/themeColors";
+import { isScriptBlock, getScriptBlockData, ScriptBlockData, IndexRange } from './scriptData';
+import { colorText } from '../utils/htmlFormat';
+import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptParameter';
 
 /**
  * Represents a script block in a PZ script file. Handles nested blocks and diagnostics.
@@ -18,10 +18,12 @@ export class ScriptBlock {
     originalScriptBlock: string | null = null;
     
     // block data
-    parent: ScriptBlock | null = null;
-    scriptBlock: string = "";
-    id: string | null = null;
-    children: ScriptBlock[] = [];
+    parent: ScriptBlock | null = null; // the parent script block, if any
+    scriptBlock: string = ""; // the type of the script block
+    id: string | null = null; // the ID of the block, if any
+    children: ScriptBlock[] = []; // children script blocks
+    parameters: ScriptParameter[] = []; // parameters of the block
+    isTemplate: boolean = false; // whether this block is a template block
 
     // positions
     start: number = 0;
@@ -59,6 +61,7 @@ export class ScriptBlock {
         }
         this.children = this.findChildBlocks();
         this.validateChildren();
+        this.parameters = this.findParameters();
     }
 
 
@@ -69,24 +72,70 @@ export class ScriptBlock {
         return this.scriptBlock === word;
     }
 
-    public isParameterOf(word: string): boolean {
-        // TODO
+    public isIndexOf(index: number): boolean {
+        // check if in main block
+        if (index < this.start || index >= this.end) {
+            return false;
+        }
+
+        // check if in any child block
+        for (const child of this.children) {
+            if (index >= child.start && index < child.end) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public getParameter(name: string, parameters?: ScriptParameter[]): ScriptParameter | null {
+        const paramsToSearch = parameters || this.parameters;
+        for (const param of paramsToSearch) {
+            if (param.parameter === name) {
+                return param;
+            }
+        }
+        return null;
+    }
+
+    public isParameterOf(name: string): boolean {
+        for (const param of this.parameters) {
+            if (param.parameter === name) {
+                return true;
+            }
+        }
         return false;
     }
 
-    private colorBlock(txt: string): string {
-        const color = getColor(ThemeColorType.SCRIPT_BLOCK);
-        return colorText(txt, color);
+    public canHaveParameter(name: string): boolean {
+        const blockData = getScriptBlockData(this.scriptBlock);
+        const parameters = blockData.parameters;
+        if (parameters) {
+            const paramData = parameters[name.toLowerCase()];
+            if (paramData) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private getTree(): string {
-        const scriptBlock = "**" + this.colorBlock(this.scriptBlock) + "**";
+    private color(txt: string, colorType: ThemeColorType = ThemeColorType.SCRIPT_BLOCK): string {
+        const color = getColor(colorType);
+        const fontStyle = getFontStyle(colorType);
+        return colorText(txt, color, fontStyle);
+    }
+
+    public getTree(children: boolean = false): string {
+        let scriptBlock = this.color(this.scriptBlock)
+        if (!children) {
+            scriptBlock = "**" + scriptBlock + "**";
+        }
         const parents = [scriptBlock];
     
         // recursively collect parents
         let current = this.parent;
-        while (current && current.scriptBlock !== "_DOCUMENT") {
-            parents.unshift(this.colorBlock(current.scriptBlock));
+        while (current && current.scriptBlock !== DOCUMENT_IDENTIFIER) {
+            parents.unshift(this.color(current.scriptBlock));
             current = current.parent;
         }
         
@@ -99,7 +148,7 @@ export class ScriptBlock {
     public getHoverText(): MarkdownString {
         const markdown = new vscode.MarkdownString();
         markdown.isTrusted = true; // needed for html rendering
-        
+
         // retrieve tree and description
         const tree = this.getTree();
         const desc = this.getDescription();
@@ -117,6 +166,41 @@ export class ScriptBlock {
         return blockData?.description || DefaultText.SCRIPT_BLOCK_DESCRIPTION;
     }
 
+    public canHaveParent(parentBlock: string): boolean {
+        const blockData = getScriptBlockData(this.scriptBlock);
+        const validParents = blockData.parents;
+        if (this.scriptBlock in validParents) {
+            return true;
+        }
+        return false;
+    }
+
+    public getRequiredChildren(): string[] | null {
+        const blockData = getScriptBlockData(this.scriptBlock);
+        return blockData.needsChildren || null;
+    }
+
+    public shouldHaveID(): boolean {
+        if (!this.parent) { return true; } // there should always be a parent anyway
+        return this.parent.shouldChildrenHaveID(this.scriptBlock);
+    }
+
+    public shouldChildrenHaveID(childrenBlock: string): boolean {
+        const childrenBlockData = getScriptBlockData(childrenBlock);
+        const IDData = childrenBlockData.ID;
+        if (!IDData) { return false; }
+
+        // used to check if the parent block requires an ID for this subblock
+        const invalidBlocks = IDData.parentsWithout;
+        let shouldHaveIDfromParent = true;
+        if (invalidBlocks) {
+            if (invalidBlocks.includes(this.scriptBlock)) {
+                shouldHaveIDfromParent = false;
+            }
+        }
+
+        return shouldHaveIDfromParent;
+    }
     
 
 // SEARCHERS
@@ -194,8 +278,60 @@ export class ScriptBlock {
         return children;
     }
 
-    protected findParameters(): void {
-        
+    protected findParameters(): ScriptParameter[] {
+        const document = this.document;
+        const text = document.getText().slice(this.start, this.end);
+
+        const parameters: ScriptParameter[] = [];
+
+        const matches = Array.from(text.matchAll(parameterRegex));
+
+        for (const match of matches) {
+            const groups = match.groups;
+            if (!groups) continue;
+            const fullMatch = match[0];
+            const name = groups.name.trim();
+            const value = groups.value.trim();
+            const comma = groups.comma.trim();
+
+            const index = match.index!;
+
+            const nameStart = this.start + index + fullMatch.indexOf(name);
+            const nameEnd = nameStart + name.length;
+            const nameRange: IndexRange = {start: nameStart, end: nameEnd};
+            
+            const valueStart = this.start + index + fullMatch.indexOf(value);
+            const valueEnd = valueStart + value.length;
+            const valueRange: IndexRange = {start: valueStart, end: valueEnd};
+
+            // verify it is within this block and not in a child block
+            if (!this.isIndexOf(nameStart) || !this.isIndexOf(valueEnd - 1)) {
+                continue;
+            }
+
+            // verify it isn't already a parameter of the block
+            const param = this.getParameter(name, parameters);
+            let isDuplicate = false;
+            if (param) {
+                isDuplicate = true;
+                param.setAsDuplicate(); // set the other parameter as duplicate too
+            }
+
+            const parameter = new ScriptParameter(
+                document,
+                this,
+                this.diagnostics,
+                name,
+                value,
+                nameRange,
+                valueRange,
+                comma,
+                isDuplicate
+            );
+
+            parameters.push(parameter);
+        }
+        return parameters;
     } 
 
 
@@ -246,7 +382,7 @@ export class ScriptBlock {
         // shouldn't have parent
         } else {
             // but has one when shouldn't
-            if (this.parent && this.parent.scriptBlock !== "_DOCUMENT") {
+            if (this.parent && this.parent.scriptBlock !== DOCUMENT_IDENTIFIER) {
                 this.diagnostic(
                     DiagnosticType.HAS_PARENT_BLOCK,
                     { scriptBlock: this.scriptBlock }, 
@@ -297,7 +433,7 @@ export class ScriptBlock {
     }
 
     protected validateID(): boolean {
-        if (this.scriptBlock === "_DOCUMENT") {
+        if (this.scriptBlock === DOCUMENT_IDENTIFIER) {
             return true;
         }
 
@@ -342,7 +478,9 @@ export class ScriptBlock {
             return false;
         }
 
+        // has an ID, so validate it
         if (hasID) {
+            // check if parent block forbids an ID for this subblock
             if (!shouldHaveIDfromParent) {
                 this.diagnostic(
                     DiagnosticType.HAS_ID_IN_PARENT,
@@ -371,7 +509,6 @@ export class ScriptBlock {
                 // consider the ID as part of the script block type
                 // this means it will be a script block in itself with its own data
                 if (IDData.asType) {
-                    console.log(`Consider ID '${id}' as part of script block type for block '${this.scriptBlock}'`);
                     this.originalScriptBlock = this.scriptBlock;
                     this.scriptBlock = this.scriptBlock + " " + id;
                     this.id = null; // reset ID to null
@@ -382,25 +519,29 @@ export class ScriptBlock {
         return true;
     }
 
+    protected validateParameters(): boolean {
+
+        return true;
+    }
+
 
 // DIAGNOSTICS HELPERS
 
-    private diagnostic(
+    protected diagnostic(
         type: DiagnosticType,
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
     ): void {
-        const positionStart = this.document.positionAt(index_start);
-        const positionEnd = index_end ? this.document.positionAt(index_end) : positionStart;
-        const message = formatDiagnostic(type, params);
-        const diagnostic = new vscode.Diagnostic(
-            new vscode.Range(positionStart, positionEnd),
-            message,
+        diagnostic(
+            this.document,
+            this.diagnostics,
+            type,
+            params,
+            index_start,
+            index_end,
             severity
         );
-        this.diagnostics.push(diagnostic);
-        console.warn(message);
     }
 }
 
@@ -429,6 +570,171 @@ export class ComponentBlock extends ScriptBlock {
 }
 
 
+export class ItemMapperBlock extends ScriptBlock {
+    constructor(
+        document: TextDocument,
+        diagnostics: Diagnostic[],
+        parent: ScriptBlock | null,
+        type: string,
+        name: string | null,
+        start: number,
+        end: number,
+        headerStart: number
+    ) {
+        super(document, diagnostics, parent, type, name, start, end, headerStart);
+    }
+
+    public canHaveParameter(name: string): boolean {
+        // TODO: to implement
+        // allow any parameter in itemMapper blocks for now
+        return true;
+    }
+}
+
+
+export class TemplateBlock extends ScriptBlock {
+    constructor(
+        document: TextDocument,
+        diagnostics: Diagnostic[],
+        parent: ScriptBlock | null,
+        type: string,
+        name: string | null,
+        start: number,
+        end: number,
+        headerStart: number
+    ) {
+        const splittedID = name ? name.split(" ") : null;
+        if (splittedID) {
+            type = splittedID[0];
+            name = splittedID.slice(1).join(" ") || null;
+        }
+        
+        super(document, diagnostics, parent, type, name, start, end, headerStart);
+        this.isTemplate = true;
+    }
+
+    protected validateBlock(): boolean {
+        const type = this.scriptBlock;
+
+        // verify it's a script block
+        if (!isScriptBlock(type)) {
+            this.diagnostic(
+                DiagnosticType.NOT_VALID_BLOCK,
+                { scriptBlock: type },
+                this.headerStart
+            )
+            return false;
+        }
+
+        // make sure an ID is provided
+        if (!this.id) {
+            this.diagnostic(
+                DiagnosticType.MISSING_ID,
+                { scriptBlock: this.scriptBlock },
+                this.headerStart
+            )
+            return false;
+        }
+
+        // verify ID
+        if (!this.validateID()) {
+            // return false;
+        }
+
+        // verify parent block
+        if (!this.validateParent()) {
+            // return false;
+        }
+
+        return true;
+    }
+}
+
+
+export class InputsBlock extends ScriptBlock {
+    constructor(
+        document: TextDocument,
+        diagnostics: Diagnostic[],
+        parent: ScriptBlock | null,
+        type: string,
+        name: string | null,
+        start: number,
+        end: number,
+        headerStart: number
+    ) {
+        super(document, diagnostics, parent, type, name, start, end, headerStart);
+    }
+
+    protected findParameters(): any[] {
+        const document = this.document;
+        const text = document.getText().slice(this.start, this.end);
+
+        const parameters: any[] = [];
+
+        // identify the different inputs/outputs parameters
+        const matches = Array.from(text.matchAll(inputsOutputsRegex.main));
+
+        for (const match of matches) {
+            const groups = match.groups;
+            if (!groups) continue;
+            const fullMatch = match[0];
+            const name = groups.name.trim();
+            const amount = groups.amount.trim();
+            const values = groups.values;
+            const comma = groups.comma.trim();
+
+            const index = match.index!;
+
+            // retrieve the positions
+            const nameStart = this.start + index + fullMatch.indexOf(name);
+            const nameEnd = nameStart + name.length;
+            const nameRange: IndexRange = {start: nameStart, end: nameEnd};
+
+            const amountStart = this.start + index + fullMatch.indexOf(amount);
+            const amountEnd = amountStart + amount.length;
+            const amountRange: IndexRange = {start: amountStart, end: amountEnd};
+            
+            const valuesStart = this.start + index + fullMatch.indexOf(values);
+            const valuesEnd = valuesStart + values.length;
+            const valuesRange: IndexRange = {start: valuesStart, end: valuesEnd};
+
+            // verify it is within this block and not in a child block
+            if (!this.isIndexOf(nameStart) || !this.isIndexOf(valuesEnd - 1)) {
+                continue;
+            }
+
+            // determine parameter type
+            let parameterType;
+            if (name === "item") {
+                parameterType = InputsItemParameter;
+            } else if (name.includes("fluid")) {
+                parameterType = InputsFluidParameter;
+            } else {
+                // unknown parameter type
+                continue;
+            }
+
+            // create the parameter
+            const parameter = new parameterType(
+                document,
+                this,
+                this.diagnostics,
+                name,
+                values,
+                amount,
+                nameRange,
+                amountRange,
+                valuesRange,
+                comma
+            );
+
+            parameters.push(parameter);
+        } 
+
+        return parameters;
+    }
+}
+
 
 /**
  * A ScriptBlock that represents the entire document. This is more a convenience class to handle everything easily.
@@ -439,7 +745,7 @@ export class DocumentBlock extends ScriptBlock {
     constructor(document: TextDocument, diagnostics: Diagnostic[]) {
         // Only document is provided
         const parent = null;
-        const type = "_DOCUMENT";
+        const type = DOCUMENT_IDENTIFIER;
         const name = null;
         const start = 0;
         const end = document.getText().length;
@@ -488,6 +794,7 @@ export class DocumentBlock extends ScriptBlock {
     protected validateBlock(): boolean { return true; }
     protected validateChildren(): boolean { return true; }
     protected validateID(): boolean { return true; }
+    protected findParameters(): ScriptParameter[] { return []; }
 }
 
 
@@ -495,3 +802,6 @@ export class DocumentBlock extends ScriptBlock {
 // ASSIGNED CLASSES FOR SCRIPT BLOCK TYPES
 const assignedClasses = new Map<string, typeof ScriptBlock>();
 assignedClasses.set("component", ComponentBlock);
+assignedClasses.set("template", TemplateBlock);
+assignedClasses.set("itemMapper", ItemMapperBlock)
+assignedClasses.set("inputs", InputsBlock);

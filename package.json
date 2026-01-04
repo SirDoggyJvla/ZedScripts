@@ -1,22 +1,26 @@
 {
   "name": "project-zomboid-scripts",
   "displayName": "Project Zomboid Scripts",
+  "icon": "images/pz-script.png",
   "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "SimKDT",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.107.0"
   },
-  "main": "./out/extension.js",
-  "activationEvents": [
-    "onLanguage:plaintext"
-  ],
   "editor.semanticHighlighting.enabled": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/SirDoggyJvla/pz-syntax-extension"
   },
-  "icon": "images/pz-script.png",
+  "bugs": {
+    "type": "git",
+    "url": "https://github.com/SirDoggyJvla/pz-syntax-extension/issues"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./out/extension.js",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -79,23 +83,30 @@
           ],
           "keyword.control.pz": [
             "keyword.control"
+          ],
+          "support.type.property-name.pz": [
+            "support.type.property-name"
           ]
         }
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "jest",
+    "check": "tsc --noEmit && npm run test",
     "compile": "tsc -p ./tsconfig.json",
     "watch": "tsc -watch -p ./tsconfig.json",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "package": "npx @vscode/vsce package",
+    "publish": "npx @vscode/vsce publish"
   },
   "devDependencies": {
-    "@types/node": "^22.10.9",
-    "typescript": "^4.0.0",
-    "vsce": "^2.15.0",
-    "vscode": "^1.1.36"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.3",
+    "@types/vscode": "^1.107.0",
+    "@vscode/vsce": "^3.7.1",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
   }
 }
