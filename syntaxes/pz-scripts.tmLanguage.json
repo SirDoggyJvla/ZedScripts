@@ -14,7 +14,7 @@
       }
     },
     {
-      "name": "support.type.property-name",
+      "name": "string.quoted.double.pz",
       "match": "\\b[\\w]*[a-zA-Z_][\\w]*\\.[\\w.]+\\b"
     },
     {

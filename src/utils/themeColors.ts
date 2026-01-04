@@ -2,11 +2,15 @@ import { extensions, workspace } from "vscode";
 import path from "path";
 import { ThemeColorType } from "../models/enums";
 
+const TokenColorsCache = new Map<string, (token: string) => any>();
 /**
 * Retrieves token colors for a given theme.
 * https://github.com/microsoft/vscode/issues/32813#issuecomment-3236474810
 */
-export function getTokenColorsForTheme(themeName: string) {
+export function getTokenColorsForTheme(themeName: string): (token: string) => any {
+    if (TokenColorsCache.has(themeName)) {
+        return TokenColorsCache.get(themeName)!;
+    }
     const tokenColors = new Map();
     let currentThemePath;
     for (const extension of extensions.all) {
@@ -29,29 +33,37 @@ export function getTokenColorsForTheme(themeName: string) {
             }
             if (theme.tokenColors) {
                 theme.tokenColors.forEach((rule: any) => {
-                    if (typeof rule.scope === "string" && !tokenColors.has(rule.scope)) {
-                        tokenColors.set(rule.scope, rule.settings);
+                    const scopes: string[] = [];
+                    
+                    if (typeof rule.scope === "string") {
+                        // Handle comma-separated scopes in a single string
+                        scopes.push(...rule.scope.split(',').map((s: string) => s.trim()));
                     } else if (rule.scope instanceof Array) {
-                        rule.scope.forEach((scope: any) => {
-                            if (!tokenColors.has(scope)) {
-                                tokenColors.set(scope, rule.settings);
-                            }
-                        });
+                        scopes.push(...rule.scope);
                     }
+                    
+                    scopes.forEach((scope: string) => {
+                        if (!tokenColors.has(scope)) {
+                            tokenColors.set(scope, rule.settings);
+                        }
+                    });
                 });
             }
         }
     }
-    return (token: string) => {
-        while(!tokenColors.has(token)) {
-            if(token.includes(".")) {
-                token = token.slice(0, token.lastIndexOf("."));
+    const tktColor = (token: string) => {
+        let currentToken = token;
+        while(!tokenColors.has(currentToken)) {
+            if(currentToken.includes(".")) {
+                currentToken = currentToken.slice(0, currentToken.lastIndexOf("."));
             } else {
                 return undefined;
             }
         }
-        return tokenColors.get(token);
+        return tokenColors.get(currentToken);
     };
+    TokenColorsCache.set(themeName, tktColor);
+    return tktColor;
 }
 
 export function getThemeColors(): any {
@@ -64,4 +76,14 @@ export function getThemeColors(): any {
 export function getColor(type: ThemeColorType): string {
     const tokenColors = getThemeColors();
     return tokenColors(type)?.foreground;
+}
+
+export function getFontStyle(type: ThemeColorType): string | undefined {
+    const tokenColors = getThemeColors();
+    return tokenColors(type)?.fontStyle;
+}
+
+export function getTokenSettings(type: ThemeColorType): { foreground?: string; fontStyle?: string } {
+    const tokenColors = getThemeColors();
+    return tokenColors(type) || {};
 }
