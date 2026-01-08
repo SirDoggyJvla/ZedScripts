@@ -90,9 +90,6 @@
       "animationsmesh": {
         "name": "animationsMesh"
       },
-      "attachment": {
-        "name": "attachment"
-      },
       "boneweight": {
         "name": "boneWeight"
       },
@@ -124,7 +121,9 @@
         "name": "postProcess"
       },
       "scale": {
-        "name": "scale"
+        "name": "scale",
+        "description": "Used to scale the model up or down.",
+        "type": "float"
       },
       "shader": {
         "name": "shader"
