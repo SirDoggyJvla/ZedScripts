@@ -1,6 +1,27 @@
-import { TextDocument, Position } from 'vscode';
-import SCRIPTS_TYPES from '../data/scriptBlocks.json';
-import { DOCUMENT_IDENTIFIER } from '../models/enums';
+export interface ScriptData {
+    [key: string]: ScriptBlockData;
+}
+
+import { TextDocument, ExtensionContext } from 'vscode';
+// If your tsconfig has "resolveJsonModule": true, use:
+// import DEFAULT_SCRIPTS_TYPES from '../data/scriptBlocks.json';
+// Otherwise, for CommonJS, use:
+export let SCRIPTS_TYPES: ScriptData = require('../data/scriptBlocks.json');
+import { DOCUMENT_IDENTIFIER, CACHE_DURATION_MS, SCRIPT_DATA_LINK } from '../models/enums';
+
+
+
+export interface ScriptBlockData {
+    version: number;
+    name: string;
+    description: string;
+    shouldHaveParent: boolean;
+    needsChildren?: string[];
+    parents: string[];
+    ID?: ScriptBlockID;
+    parameters: { [key: string]: ScriptBlockParameter };
+    properties?: { [key: string]: InputParameterData };
+}
 
 export interface IndexRange {
     start: number;
@@ -13,27 +34,17 @@ export interface ScriptBlockParameter {
     itemTypes?: string[];
     allowedDuplicate?: boolean;
     canBeEmpty?: boolean;
-    default?: string | number | boolean | string[];
+    default?: (string | number | boolean)[];
     type?: "string" | "int" | "float" | "boolean" | "array";
     required?: boolean;
+    deprecated?: boolean;
+    values?: (string | number | boolean)[];
 }
 
 export interface ScriptBlockID {
     parentsWithout?: string[];
     values?: string[];
     asType?: boolean;
-}
-
-export interface ScriptBlockData {
-    version: number;
-    name: string;
-    description: string;
-    shouldHaveParent: boolean;
-    needsChildren?: string[];
-    parents: string[];
-    ID?: ScriptBlockID;
-    parameters: { [key: string]: ScriptBlockParameter };
-    properties?: { [key: string]: InputParameterData };
 }
 
 export interface InputAnalysisProperty {
@@ -58,11 +69,50 @@ export interface InputParameterData {
 
 
 
+// utility functions to set the current source of data
+export async function initScriptBlocks(context: ExtensionContext) {
+    // check cache first
+    const cached: ScriptData | undefined = context.globalState.get('scriptBlocks');
+    const lastFetch = context.globalState.get<number>('lastFetch', 0);
+    
+    // if cached and less than the config time, use it
+    if (cached && Date.now() - lastFetch < CACHE_DURATION_MS) {
+        SCRIPTS_TYPES = cached;
+        initBlockRegex();
+        console.log("Using cached script block data.");
+        return;
+    }
+    
+    // try to fetch fresh data
+    try {
+        const response = await fetch(SCRIPT_DATA_LINK);
+        const data = await response.json();
+        SCRIPTS_TYPES = data;
+        initBlockRegex();
+        
+        // save to cache
+        await context.globalState.update('scriptBlocks', data);
+        await context.globalState.update('lastFetch', Date.now());
+        console.log("Fetched and cached new script block data.");
+        return;
+    } catch (error) {
+        // if fetch fails, return cached (even if old) or fallback
+        SCRIPTS_TYPES = cached || require('../data/scriptBlocks.json');
+        initBlockRegex();
+        console.warn("Failed to fetch new script block data, using cached or default extension data. Information might be outdated.");
+        return;
+    }
+}
+
 // generates a regex pattern to match any script block line
-export const BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
-const blockPattern = new RegExp(
-    `^\\s*(${BLOCK_NAMES.join('|')})\\s+.*\\{.*$`
-);
+export let BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
+let blockPattern: RegExp;
+function initBlockRegex() {
+    BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
+    blockPattern = new RegExp(
+        `^\\s*(${BLOCK_NAMES.join('|')})\\s+.*\\{.*$`
+    );
+}
 
 // detects if a line is starting a script block and returns the block type
 function isScriptBlockLine(line: string): string | null {

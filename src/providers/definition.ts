@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { defaultDir } from "../extension";
+import { DEFAULT_DIR } from "../models/enums";
 import { itemCache } from "./cache";
 
 export async function provideDefinition(
@@ -24,7 +24,7 @@ export async function provideDefinition(
   }
 
   const config = vscode.workspace.getConfiguration("pzSyntaxExtension");
-  const searchDirectories: string[] = config.get("searchDirectories", [defaultDir]);
+  const searchDirectories: string[] = config.get("searchDirectories", [DEFAULT_DIR]);
 
   // Filtrage des répertoires valides
   const validDirs = searchDirectories.filter(dir => {

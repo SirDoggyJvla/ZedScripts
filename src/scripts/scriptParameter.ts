@@ -59,29 +59,6 @@ export class ScriptParameter {
         // this.highlightPositions();
     }
 
-    private highlightPositions(): void {
-        const parameterRange = new vscode.Range(
-            this.document.positionAt(this.parameterRange.start),
-            this.document.positionAt(this.parameterRange.end)
-        );
-        const valueRange = new vscode.Range(
-            this.document.positionAt(this.valueRange.start),
-            this.document.positionAt(this.valueRange.end)
-        );
-
-        this.diagnostics.push(new vscode.Diagnostic(
-            parameterRange,
-            `Parameter: ${this.parameter}`,
-            vscode.DiagnosticSeverity.Information
-        ));
-
-        this.diagnostics.push(new vscode.Diagnostic(
-            valueRange,
-            `Value: ${this.value}`,
-            vscode.DiagnosticSeverity.Information
-        ));
-    }
-
     private getLineEnd(): number {
         const line = this.document.positionAt(this.valueRange.end).line;
         const lineEndPosition = this.document.lineAt(line).range.end;
@@ -199,6 +176,23 @@ export class ScriptParameter {
         return false;
     }
 
+    public isDeprecated(): boolean {
+        const parameterData = this.getParameterData();
+        if (parameterData) {
+            return parameterData.deprecated === true;
+        }
+        return false;
+    }
+
+    public hasAcceptedValue(): boolean {
+        const parameterData = this.getParameterData();
+        if (parameterData && parameterData.values) {
+            const acceptedValues = parameterData.values;
+            return acceptedValues.includes(this.value);
+        }
+        return false;
+    }
+
 
 // CHECKERS
 
@@ -215,6 +209,15 @@ export class ScriptParameter {
                 vscode.DiagnosticSeverity.Hint
             );
             // return false;
+        }
+
+        // verify if parameter is deprecated
+        if (this.isDeprecated()) {
+            this.diagnostic(
+                DiagnosticType.DEPRECATED_PARAMETER,
+                { parameter: name, scriptBlock: this.parent.scriptBlock },
+                this.parameterRange.start
+            );
         }
 
         // check for duplicate
@@ -234,6 +237,21 @@ export class ScriptParameter {
                 vscode.DiagnosticSeverity.Hint
             );
             return false;
+        }
+
+        // verify if parameter has accepted value
+        if (this.value !== "" && !this.hasAcceptedValue()) {
+            const parameterData = this.getParameterData();
+            const values = parameterData?.values;
+            if (values) {
+                this.diagnostic(
+                    DiagnosticType.WRONG_VALUE,
+                    { value: this.value, parameter: name, validValues: values.map(p => `'${p}'`).join(", ") },
+                    this.valueRange.start,
+                    this.valueRange.end
+                );
+                return false;
+            }
         }
 
         // check if missing comma at the end

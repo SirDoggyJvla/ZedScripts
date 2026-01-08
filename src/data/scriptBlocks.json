@@ -92,9 +92,6 @@
       "animationsmesh": {
         "name": "animationsMesh"
       },
-      "attachment": {
-        "name": "attachment"
-      },
       "boneweight": {
         "name": "boneWeight"
       },
@@ -126,7 +123,9 @@
         "name": "postProcess"
       },
       "scale": {
-        "name": "scale"
+        "name": "scale",
+        "description": "Used to scale the model up or down.",
+        "type": "float"
       },
       "shader": {
         "name": "shader"
@@ -2586,7 +2585,35 @@
           "weapon",
           "weaponpart"
         ],
-        "required": true
+        "values": [
+          "base:alarmclock",
+          "base:alarmclockclothing",
+          "base:animal",
+          "base:clothing",
+          "base:container",
+          "base:drainable",
+          "base:food",
+          "base:key",
+          "base:literature",
+          "base:map",
+          "base:moveable",
+          "base:normal",
+          "base:radio",
+          "base:weapon",
+          "base:weaponpart"
+        ],
+        "required": true,
+        "type": "string"
+      },
+      "type": {
+        "name": "Type",
+        "deprecated": true,
+        "description": "This parameter was replaced by `ItemType` in Build 42.13."
+      },
+      "displayname": {
+        "name": "DisplayName",
+        "deprecated": true,
+        "description": "This parameter was removed in Build 42.13, naming an item should be done with a translation entry. See the [wiki](https://pzwiki.net/wiki/DisplayName) page for more information."
       },
       "itemwhendry": {
         "name": "ItemWhenDry",

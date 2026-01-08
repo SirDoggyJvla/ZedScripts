@@ -6,10 +6,7 @@ import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-
-export const defaultDir = path.normalize(
-    "C:/Program Files (x86)/Steam/steamapps/common/ProjectZomboid/media/scripts/"
-);
+import { initScriptBlocks } from "./scripts/scriptData";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
     if (document.languageId === "pz-scripts") {
@@ -50,7 +47,7 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
     }
 }
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     // let documentLanguage = vscode.window.activeTextEditor?.document.languageId;
     // console.debug(`Document language on activation: ${documentLanguage}`);
 
@@ -62,6 +59,11 @@ export function activate(context: vscode.ExtensionContext) {
     // if (documentLanguage === "plaintext") {
     //     return;
     // }
+
+    // access the cached script data first
+
+    // try to fetch the latest scriptBlocks.json from the GitHub repository
+    await initScriptBlocks(context);
 
     console.log('Extension "pz-syntax-extension" is now active!');
     const diagnosticProvider = new DiagnosticProvider();

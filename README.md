@@ -4,34 +4,33 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 
 > Note: This extension is designed specifically for Build 42.
 
-## Features
+### Features
+- Syntax highlighting for Project Zomboid script files.
+- Auto-formatting of script files to maintain consistent style.
+- Diagnostics for:
+  - Common errors in script definitions;
+  - Mandatory, wrong, deprecated parameters;
+  - Wrong types and values;
+  - Missing commas;
+  - And more!
+- Hovering tooltips with additional information about script elements.
+- Auto-completion for script elements based on the Project Zomboid data (automatic mandatory parameters and subblocks).
+- Detection for script blocks used in wrong parent blocks.
+- Missing IDs detection.
 
-- Syntax highlighting for Project Zomboid's script blocks
-- Navigation features:
-  - Go to item definition with CTRL+click
-  - Hover information for items (shows definition when hovering over Base.ITEM)
-- Automatic indentation rules
-- Comment support (`/* */`)
-- Auto-formatting support:
-  - Aligns assignments within blocks
-  - Maintains proper indentation levels
-- Diagnostics:
-  - Identifies unrecognized keywords within blocks
-  - Provides warnings for potential issues in the script
+### Usage
+- Install the extension from the VS Code Marketplace.
+- Open a `.txt` script file.
+- Press Ctrl + Shift + P and select "Change Language Mode".
+- Choose "Project Zomboid Scripts (pz-scripts)" from the list.
 
-## Configuration
-By default the Project Zomboid directory is "C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts", but you can change this in the settings of the extension.
-You can add custom filename if you want they be detected as "pz-scripts" file
+The extension automatically downloads the latest script data from the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository and caches it for 12 hours, which it will fetch once more after this time. If it doesn't manage to fetch this data, it will fall back to the bundled data with the extension, which may get outdated.
 
-## Usage
+### Configuration
+By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts.
 
-- Open a file with the `.txt` extension to activate the syntax highlighting, formatting, and diagnostic features.
-- Use the command palette to access any additional commands provided by the extension.
+### Contributing
+Want to contribute to the project ? Feel free to do so ! You can also help by providing descriptions and data for scripts in the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository.
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
-
-## License
-
+### License
 This project is licensed under the MIT License. See the LICENSE file for details.

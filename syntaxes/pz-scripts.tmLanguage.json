@@ -15,7 +15,7 @@
     },
     {
       "name": "string.quoted.double.pz",
-      "match": "\\b[\\w]*[a-zA-Z_][\\w]*\\.[\\w.]+\\b"
+      "match": "\\b[a-zA-Z][\\w]*[.-\/-][\\w.-\/-]+\\b"
     },
     {
       "name": "entity.name.property.pz",

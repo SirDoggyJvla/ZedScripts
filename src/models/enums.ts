@@ -1,6 +1,13 @@
 import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
+import * as path from "path";
 
 export const DOCUMENT_IDENTIFIER = "_DOCUMENT";
+export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/scriptBlocks.json";
+export const DEFAULT_DIR = path.normalize(
+    "C:/Program Files (x86)/Steam/steamapps/common/ProjectZomboid/media/scripts/"
+);
+const CACHE_DURATION_HOURS = 12;
+export const CACHE_DURATION_MS = CACHE_DURATION_HOURS * 60 * 60 * 1000; // in milliseconds
 
 export enum ThemeColorType {
     ID = "entity.name.class",
@@ -54,6 +61,8 @@ export enum DiagnosticType {
     DUPLICATE_PARAMETER = "'{parameter}' is defined multiple times in '{scriptBlock}' block.",
     MISSING_VALUE = "Missing a value.",
     INVALID_PARAMETER_VALUE = "'{parameter}' has an invalid value '{value}'.",
+    DEPRECATED_PARAMETER = "'{parameter}' parameter in '{scriptBlock}' block is deprecated.",
+    WRONG_VALUE = "'{value}' is not a valid value for parameter '{parameter}'. Valid values are: {validValues}.",
 
     // craftRecipe related diagnostics
     INVALID_AMOUNT = "'{amount}' is not a valid amount for '{type}'.",
