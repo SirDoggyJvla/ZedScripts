@@ -1,7 +1,15 @@
 import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
 import { scriptBlockRegex, parameterRegex, inputsOutputsRegex } from '../models/regexPatterns';
-import { DOCUMENT_IDENTIFIER, ThemeColorType, DiagnosticType, DefaultText, diagnostic } from '../models/enums';
+import { 
+    DOCUMENT_IDENTIFIER, 
+    ThemeColorType, 
+    DiagnosticType, 
+    DefaultText, 
+    diagnostic, 
+    WIKI_LINK,
+    formatText
+} from '../models/enums';
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { isScriptBlock, getScriptBlockData, ScriptBlockData, IndexRange } from './scriptData';
 import { colorText } from '../utils/htmlFormat';
@@ -125,6 +133,10 @@ export class ScriptBlock {
         return colorText(txt, color, fontStyle);
     }
 
+    private getWikiPage(): string {
+        return WIKI_LINK + this.scriptBlock + '_(scripts)';
+    }
+
     public getTree(children: boolean = false): string {
         let scriptBlock = this.color(this.scriptBlock)
         if (!children) {
@@ -157,6 +169,7 @@ export class ScriptBlock {
         markdown.appendMarkdown(`${tree}  \n`);
         markdown.appendMarkdown('\n\n---\n\n');
         markdown.appendMarkdown(desc);
+        markdown.appendMarkdown('\n\n' + formatText(DefaultText.MORE_INFORMATION, { wikiPage: this.getWikiPage()}));
         
         return markdown;
     }

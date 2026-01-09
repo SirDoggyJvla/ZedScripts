@@ -26,6 +26,8 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 
 The extension automatically downloads the latest script data from the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository and caches it for 12 hours, which it will fetch once more after this time. If it doesn't manage to fetch this data, it will fall back to the bundled data with the extension, which may get outdated.
 
+You can also manually force a data refresh by running the "PZ Scripts: Force fetch Script Data" command from the command palette (ctrl + shift + P).
+
 ### Configuration
 By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts.
 

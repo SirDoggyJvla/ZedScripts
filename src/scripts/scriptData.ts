@@ -1,3 +1,4 @@
+import { window } from 'vscode';
 export interface ScriptData {
     [key: string]: ScriptBlockData;
 }
@@ -70,17 +71,17 @@ export interface InputParameterData {
 
 
 // utility functions to set the current source of data
-export async function initScriptBlocks(context: ExtensionContext) {
+export async function initScriptBlocks(context: ExtensionContext, forceFetch: boolean = false): Promise<boolean> {
     // check cache first
     const cached: ScriptData | undefined = context.globalState.get('scriptBlocks');
     const lastFetch = context.globalState.get<number>('lastFetch', 0);
     
     // if cached and less than the config time, use it
-    if (cached && Date.now() - lastFetch < CACHE_DURATION_MS) {
+    if (!forceFetch && cached && Date.now() - lastFetch < CACHE_DURATION_MS) {
         SCRIPTS_TYPES = cached;
         initBlockRegex();
         console.log("Using cached script block data.");
-        return;
+        return true;
     }
     
     // try to fetch fresh data
@@ -94,13 +95,16 @@ export async function initScriptBlocks(context: ExtensionContext) {
         await context.globalState.update('scriptBlocks', data);
         await context.globalState.update('lastFetch', Date.now());
         console.log("Fetched and cached new script block data.");
-        return;
+        return true;
     } catch (error) {
         // if fetch fails, return cached (even if old) or fallback
         SCRIPTS_TYPES = cached || require('../data/scriptBlocks.json');
         initBlockRegex();
+        window.showWarningMessage(
+            "Project Zomboid Scripts Data fetch failed, using cached or default extension data. Information might be outdated."
+        );
         console.warn("Failed to fetch new script block data, using cached or default extension data. Information might be outdated.");
-        return;
+        return false;
     }
 }
 

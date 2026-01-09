@@ -966,6 +966,50 @@
       }
     }
   },
+  "option": {
+    "name": "option",
+    "description": "Defines a custom sandbox option for a mod.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "ID": {},
+    "parameters": {
+      "type": {
+        "name": "type",
+        "type": "string",
+        "description": "The type of the option.",
+        "values": [
+          "boolean",
+          "integer",
+          "double",
+          "string",
+          "enum"
+        ],
+        "required": true
+      },
+      "min": {
+        "name": "min",
+        "type": "float"
+      },
+      "max": {
+        "name": "max",
+        "type": "float"
+      },
+      "default": {
+        "name": "default",
+        "type": "float"
+      },
+      "page": {
+        "name": "page",
+        "type": "string",
+        "description": "The sandbox option to add the option to. Can be a custom page."
+      },
+      "translation": {
+        "name": "translation",
+        "type": "string",
+        "description": "The translation key for the option's name."
+      }
+    }
+  },
   "vehicle": {
     "name": "vehicle",
     "description": "Defines a vehicle.",

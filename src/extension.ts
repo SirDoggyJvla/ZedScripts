@@ -65,6 +65,19 @@ export async function activate(context: vscode.ExtensionContext) {
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await initScriptBlocks(context);
 
+    // add a force reset cache function
+    vscode.commands.registerCommand(
+        "pz-scripts.resetScriptCache",
+        async () => {
+            const result = await initScriptBlocks(context, true);
+            if (result) {
+                vscode.window.showInformationMessage(
+                    "Project Zomboid Scripts cache has been reset."
+                );
+            }
+        }
+    )
+
     console.log('Extension "pz-syntax-extension" is now active!');
     const diagnosticProvider = new DiagnosticProvider();
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
