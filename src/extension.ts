@@ -7,6 +7,7 @@ import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
 import { initScriptBlocks } from "./scripts/scriptData";
+import { DefaultText } from "./models/enums";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
     if (document.languageId === "pz-scripts") {
@@ -64,6 +65,23 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await initScriptBlocks(context);
+
+    // add a force reset cache function
+    vscode.commands.registerCommand(
+        "pz-scripts.resetScriptCache",
+        async () => {
+            const result = await initScriptBlocks(context, true);
+            if (result) {
+                vscode.window.showInformationMessage(
+                    DefaultText.CACHE_RESET
+                );
+            } else {
+                vscode.window.showWarningMessage(
+                    DefaultText.CACHE_RESET_FAILED
+                );
+            }
+        }
+    )
 
     console.log('Extension "pz-syntax-extension" is now active!');
     const diagnosticProvider = new DiagnosticProvider();

@@ -3720,6 +3720,11 @@
         "name": "XPBoosts",
         "description": "A list of experience boosts granted by this trait. Each entry should contain a skill name and the corresponding boost amount.\n\nFor example:\n```cpp\nXPBoosts = Axe=1;Blunt=1,\n```",
         "type": "array"
+      },
+      "grantedrecipes": {
+        "name": "GrantedRecipes",
+        "description": "A list of [craftRecipe](https://pzwiki.net/wiki/CraftRecipe) IDs that are granted to the character when this trait is selected.",
+        "type": "array"
       }
     }
   },
@@ -4347,8 +4352,11 @@
       "tileset"
     ],
     "parameters": {
-      "xyisprofessiontrait": {
-        "name": "xyIsProfessionTrait"
+      "xy": {
+        "name": "xy"
+      },
+      "isprofessiontrait": {
+        "name": "IsProfessionTrait"
       },
       "runtime": {
         "name": "runtime"

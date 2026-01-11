@@ -24,6 +24,9 @@ export enum ThemeColorType {
 export enum DefaultText {
     SCRIPT_BLOCK_DESCRIPTION = "No description available for this script block.",
     PARAMETER_DESCRIPTION = "No description available for this parameter.",
+
+    CACHE_RESET = "Script data cache has been reset.",
+    CACHE_RESET_FAILED = "Project Zomboid Scripts Data fetch failed, using cached or default extension data. Information might be outdated.",
 }
 
 export enum CompletionText {

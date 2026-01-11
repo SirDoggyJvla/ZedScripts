@@ -767,6 +767,10 @@ export class DocumentBlock extends ScriptBlock {
         return documentBlock;
     }
 
+    public static clearCache(): void {
+        DocumentBlock.documentBlockCache.clear();
+    }
+
 
 // ACCESS
 
