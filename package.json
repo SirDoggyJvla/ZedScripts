@@ -3,7 +3,7 @@
   "displayName": "Project Zomboid Scripts",
   "icon": "images/pz-script.png",
   "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files.",
-  "version": "1.4.1",
+  "version": "1.2.0",
   "publisher": "SimKDT",
   "engines": {
     "vscode": "^1.107.0"
@@ -26,7 +26,7 @@
       "type": "object",
       "title": "Project Zomboid Script",
       "properties": {
-        "pzSyntaxExtension.searchDirectories": {
+        "pz-scripts.searchDirectories": {
           "type": "array",
           "items": {
             "type": "string"
@@ -36,7 +36,7 @@
           ],
           "description": "Directories to search for item definition files."
         },
-        "pzSyntaxExtension.pzFilenames": {
+        "pz-scripts.pzFilenames": {
           "type": "array",
           "items": {
             "type": "string"
@@ -88,6 +88,12 @@
             "support.type.property-name"
           ]
         }
+      }
+    ],
+    "commands": [
+      {
+        "command": "pz-scripts.resetScriptCache",
+        "title": "PZ Scripts: Force fetch Scripts Data"
       }
     ]
   },

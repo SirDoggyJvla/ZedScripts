@@ -1,76 +1,4 @@
 {
-  "overlayMapper": {
-    "name": "overlayMapper",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "craftRecipe"
-    ],
-    "parameters": {}
-  },
-  "animationsMesh": {
-    "name": "animationsMesh",
-    "description": "Defines an animated mesh, usually for characters or animals.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "parameters": {
-      "animationdirectory": {
-        "name": "animationDirectory"
-      },
-      "animationprefix": {
-        "name": "animationPrefix"
-      },
-      "keepmeshanimations": {
-        "name": "keepMeshAnimations"
-      },
-      "meshfile": {
-        "name": "meshFile"
-      },
-      "postprocess": {
-        "name": "postProcess"
-      }
-    }
-  },
-  "component DryingCraftLogic": {
-    "name": "component DryingCraftLogic",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "parameters": {}
-  },
-  "attachment": {
-    "name": "attachment",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "vehicle",
-      "model",
-      "template"
-    ],
-    "ID": {},
-    "parameters": {
-      "offset": {
-        "name": "offset"
-      },
-      "rotate": {
-        "name": "rotate"
-      },
-      "zoffset": {
-        "name": "zoffset"
-      },
-      "scale": {
-        "name": "scale"
-      },
-      "bone": {
-        "name": "bone"
-      }
-    }
-  },
   "model": {
     "name": "model",
     "description": "Defines a 3D model properties.",
@@ -142,8 +70,228 @@
       }
     }
   },
-  "door": {
-    "name": "door",
+  "component": {
+    "name": "component",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item",
+      "entity"
+    ],
+    "ID": {
+      "values": [
+        "CraftRecipe",
+        "SpriteConfig",
+        "UiConfig",
+        "CraftBench",
+        "CraftBenchSounds",
+        "Resources",
+        "DryingCraftLogic",
+        "SpriteOverlayConfig",
+        "Durability",
+        "FluidContainer",
+        "ContextMenuConfig",
+        "WallCoveringConfig"
+      ],
+      "asType": true
+    },
+    "parameters": {}
+  },
+  "entity": {
+    "name": "entity",
+    "description": "Defines a tile with special properties.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module",
+      "xuiSkin"
+    ],
+    "ID": {},
+    "parameters": {
+      "luawindowclass": {
+        "name": "LuaWindowClass"
+      },
+      "displayname": {
+        "name": "DisplayName"
+      },
+      "icon": {
+        "name": "Icon"
+      }
+    }
+  },
+  "ragdoll": {
+    "name": "ragdoll",
+    "description": "Defines the ragdoll properties of a bone.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
+  "component WallCoveringConfig": {
+    "name": "component WallCoveringConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {
+      "sign": {
+        "name": "sign"
+      },
+      "type": {
+        "name": "type"
+      }
+    }
+  },
+  "evolvedrecipe": {
+    "name": "evolvedrecipe",
+    "description": "Defines a dynamic recipe.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "addingredientifcooked": {
+        "name": "AddIngredientIfCooked"
+      },
+      "addingredientsound": {
+        "name": "AddIngredientSound"
+      },
+      "baseitem": {
+        "name": "BaseItem"
+      },
+      "canaddspicesempty": {
+        "name": "CanAddSpicesEmpty"
+      },
+      "cookable": {
+        "name": "Cookable"
+      },
+      "maxitems": {
+        "name": "MaxItems"
+      },
+      "minimumwater": {
+        "name": "MinimumWater"
+      },
+      "name": {
+        "name": "Name"
+      },
+      "resultitem": {
+        "name": "ResultItem"
+      },
+      "template": {
+        "name": "Template"
+      }
+    }
+  },
+  "lightbar": {
+    "name": "lightbar",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "parameters": {
+      "texture": {
+        "name": "texture"
+      },
+      "soundsiren": {
+        "name": "soundSiren"
+      },
+      "leftcol": {
+        "name": "leftCol"
+      },
+      "rightcol": {
+        "name": "rightCol"
+      }
+    }
+  },
+  "container": {
+    "name": "container",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "parameters": {
+      "capacity": {
+        "name": "capacity"
+      }
+    }
+  },
+  "module": {
+    "name": "module",
+    "description": "A module holds different types of script definitions.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "ID": {},
+    "parameters": {}
+  },
+  "energy": {
+    "name": "energy",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
+  "passenger": {
+    "name": "passenger",
+    "description": "Defines a passenger position in a vehicle script.",
+    "shouldHaveParent": true,
+    "parents": [
+      "vehicle"
+    ],
+    "ID": {},
+    "parameters": {
+      "door": {
+        "name": "door"
+      },
+      "area": {
+        "name": "area"
+      }
+    }
+  },
+  "component CraftBenchSounds": {
+    "name": "component CraftBenchSounds",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {
+      "addfuel": {
+        "name": "AddFuel"
+      },
+      "lightfire": {
+        "name": "LightFire"
+      },
+      "running": {
+        "name": "Running"
+      }
+    }
+  },
+  "group": {
+    "name": "group",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component Resources"
+    ],
+    "ID": {
+      "values": [
+        "craft_inputs",
+        "craft_outputs"
+      ]
+    },
+    "parameters": {}
+  },
+  "table": {
+    "name": "table",
     "description": "",
     "shouldHaveParent": true,
     "parents": [
@@ -151,26 +299,6 @@
     ],
     "ID": {},
     "parameters": {}
-  },
-  "position": {
-    "name": "position",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "passenger"
-    ],
-    "ID": {},
-    "parameters": {
-      "offset": {
-        "name": "offset"
-      },
-      "rotate": {
-        "name": "rotate"
-      },
-      "area": {
-        "name": "area"
-      }
-    }
   },
   "timedAction": {
     "name": "timedAction",
@@ -219,700 +347,24 @@
       }
     }
   },
-  "anim": {
-    "name": "anim",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "part",
-      "passenger"
-    ],
-    "ID": {},
-    "parameters": {
-      "anim": {
-        "name": "anim"
-      },
-      "rate": {
-        "name": "rate"
-      }
-    }
-  },
-  "module": {
-    "name": "module",
-    "description": "A module holds different types of script definitions.",
+  "spriteModel": {
+    "name": "spriteModel",
+    "description": "Used to define tileset properties.",
     "shouldHaveParent": false,
     "parents": [],
-    "ID": {},
-    "parameters": {}
-  },
-  "contextEntry": {
-    "name": "contextEntry",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "component ContextMenuConfig"
-    ],
     "parameters": {
-      "menu": {
-        "name": "menu"
-      },
-      "customfunction": {
-        "name": "customFunction"
+      "version": {
+        "name": "VERSION",
+        "type": "integer"
       }
     }
   },
-  "CopyFrames": {
-    "name": "CopyFrames",
-    "description": "It is unknown what this block does.",
-    "shouldHaveParent": true,
-    "parents": [
-      "animation"
-    ],
-    "parameters": {
-      "frame": {
-        "name": "frame"
-      },
-      "source": {
-        "name": "source"
-      },
-      "sourceframe1": {
-        "name": "sourceFrame1"
-      },
-      "sourceframe2": {
-        "name": "sourceFrame2"
-      }
-    }
-  },
-  "wheel": {
-    "name": "wheel",
-    "description": "Defines the wheels of a vehicle. While the ID can technically be anything, only the IDs 'FrontLeft', 'FrontRight', 'RearLeft', and 'RearRight' are recognized by the game and will function properly.",
-    "shouldHaveParent": true,
-    "parents": [
-      "template",
-      "vehicle"
-    ],
-    "ID": {},
-    "parameters": {
-      "radius": {
-        "name": "radius"
-      },
-      "offset": {
-        "name": "offset"
-      },
-      "front": {
-        "name": "front"
-      },
-      "width": {
-        "name": "width"
-      }
-    }
-  },
-  "passenger": {
-    "name": "passenger",
-    "description": "Defines a passenger position in a vehicle script.",
-    "shouldHaveParent": true,
-    "parents": [
-      "vehicle"
-    ],
-    "ID": {},
-    "parameters": {
-      "door": {
-        "name": "door"
-      },
-      "area": {
-        "name": "area"
-      }
-    }
-  },
-  "component Resources": {
-    "name": "component Resources",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "parameters": {}
-  },
-  "energy": {
-    "name": "energy",
-    "description": "",
+  "physicsHitReaction": {
+    "name": "physicsHitReaction",
+    "description": "Defines the physics reaction a bullet or bomb imposes to objects.",
     "shouldHaveParent": true,
     "parents": [
       "module"
-    ],
-    "ID": {},
-    "parameters": {}
-  },
-  "craftRecipe": {
-    "name": "craftRecipe",
-    "description": "Defines a crafting recipe.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "needsChildren": [
-      "inputs"
-    ],
-    "ID": {},
-    "parameters": {
-      "allowbatchcraft": {
-        "name": "AllowBatchCraft"
-      },
-      "autolearnall": {
-        "name": "AutoLearnAll"
-      },
-      "autolearnany": {
-        "name": "AutoLearnAny"
-      },
-      "category": {
-        "name": "category",
-        "description": "The category under which the recipe will be listed in the crafting menu."
-      },
-      "icon": {
-        "name": "Icon"
-      },
-      "itemmappers": {
-        "name": "itemMappers"
-      },
-      "metarecipe": {
-        "name": "MetaRecipe"
-      },
-      "needtobelearn": {
-        "name": "NeedToBeLearn",
-        "description": "Whether the recipe needs to be learned before it can be crafted."
-      },
-      "oncreate": {
-        "name": "OnCreate"
-      },
-      "ontest": {
-        "name": "OnTest"
-      },
-      "overlaystyle": {
-        "name": "overlayStyle"
-      },
-      "recipegroup": {
-        "name": "recipeGroup"
-      },
-      "researchany": {
-        "name": "ResearchAny"
-      },
-      "researchskilllevel": {
-        "name": "ResearchSkillLevel"
-      },
-      "skillrequired": {
-        "name": "SkillRequired",
-        "description": "The skill required to craft the item."
-      },
-      "tags": {
-        "name": "tags",
-        "description": "Tags to define the special behavior of the recipe.",
-        "required": true
-      },
-      "time": {
-        "name": "time",
-        "description": "The time it takes to craft the item, not using a specific unit of time."
-      },
-      "timedaction": {
-        "name": "timedAction",
-        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
-      },
-      "tooltip": {
-        "name": "Tooltip"
-      },
-      "xpaward": {
-        "name": "xpAward",
-        "description": "The amount of experience points awarded upon crafting the item."
-      }
-    }
-  },
-  "sound": {
-    "name": "sound",
-    "description": "Defines a sound properties.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module",
-      "vehicle",
-      "template"
-    ],
-    "ID": {
-      "parentsWithout": [
-        "vehicle",
-        "template"
-      ]
-    },
-    "parameters": {
-      "category": {
-        "name": "category"
-      },
-      "loop": {
-        "name": "loop"
-      },
-      "master": {
-        "name": "master"
-      },
-      "maxinstancesperemitter": {
-        "name": "maxInstancesPerEmitter"
-      },
-      "is3d": {
-        "name": "is3D"
-      },
-      "alarmloop": {
-        "name": "alarmLoop",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      },
-      "engine": {
-        "name": "engine",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      },
-      "enginestart": {
-        "name": "engineStart",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      },
-      "engineturnoff": {
-        "name": "engineTurnOff",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      },
-      "horn": {
-        "name": "horn",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      },
-      "ignitionfail": {
-        "name": "ignitionFail",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
-      }
-    }
-  },
-  "component FluidContainer": {
-    "name": "component FluidContainer",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "item"
-    ],
-    "parameters": {
-      "capacity": {
-        "name": "Capacity"
-      },
-      "containername": {
-        "name": "ContainerName"
-      },
-      "customdrinksound": {
-        "name": "CustomDrinkSound"
-      },
-      "initialpercentmax": {
-        "name": "InitialPercentMax"
-      },
-      "initialpercentmin": {
-        "name": "InitialPercentMin"
-      },
-      "inputlocked": {
-        "name": "InputLocked"
-      },
-      "opened": {
-        "name": "Opened"
-      },
-      "pickrandomfluid": {
-        "name": "PickRandomFluid"
-      },
-      "rainfactor": {
-        "name": "RainFactor"
-      }
-    }
-  },
-  "outputs": {
-    "name": "ouputs",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "craftRecipe"
-    ],
-    "parameters": {}
-  },
-  "components": {
-    "name": "components",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "parameters": {}
-  },
-  "component SpriteConfig": {
-    "name": "component SpriteConfig",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "needsChildren": [
-      "face"
-    ],
-    "parameters": {
-      "isthumpable": {
-        "name": "isThumpable"
-      },
-      "oncreate": {
-        "name": "OnCreate"
-      },
-      "isprop": {
-        "name": "isProp"
-      },
-      "onisvalid": {
-        "name": "OnIsValid"
-      },
-      "timedactiononisvalid": {
-        "name": "TimedActionOnIsValid"
-      }
-    }
-  },
-  "CopyFrame": {
-    "name": "CopyFrame",
-    "description": "It is unknown what this block does.",
-    "shouldHaveParent": true,
-    "parents": [
-      "animation"
-    ],
-    "parameters": {
-      "frame": {
-        "name": "frame"
-      },
-      "source": {
-        "name": "source"
-      },
-      "sourceframe": {
-        "name": "sourceFrame"
-      }
-    }
-  },
-  "component Durability": {
-    "name": "component Durability",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "item"
-    ],
-    "parameters": {}
-  },
-  "area": {
-    "name": "area",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "template",
-      "vehicle"
-    ],
-    "ID": {},
-    "parameters": {
-      "xywh": {
-        "name": "xywh"
-      }
-    }
-  },
-  "group": {
-    "name": "group",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "component Resources"
-    ],
-    "ID": {
-      "values": [
-        "craft_inputs",
-        "craft_outputs"
-      ]
-    },
-    "parameters": {}
-  },
-  "CraftLogic": {
-    "name": "CraftLogic",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "components"
-    ],
-    "parameters": {}
-  },
-  "lightbar": {
-    "name": "lightbar",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "template",
-      "vehicle"
-    ],
-    "parameters": {
-      "texture": {
-        "name": "texture"
-      },
-      "soundsiren": {
-        "name": "soundSiren"
-      },
-      "leftcol": {
-        "name": "leftCol"
-      },
-      "rightcol": {
-        "name": "rightCol"
-      }
-    }
-  },
-  "switchSeat": {
-    "name": "switchSeat",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "passenger"
-    ],
-    "ID": {},
-    "parameters": {
-      "anim": {
-        "name": "anim"
-      },
-      "rate": {
-        "name": "rate"
-      },
-      "sound": {
-        "name": "sound"
-      }
-    }
-  },
-  "skin": {
-    "name": "skin",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "template",
-      "vehicle"
-    ],
-    "parameters": {}
-  },
-  "face": {
-    "name": "face",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "component SpriteConfig"
-    ],
-    "ID": {
-      "values": [
-        "SINGLE",
-        "S",
-        "E",
-        "W",
-        "N",
-        "S_OPEN",
-        "E_OPEN",
-        "W_OPEN",
-        "N_OPEN"
-      ]
-    },
-    "parameters": {}
-  },
-  "entity": {
-    "name": "entity",
-    "description": "Defines a tile with special properties.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module",
-      "xuiSkin"
-    ],
-    "ID": {},
-    "parameters": {
-      "luawindowclass": {
-        "name": "LuaWindowClass"
-      },
-      "displayname": {
-        "name": "DisplayName"
-      },
-      "icon": {
-        "name": "Icon"
-      }
-    }
-  },
-  "evolvedrecipe": {
-    "name": "evolvedrecipe",
-    "description": "Defines a dynamic recipe.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "parameters": {
-      "addingredientifcooked": {
-        "name": "AddIngredientIfCooked"
-      },
-      "addingredientsound": {
-        "name": "AddIngredientSound"
-      },
-      "baseitem": {
-        "name": "BaseItem"
-      },
-      "canaddspicesempty": {
-        "name": "CanAddSpicesEmpty"
-      },
-      "cookable": {
-        "name": "Cookable"
-      },
-      "maxitems": {
-        "name": "MaxItems"
-      },
-      "minimumwater": {
-        "name": "MinimumWater"
-      },
-      "name": {
-        "name": "Name"
-      },
-      "resultitem": {
-        "name": "ResultItem"
-      },
-      "template": {
-        "name": "Template"
-      }
-    }
-  },
-  "table": {
-    "name": "table",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "part"
-    ],
-    "ID": {},
-    "parameters": {}
-  },
-  "animation": {
-    "name": "animation",
-    "description": "It is unknown what this block does.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "parameters": {}
-  },
-  "component CraftRecipe": {
-    "name": "component CraftRecipe",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "needsChildren": [
-      "inputs"
-    ],
-    "parameters": {
-      "category": {
-        "name": "category",
-        "description": "The category under which the recipe will be listed in the crafting menu."
-      },
-      "needtobelearn": {
-        "name": "NeedToBeLearn",
-        "description": "Whether the recipe needs to be learned before it can be crafted."
-      },
-      "onaddtomenu": {
-        "name": "OnAddToMenu"
-      },
-      "oncreate": {
-        "name": "OnCreate"
-      },
-      "skillrequired": {
-        "name": "SkillRequired",
-        "description": "The skill required to craft the item."
-      },
-      "tags": {
-        "name": "tags",
-        "description": "Tags to define the special behavior of the recipe.",
-        "required": true
-      },
-      "time": {
-        "name": "time",
-        "description": "The time it takes to craft the item, not using a specific unit of time."
-      },
-      "timedaction": {
-        "name": "timedAction",
-        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
-      },
-      "tooltip": {
-        "name": "Tooltip"
-      },
-      "xpaward": {
-        "name": "xpAward",
-        "description": "The amount of experience points awarded upon crafting the item."
-      }
-    }
-  },
-  "ragdoll": {
-    "name": "ragdoll",
-    "description": "Defines the ragdoll properties of a bone.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "parameters": {}
-  },
-  "container": {
-    "name": "container",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "part"
-    ],
-    "parameters": {
-      "capacity": {
-        "name": "capacity"
-      }
-    }
-  },
-  "component ContextMenuConfig": {
-    "name": "component ContextMenuConfig",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "item"
-    ],
-    "needsChildren": [
-      "contextEntry"
-    ],
-    "parameters": {}
-  },
-  "layer": {
-    "name": "layer",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "face"
-    ],
-    "parameters": {
-      "row": {
-        "name": "row",
-        "allowedDuplicate": true
-      }
-    }
-  },
-  "itemMapper": {
-    "name": "itemMapper",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "craftRecipe"
     ],
     "ID": {},
     "parameters": {}
@@ -951,413 +403,70 @@
       }
     }
   },
-  "option": {
-    "name": "option",
-    "description": "Defines a custom sandbox option for a mod.",
-    "shouldHaveParent": false,
-    "parents": [],
-    "ID": {},
+  "layer": {
+    "name": "layer",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "face"
+    ],
     "parameters": {
-      "type": {
-        "name": "type",
-        "type": "string",
-        "description": "The type of the option.",
-        "values": [
-          "boolean",
-          "integer",
-          "double",
-          "string",
-          "enum"
-        ],
-        "required": true
-      },
-      "min": {
-        "name": "min",
-        "type": "float"
-      },
-      "max": {
-        "name": "max",
-        "type": "float"
-      },
-      "default": {
-        "name": "default",
-        "type": "float"
-      },
-      "page": {
-        "name": "page",
-        "type": "string",
-        "description": "The sandbox option to add the option to. Can be a custom page."
-      },
-      "translation": {
-        "name": "translation",
-        "type": "string",
-        "description": "The translation key for the option's name."
+      "row": {
+        "name": "row",
+        "allowedDuplicate": true
       }
     }
   },
-  "vehicle": {
-    "name": "vehicle",
-    "description": "Defines a vehicle.",
+  "fixing": {
+    "name": "fixing",
+    "description": "Defines how an item can be repaired or fixed.",
     "shouldHaveParent": true,
     "parents": [
       "module"
     ],
     "ID": {},
     "parameters": {
-      "animaltrailersize": {
-        "name": "animalTrailerSize"
+      "fixer": {
+        "name": "Fixer",
+        "allowedDuplicate": true
+      },
+      "require": {
+        "name": "Require"
+      }
+    }
+  },
+  "area": {
+    "name": "area",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "ID": {},
+    "parameters": {
+      "xywh": {
+        "name": "xywh"
+      }
+    }
+  },
+  "position": {
+    "name": "position",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "passenger"
+    ],
+    "ID": {},
+    "parameters": {
+      "offset": {
+        "name": "offset"
+      },
+      "rotate": {
+        "name": "rotate"
       },
       "area": {
         "name": "area"
-      },
-      "attachment": {
-        "name": "attachment"
-      },
-      "brakingforce": {
-        "name": "brakingForce"
-      },
-      "carmechanicsoverlay": {
-        "name": "carMechanicsOverlay"
-      },
-      "carmodelname": {
-        "name": "carModelName"
-      },
-      "centerofmassoffset": {
-        "name": "centerOfMassOffset"
-      },
-      "engineforce": {
-        "name": "engineForce"
-      },
-      "engineloudness": {
-        "name": "engineLoudness"
-      },
-      "enginequality": {
-        "name": "engineQuality"
-      },
-      "enginerepairlevel": {
-        "name": "engineRepairLevel"
-      },
-      "enginerpmtype": {
-        "name": "engineRPMType"
-      },
-      "extents": {
-        "name": "extents"
-      },
-      "extentsoffset": {
-        "name": "extentsOffset"
-      },
-      "frontendhealth": {
-        "name": "frontEndHealth"
-      },
-      "gearratio1": {
-        "name": "gearRatio1"
-      },
-      "gearratio2": {
-        "name": "gearRatio2"
-      },
-      "gearratio3": {
-        "name": "gearRatio3"
-      },
-      "gearratio4": {
-        "name": "gearRatio4"
-      },
-      "gearratio5": {
-        "name": "gearRatio5"
-      },
-      "gearratiocount": {
-        "name": "gearRatioCount"
-      },
-      "gearratior": {
-        "name": "gearRatioR"
-      },
-      "issmallvehicle": {
-        "name": "isSmallVehicle"
-      },
-      "lightbar": {
-        "name": "lightbar"
-      },
-      "mass": {
-        "name": "mass"
-      },
-      "maxspeed": {
-        "name": "maxSpeed"
-      },
-      "maxsuspensiontravelcm": {
-        "name": "maxSuspensionTravelCm"
-      },
-      "mechanictype": {
-        "name": "mechanicType"
-      },
-      "model": {
-        "name": "model"
-      },
-      "neverspawnkey": {
-        "name": "neverSpawnKey"
-      },
-      "offroadefficiency": {
-        "name": "offRoadEfficiency"
-      },
-      "part": {
-        "name": "part"
-      },
-      "passenger": {
-        "name": "passenger"
-      },
-      "physics": {
-        "name": "physics"
-      },
-      "physicschassisshape": {
-        "name": "physicsChassisShape"
-      },
-      "playerdamageprotection": {
-        "name": "playerDamageProtection"
-      },
-      "rearendhealth": {
-        "name": "rearEndHealth"
-      },
-      "rollinfluence": {
-        "name": "rollInfluence"
-      },
-      "seatnumber": {
-        "name": "seatNumber"
-      },
-      "seats": {
-        "name": "seats"
-      },
-      "shadowextents": {
-        "name": "shadowExtents"
-      },
-      "shadowoffset": {
-        "name": "shadowOffset"
-      },
-      "skin": {
-        "name": "skin"
-      },
-      "sound": {
-        "name": "sound"
-      },
-      "spawnoffsety": {
-        "name": "spawnOffsetY"
-      },
-      "specialkeyring": {
-        "name": "specialKeyRing"
-      },
-      "specialkeyringchance": {
-        "name": "specialKeyRingChance"
-      },
-      "speciallootchance": {
-        "name": "specialLootChance"
-      },
-      "steeringclamp": {
-        "name": "steeringClamp"
-      },
-      "steeringincrement": {
-        "name": "steeringIncrement"
-      },
-      "stoppingmovementforce": {
-        "name": "stoppingMovementForce"
-      },
-      "suspensioncompression": {
-        "name": "suspensionCompression"
-      },
-      "suspensiondamping": {
-        "name": "suspensionDamping"
-      },
-      "suspensionrestlength": {
-        "name": "suspensionRestLength"
-      },
-      "suspensionstiffness": {
-        "name": "suspensionStiffness"
-      },
-      "template": {
-        "name": "template",
-        "description": "Uses a template script data for this vehicle.",
-        "allowedDuplicate": true
-      },
-      "template!": {
-        "name": "template!",
-        "allowedDuplicate": true
-      },
-      "texturedamage1overlay": {
-        "name": "textureDamage1Overlay"
-      },
-      "texturedamage1shell": {
-        "name": "textureDamage1Shell"
-      },
-      "texturedamage2overlay": {
-        "name": "textureDamage2Overlay"
-      },
-      "texturedamage2shell": {
-        "name": "textureDamage2Shell"
-      },
-      "texturelights": {
-        "name": "textureLights"
-      },
-      "texturemask": {
-        "name": "textureMask"
-      },
-      "texturerust": {
-        "name": "textureRust"
-      },
-      "usechassisphysicscollision": {
-        "name": "useChassisPhysicsCollision"
-      },
-      "wheel": {
-        "name": "wheel"
-      },
-      "wheelfriction": {
-        "name": "wheelFriction"
-      },
-      "zombietype": {
-        "name": "zombieType"
-      }
-    }
-  },
-  "component CraftBenchSounds": {
-    "name": "component CraftBenchSounds",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "entity"
-    ],
-    "parameters": {
-      "addfuel": {
-        "name": "AddFuel"
-      },
-      "lightfire": {
-        "name": "LightFire"
-      },
-      "running": {
-        "name": "Running"
-      }
-    }
-  },
-  "inputs": {
-    "name": "inputs",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "craftRecipe",
-      "component CraftRecipe"
-    ],
-    "properties": {
-      "item": {
-        "oneOf": [
-          "itemList",
-          "tags"
-        ],
-        "properties": {
-          "itemList": {
-            "name": "itemList",
-            "type": "array",
-            "description": "A list of items that can be used as input."
-          },
-          "mode": {
-            "name": "mode",
-            "type": "string",
-            "description": "Whenever the item gets consumed or not. Default is `destroy`.",
-            "values": [
-              "destroy",
-              "keep"
-            ]
-          },
-          "flags": {
-            "name": "flags",
-            "type": "array",
-            "description": "Provides information about how the recipe impacts the items used in the crafting recipe or identified as valid items."
-          },
-          "mappers": {
-            "name": "mappers",
-            "type": "array",
-            "description": "Used to associated a specific input item to another specific output item."
-          },
-          "overlayMapper": {
-            "name": "overlayMapper",
-            "type": "boolean",
-            "description": "If provided, this input entry is used to determine the overlayMapper of the `craftRecipe`."
-          },
-          "tags": {
-            "name": "tags",
-            "type": "array",
-            "description": "Tags are used to determine which items can be used as input."
-          }
-        }
-      },
-      "-fluid": {
-        "oneOf": [
-          "fluidList",
-          "categories"
-        ],
-        "properties": {
-          "fluidList": {
-            "name": "fluidList",
-            "type": "array",
-            "description": "A list of fluids that can be used as input."
-          },
-          "categories": {
-            "name": "categories",
-            "type": "array",
-            "description": "A category of fluid used to determine which fluids can be used as input."
-          },
-          "flags": {
-            "name": "flags",
-            "type": "array",
-            "description": "Flags determine how the fluid is impacted during the recipe or identified."
-          },
-          "mode": {
-            "name": "mode",
-            "type": "string",
-            "description": "",
-            "values": [
-              "mixture",
-              "exact",
-              "primary",
-              "anything"
-            ]
-          }
-        }
-      },
-      "+fluid": {
-        "oneOf": [
-          "singleValue"
-        ],
-        "properties": {
-          "singleValue": {
-            "name": "singleValue",
-            "type": "string",
-            "description": "A single fluid value defining the output fluid."
-          }
-        }
-      }
-    },
-    "parameters": {}
-  },
-  "fluid": {
-    "name": "fluid",
-    "description": "Defines a fluid.",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "parameters": {
-      "blendwhitelist": {
-        "name": "BlendWhiteList"
-      },
-      "categories": {
-        "name": "Categories"
-      },
-      "colorreference": {
-        "name": "ColorReference"
-      },
-      "displayname": {
-        "name": "DisplayName"
-      },
-      "poison": {
-        "name": "Poison"
-      },
-      "properties": {
-        "name": "Properties"
       }
     }
   },
@@ -1544,7 +653,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "basevolumerange": {
         "name": "BaseVolumeRange",
@@ -1879,7 +988,7 @@
           "container"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "conditionaffectscapacity": {
         "name": "ConditionAffectsCapacity",
@@ -1971,7 +1080,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 20.0
+        "default": 20
       },
       "customcontextmenu": {
         "name": "CustomContextMenu",
@@ -2157,7 +1266,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "engineloudness": {
         "name": "engineLoudness",
@@ -2364,7 +1473,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "headconditionmax": {
         "name": "HeadConditionMax",
@@ -2378,7 +1487,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "herbalisttype": {
         "name": "HerbalistType",
@@ -2656,7 +1765,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "keepondeplete": {
         "name": "KeepOnDeplete",
@@ -2677,7 +1786,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "learnedrecipes": {
         "name": "LearnedRecipes",
@@ -2802,7 +1911,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "maxrangemodifier": {
         "name": "MaxRangeModifier",
@@ -2865,7 +1974,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "minchannel": {
         "name": "MinChannel",
@@ -2951,7 +2060,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "needtobeclosedoncereload": {
         "name": "needtobeclosedoncereload",
@@ -2983,7 +2092,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "numberofpages": {
         "name": "NumberOfPages",
@@ -3184,7 +2293,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "protectfromrainwhenequipped": {
         "name": "ProtectFromRainWhenEquipped",
@@ -3206,7 +2315,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "putinsound": {
         "name": "PutInSound",
@@ -3409,7 +2518,7 @@
           "radio"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "scaleworldicon": {
         "name": "ScaleWorldIcon",
@@ -3417,7 +2526,7 @@
           "drainable"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "scratchdefense": {
         "name": "ScratchDefense",
@@ -3459,7 +2568,7 @@
           "normal"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "shouttype": {
         "name": "ShoutType",
@@ -3488,7 +2597,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "soundmap": {
         "name": "SoundMap",
@@ -3555,7 +2664,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "staticmodel": {
         "name": "StaticModel",
@@ -3586,7 +2695,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "stoppower": {
         "name": "StopPower",
@@ -3594,7 +2703,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 5.0
+        "default": 5
       },
       "stresschange": {
         "name": "StressChange",
@@ -3661,7 +2770,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "tags": {
         "name": "Tags",
@@ -3703,7 +2812,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "tooltip": {
         "name": "Tooltip",
@@ -3864,7 +2973,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "visualaid": {
         "name": "VisualAid",
@@ -3916,7 +3025,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "weight": {
         "name": "Weight",
@@ -3938,7 +3047,7 @@
           "weaponpart"
         ],
         "type": "float",
-        "default": 1.0
+        "default": 1
       },
       "weightempty": {
         "name": "WeightEmpty",
@@ -4037,6 +3146,597 @@
       }
     }
   },
+  "part": {
+    "name": "part",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "ID": {},
+    "parameters": {
+      "itemtype": {
+        "name": "itemType"
+      },
+      "category": {
+        "name": "category"
+      },
+      "durability": {
+        "name": "durability"
+      }
+    }
+  },
+  "inputs": {
+    "name": "inputs",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "craftRecipe",
+      "component CraftRecipe"
+    ],
+    "properties": {
+      "item": {
+        "oneOf": [
+          "itemList",
+          "tags"
+        ],
+        "properties": {
+          "itemList": {
+            "name": "itemList",
+            "type": "array",
+            "description": "A list of items that can be used as input."
+          },
+          "mode": {
+            "name": "mode",
+            "type": "string",
+            "description": "Whenever the item gets consumed or not. Default is `destroy`.",
+            "values": [
+              "destroy",
+              "keep"
+            ]
+          },
+          "flags": {
+            "name": "flags",
+            "type": "array",
+            "description": "Provides information about how the recipe impacts the items used in the crafting recipe or identified as valid items."
+          },
+          "mappers": {
+            "name": "mappers",
+            "type": "array",
+            "description": "Used to associated a specific input item to another specific output item."
+          },
+          "overlayMapper": {
+            "name": "overlayMapper",
+            "type": "boolean",
+            "description": "If provided, this input entry is used to determine the overlayMapper of the `craftRecipe`."
+          },
+          "tags": {
+            "name": "tags",
+            "type": "array",
+            "description": "Tags are used to determine which items can be used as input."
+          }
+        }
+      },
+      "-fluid": {
+        "oneOf": [
+          "fluidList",
+          "categories"
+        ],
+        "properties": {
+          "fluidList": {
+            "name": "fluidList",
+            "type": "array",
+            "description": "A list of fluids that can be used as input."
+          },
+          "categories": {
+            "name": "categories",
+            "type": "array",
+            "description": "A category of fluid used to determine which fluids can be used as input."
+          },
+          "flags": {
+            "name": "flags",
+            "type": "array",
+            "description": "Flags determine how the fluid is impacted during the recipe or identified."
+          },
+          "mode": {
+            "name": "mode",
+            "type": "string",
+            "description": "",
+            "values": [
+              "mixture",
+              "exact",
+              "primary",
+              "anything"
+            ]
+          }
+        }
+      },
+      "+fluid": {
+        "oneOf": [
+          "singleValue"
+        ],
+        "properties": {
+          "singleValue": {
+            "name": "singleValue",
+            "type": "string",
+            "description": "A single fluid value defining the output fluid."
+          }
+        }
+      }
+    },
+    "parameters": {}
+  },
+  "overlayMapper": {
+    "name": "overlayMapper",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "craftRecipe"
+    ],
+    "parameters": {}
+  },
+  "outputs": {
+    "name": "ouputs",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "craftRecipe"
+    ],
+    "parameters": {}
+  },
+  "contextEntry": {
+    "name": "contextEntry",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component ContextMenuConfig"
+    ],
+    "parameters": {
+      "menu": {
+        "name": "menu"
+      },
+      "customfunction": {
+        "name": "customFunction"
+      }
+    }
+  },
+  "vehicle": {
+    "name": "vehicle",
+    "description": "Defines a vehicle.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "animaltrailersize": {
+        "name": "animalTrailerSize"
+      },
+      "area": {
+        "name": "area"
+      },
+      "attachment": {
+        "name": "attachment"
+      },
+      "brakingforce": {
+        "name": "brakingForce"
+      },
+      "carmechanicsoverlay": {
+        "name": "carMechanicsOverlay"
+      },
+      "carmodelname": {
+        "name": "carModelName"
+      },
+      "centerofmassoffset": {
+        "name": "centerOfMassOffset"
+      },
+      "engineforce": {
+        "name": "engineForce"
+      },
+      "engineloudness": {
+        "name": "engineLoudness"
+      },
+      "enginequality": {
+        "name": "engineQuality"
+      },
+      "enginerepairlevel": {
+        "name": "engineRepairLevel"
+      },
+      "enginerpmtype": {
+        "name": "engineRPMType"
+      },
+      "extents": {
+        "name": "extents"
+      },
+      "extentsoffset": {
+        "name": "extentsOffset"
+      },
+      "frontendhealth": {
+        "name": "frontEndHealth"
+      },
+      "gearratio1": {
+        "name": "gearRatio1"
+      },
+      "gearratio2": {
+        "name": "gearRatio2"
+      },
+      "gearratio3": {
+        "name": "gearRatio3"
+      },
+      "gearratio4": {
+        "name": "gearRatio4"
+      },
+      "gearratio5": {
+        "name": "gearRatio5"
+      },
+      "gearratiocount": {
+        "name": "gearRatioCount"
+      },
+      "gearratior": {
+        "name": "gearRatioR"
+      },
+      "issmallvehicle": {
+        "name": "isSmallVehicle"
+      },
+      "lightbar": {
+        "name": "lightbar"
+      },
+      "mass": {
+        "name": "mass"
+      },
+      "maxspeed": {
+        "name": "maxSpeed"
+      },
+      "maxsuspensiontravelcm": {
+        "name": "maxSuspensionTravelCm"
+      },
+      "mechanictype": {
+        "name": "mechanicType"
+      },
+      "model": {
+        "name": "model"
+      },
+      "neverspawnkey": {
+        "name": "neverSpawnKey"
+      },
+      "offroadefficiency": {
+        "name": "offRoadEfficiency"
+      },
+      "part": {
+        "name": "part"
+      },
+      "passenger": {
+        "name": "passenger"
+      },
+      "physics": {
+        "name": "physics"
+      },
+      "physicschassisshape": {
+        "name": "physicsChassisShape"
+      },
+      "playerdamageprotection": {
+        "name": "playerDamageProtection"
+      },
+      "rearendhealth": {
+        "name": "rearEndHealth"
+      },
+      "rollinfluence": {
+        "name": "rollInfluence"
+      },
+      "seatnumber": {
+        "name": "seatNumber"
+      },
+      "seats": {
+        "name": "seats"
+      },
+      "shadowextents": {
+        "name": "shadowExtents"
+      },
+      "shadowoffset": {
+        "name": "shadowOffset"
+      },
+      "skin": {
+        "name": "skin"
+      },
+      "sound": {
+        "name": "sound"
+      },
+      "spawnoffsety": {
+        "name": "spawnOffsetY"
+      },
+      "specialkeyring": {
+        "name": "specialKeyRing"
+      },
+      "specialkeyringchance": {
+        "name": "specialKeyRingChance"
+      },
+      "speciallootchance": {
+        "name": "specialLootChance"
+      },
+      "steeringclamp": {
+        "name": "steeringClamp"
+      },
+      "steeringincrement": {
+        "name": "steeringIncrement"
+      },
+      "stoppingmovementforce": {
+        "name": "stoppingMovementForce"
+      },
+      "suspensioncompression": {
+        "name": "suspensionCompression"
+      },
+      "suspensiondamping": {
+        "name": "suspensionDamping"
+      },
+      "suspensionrestlength": {
+        "name": "suspensionRestLength"
+      },
+      "suspensionstiffness": {
+        "name": "suspensionStiffness"
+      },
+      "template": {
+        "name": "template",
+        "description": "Uses a template script data for this vehicle.",
+        "allowedDuplicate": true
+      },
+      "template!": {
+        "name": "template!",
+        "allowedDuplicate": true
+      },
+      "texturedamage1overlay": {
+        "name": "textureDamage1Overlay"
+      },
+      "texturedamage1shell": {
+        "name": "textureDamage1Shell"
+      },
+      "texturedamage2overlay": {
+        "name": "textureDamage2Overlay"
+      },
+      "texturedamage2shell": {
+        "name": "textureDamage2Shell"
+      },
+      "texturelights": {
+        "name": "textureLights"
+      },
+      "texturemask": {
+        "name": "textureMask"
+      },
+      "texturerust": {
+        "name": "textureRust"
+      },
+      "usechassisphysicscollision": {
+        "name": "useChassisPhysicsCollision"
+      },
+      "wheel": {
+        "name": "wheel"
+      },
+      "wheelfriction": {
+        "name": "wheelFriction"
+      },
+      "zombietype": {
+        "name": "zombieType"
+      }
+    }
+  },
+  "component Durability": {
+    "name": "component Durability",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "parameters": {}
+  },
+  "lua": {
+    "name": "lua",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "parameters": {}
+  },
+  "template": {
+    "name": "template",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "#ref_parameters": "vehicle",
+    "parameters": {}
+  },
+  "component ContextMenuConfig": {
+    "name": "component ContextMenuConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "needsChildren": [
+      "contextEntry"
+    ],
+    "parameters": {}
+  },
+  "animationsMesh": {
+    "name": "animationsMesh",
+    "description": "Defines an animated mesh, usually for characters or animals.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "animationdirectory": {
+        "name": "animationDirectory"
+      },
+      "animationprefix": {
+        "name": "animationPrefix"
+      },
+      "keepmeshanimations": {
+        "name": "keepMeshAnimations"
+      },
+      "meshfile": {
+        "name": "meshFile"
+      },
+      "postprocess": {
+        "name": "postProcess"
+      }
+    }
+  },
+  "tileset": {
+    "name": "tileset",
+    "description": "Used to define properties of tiles of tilesets.",
+    "shouldHaveParent": true,
+    "parents": [
+      "spriteModel"
+    ],
+    "parameters": {
+      "name": {
+        "name": "name"
+      }
+    }
+  },
+  "animation": {
+    "name": "animation",
+    "description": "It is unknown what this block does.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
+  "attachment": {
+    "name": "attachment",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "vehicle",
+      "model",
+      "template"
+    ],
+    "ID": {},
+    "parameters": {
+      "offset": {
+        "name": "offset"
+      },
+      "rotate": {
+        "name": "rotate"
+      },
+      "zoffset": {
+        "name": "zoffset"
+      },
+      "scale": {
+        "name": "scale"
+      },
+      "bone": {
+        "name": "bone"
+      }
+    }
+  },
+  "fluid": {
+    "name": "fluid",
+    "description": "Defines a fluid.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "blendwhitelist": {
+        "name": "BlendWhiteList"
+      },
+      "categories": {
+        "name": "Categories"
+      },
+      "colorreference": {
+        "name": "ColorReference"
+      },
+      "displayname": {
+        "name": "DisplayName"
+      },
+      "poison": {
+        "name": "Poison"
+      },
+      "properties": {
+        "name": "Properties"
+      }
+    }
+  },
+  "character_trait_definition": {
+    "name": "character_trait_definition",
+    "description": "Defines a character trait.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "isprofessiontrait": {
+        "name": "IsProfessionTrait",
+        "description": "Defines whenever the trait is a profession trait or not, meaning it will only be available when selecting a profession.",
+        "type": "boolean",
+        "required": true
+      },
+      "disabledinmultiplayer": {
+        "name": "DisabledInMultiplayer",
+        "description": "If true, this trait will be disabled in multiplayer games.",
+        "type": "boolean",
+        "required": true
+      },
+      "cost": {
+        "name": "Cost",
+        "description": "The cost of the trait when selecting a character. Negative values give points, positive values take points.",
+        "type": "integer",
+        "required": true
+      },
+      "charactertrait": {
+        "name": "CharacterTrait",
+        "description": "The registries trait definition ID to link to. see the wiki page about [registries](https://pzwiki.net/wiki/Registries) for more information.",
+        "type": "string",
+        "required": true
+      },
+      "uiname": {
+        "name": "UIName",
+        "description": "The translation key for the trait's name. The translation key needs to be in the UI translation file. See the wiki page about [translations](https://pzwiki.net/wiki/Translations) for more information.",
+        "type": "string",
+        "required": true
+      },
+      "uidescription": {
+        "name": "UIDescription",
+        "description": "The translation key for the trait's description. The translation key needs to be in the UI translation file. See the wiki page about [translations](https://pzwiki.net/wiki/Translations) for more information.",
+        "type": "string",
+        "required": true
+      },
+      "mutuallyexclusivetraits": {
+        "name": "MutuallyExclusiveTraits",
+        "description": "A list of trait IDs that are mutually exclusive with this trait. If one is selected, the others cannot be selected.",
+        "type": "array"
+      },
+      "xpboosts": {
+        "name": "XPBoosts",
+        "description": "A list of experience boosts granted by this trait. Each entry should contain a skill name and the corresponding boost amount.\n\nFor example:\n```cpp\nXPBoosts = Axe=1;Blunt=1,\n```",
+        "type": "array"
+      },
+      "grantedrecipes": {
+        "name": "GrantedRecipes",
+        "description": "A list of [craftRecipe](https://pzwiki.net/wiki/CraftRecipe) IDs that are granted to the character when this trait is selected.",
+        "type": "array"
+      }
+    }
+  },
+  "component SpriteOverlayConfig": {
+    "name": "component SpriteOverlayConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
   "component UiConfig": {
     "name": "component UiConfig",
     "description": "",
@@ -4056,37 +3756,173 @@
       }
     }
   },
-  "fixing": {
-    "name": "fixing",
-    "description": "Defines how an item can be repaired or fixed.",
+  "component CraftRecipe": {
+    "name": "component CraftRecipe",
+    "description": "",
     "shouldHaveParent": true,
     "parents": [
-      "module"
+      "entity"
     ],
-    "ID": {},
+    "needsChildren": [
+      "inputs"
+    ],
     "parameters": {
-      "fixer": {
-        "name": "Fixer",
-        "allowedDuplicate": true
+      "category": {
+        "name": "category",
+        "description": "The category under which the recipe will be listed in the crafting menu."
       },
-      "require": {
-        "name": "Require"
+      "needtobelearn": {
+        "name": "NeedToBeLearn",
+        "description": "Whether the recipe needs to be learned before it can be crafted."
+      },
+      "onaddtomenu": {
+        "name": "OnAddToMenu"
+      },
+      "oncreate": {
+        "name": "OnCreate"
+      },
+      "skillrequired": {
+        "name": "SkillRequired",
+        "description": "The skill required to craft the item."
+      },
+      "tags": {
+        "name": "tags",
+        "description": "Tags to define the special behavior of the recipe.",
+        "required": true
+      },
+      "time": {
+        "name": "time",
+        "description": "The time it takes to craft the item, not using a specific unit of time."
+      },
+      "timedaction": {
+        "name": "timedAction",
+        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
+      },
+      "tooltip": {
+        "name": "Tooltip"
+      },
+      "xpaward": {
+        "name": "xpAward",
+        "description": "The amount of experience points awarded upon crafting the item."
       }
     }
   },
-  "physicsHitReaction": {
-    "name": "physicsHitReaction",
-    "description": "Defines the physics reaction a bullet or bomb imposes to objects.",
+  "sound": {
+    "name": "sound",
+    "description": "Defines a sound properties.",
     "shouldHaveParent": true,
     "parents": [
-      "module"
+      "module",
+      "vehicle",
+      "template"
+    ],
+    "ID": {
+      "parentsWithout": [
+        "vehicle",
+        "template"
+      ]
+    },
+    "parameters": {
+      "category": {
+        "name": "category"
+      },
+      "loop": {
+        "name": "loop"
+      },
+      "master": {
+        "name": "master"
+      },
+      "maxinstancesperemitter": {
+        "name": "maxInstancesPerEmitter"
+      },
+      "is3d": {
+        "name": "is3D"
+      },
+      "alarmloop": {
+        "name": "alarmLoop",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      },
+      "engine": {
+        "name": "engine",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      },
+      "enginestart": {
+        "name": "engineStart",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      },
+      "engineturnoff": {
+        "name": "engineTurnOff",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      },
+      "horn": {
+        "name": "horn",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      },
+      "ignitionfail": {
+        "name": "ignitionFail",
+        "parentsOnly": [
+          "vehicle",
+          "template"
+        ]
+      }
+    }
+  },
+  "switchSeat": {
+    "name": "switchSeat",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "passenger"
     ],
     "ID": {},
-    "parameters": {}
+    "parameters": {
+      "anim": {
+        "name": "anim"
+      },
+      "rate": {
+        "name": "rate"
+      },
+      "sound": {
+        "name": "sound"
+      }
+    }
   },
-  "part": {
-    "name": "part",
+  "anim": {
+    "name": "anim",
     "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part",
+      "passenger"
+    ],
+    "ID": {},
+    "parameters": {
+      "anim": {
+        "name": "anim"
+      },
+      "rate": {
+        "name": "rate"
+      }
+    }
+  },
+  "wheel": {
+    "name": "wheel",
+    "description": "Defines the wheels of a vehicle. While the ID can technically be anything, only the IDs 'FrontLeft', 'FrontRight', 'RearLeft', and 'RearRight' are recognized by the game and will function properly.",
     "shouldHaveParent": true,
     "parents": [
       "template",
@@ -4094,14 +3930,17 @@
     ],
     "ID": {},
     "parameters": {
-      "itemtype": {
-        "name": "itemType"
+      "radius": {
+        "name": "radius"
       },
-      "category": {
-        "name": "category"
+      "offset": {
+        "name": "offset"
       },
-      "durability": {
-        "name": "durability"
+      "front": {
+        "name": "front"
+      },
+      "width": {
+        "name": "width"
       }
     }
   },
@@ -4126,33 +3965,320 @@
       }
     }
   },
-  "lua": {
-    "name": "lua",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "part"
-    ],
-    "parameters": {}
-  },
-  "template": {
-    "name": "template",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "module"
-    ],
-    "ID": {},
-    "#ref_parameters": "vehicle",
-    "parameters": {}
-  },
-  "component SpriteOverlayConfig": {
-    "name": "component SpriteOverlayConfig",
+  "component DryingCraftLogic": {
+    "name": "component DryingCraftLogic",
     "description": "",
     "shouldHaveParent": true,
     "parents": [
       "entity"
     ],
+    "parameters": {}
+  },
+  "component Resources": {
+    "name": "component Resources",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
+  "Fluids": {
+    "name": "Fluids",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component FluidContainer"
+    ],
+    "parameters": {
+      "fluid": {
+        "name": "fluid",
+        "allowedDuplicate": true
+      }
+    }
+  },
+  "components": {
+    "name": "components",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "parameters": {}
+  },
+  "option": {
+    "name": "option",
+    "description": "Defines a custom sandbox option for a mod.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "ID": {},
+    "parameters": {
+      "type": {
+        "name": "type",
+        "type": "string",
+        "description": "The type of the option.",
+        "values": [
+          "boolean",
+          "integer",
+          "double",
+          "string",
+          "enum"
+        ],
+        "required": true
+      },
+      "min": {
+        "name": "min",
+        "type": "float"
+      },
+      "max": {
+        "name": "max",
+        "type": "float"
+      },
+      "default": {
+        "name": "default",
+        "type": "float"
+      },
+      "page": {
+        "name": "page",
+        "type": "string",
+        "description": "The sandbox option to add the option to. Can be a custom page."
+      },
+      "translation": {
+        "name": "translation",
+        "type": "string",
+        "description": "The translation key for the option's name."
+      }
+    }
+  },
+  "component FluidContainer": {
+    "name": "component FluidContainer",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "item"
+    ],
+    "parameters": {
+      "capacity": {
+        "name": "Capacity"
+      },
+      "containername": {
+        "name": "ContainerName"
+      },
+      "customdrinksound": {
+        "name": "CustomDrinkSound"
+      },
+      "initialpercentmax": {
+        "name": "InitialPercentMax"
+      },
+      "initialpercentmin": {
+        "name": "InitialPercentMin"
+      },
+      "inputlocked": {
+        "name": "InputLocked"
+      },
+      "opened": {
+        "name": "Opened"
+      },
+      "pickrandomfluid": {
+        "name": "PickRandomFluid"
+      },
+      "rainfactor": {
+        "name": "RainFactor"
+      }
+    }
+  },
+  "xuiSkin": {
+    "name": "xuiSkin",
+    "description": "Defines a XUI interface skin.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "needsChildren": [
+      "entity"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
+  "craftRecipe": {
+    "name": "craftRecipe",
+    "description": "Defines a crafting recipe.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "needsChildren": [
+      "inputs"
+    ],
+    "ID": {},
+    "parameters": {
+      "allowbatchcraft": {
+        "name": "AllowBatchCraft"
+      },
+      "autolearnall": {
+        "name": "AutoLearnAll"
+      },
+      "autolearnany": {
+        "name": "AutoLearnAny"
+      },
+      "category": {
+        "name": "category",
+        "description": "The category under which the recipe will be listed in the crafting menu."
+      },
+      "icon": {
+        "name": "Icon"
+      },
+      "itemmappers": {
+        "name": "itemMappers"
+      },
+      "metarecipe": {
+        "name": "MetaRecipe"
+      },
+      "needtobelearn": {
+        "name": "NeedToBeLearn",
+        "description": "Whether the recipe needs to be learned before it can be crafted."
+      },
+      "oncreate": {
+        "name": "OnCreate"
+      },
+      "ontest": {
+        "name": "OnTest"
+      },
+      "overlaystyle": {
+        "name": "overlayStyle"
+      },
+      "recipegroup": {
+        "name": "recipeGroup"
+      },
+      "researchany": {
+        "name": "ResearchAny"
+      },
+      "researchskilllevel": {
+        "name": "ResearchSkillLevel"
+      },
+      "skillrequired": {
+        "name": "SkillRequired",
+        "description": "The skill required to craft the item."
+      },
+      "tags": {
+        "name": "tags",
+        "description": "Tags to define the special behavior of the recipe.",
+        "required": true
+      },
+      "time": {
+        "name": "time",
+        "description": "The time it takes to craft the item, not using a specific unit of time."
+      },
+      "timedaction": {
+        "name": "timedAction",
+        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
+      },
+      "tooltip": {
+        "name": "Tooltip"
+      },
+      "xpaward": {
+        "name": "xpAward",
+        "description": "The amount of experience points awarded upon crafting the item."
+      }
+    }
+  },
+  "skin": {
+    "name": "skin",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "template",
+      "vehicle"
+    ],
+    "parameters": {}
+  },
+  "itemMapper": {
+    "name": "itemMapper",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "craftRecipe"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
+  "face": {
+    "name": "face",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component SpriteConfig"
+    ],
+    "ID": {
+      "values": [
+        "SINGLE",
+        "S",
+        "E",
+        "W",
+        "N",
+        "S_OPEN",
+        "E_OPEN",
+        "W_OPEN",
+        "N_OPEN"
+      ]
+    },
+    "parameters": {}
+  },
+  "CopyFrame": {
+    "name": "CopyFrame",
+    "description": "It is unknown what this block does.",
+    "shouldHaveParent": true,
+    "parents": [
+      "animation"
+    ],
+    "parameters": {
+      "frame": {
+        "name": "frame"
+      },
+      "source": {
+        "name": "source"
+      },
+      "sourceframe": {
+        "name": "sourceFrame"
+      }
+    }
+  },
+  "component SpriteConfig": {
+    "name": "component SpriteConfig",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "entity"
+    ],
+    "needsChildren": [
+      "face"
+    ],
+    "parameters": {
+      "isthumpable": {
+        "name": "isThumpable"
+      },
+      "oncreate": {
+        "name": "OnCreate"
+      },
+      "isprop": {
+        "name": "isProp"
+      },
+      "onisvalid": {
+        "name": "OnIsValid"
+      },
+      "timedactiononisvalid": {
+        "name": "TimedActionOnIsValid"
+      }
+    }
+  },
+  "door": {
+    "name": "door",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "ID": {},
     "parameters": {}
   },
   "mannequin": {
@@ -4187,73 +4313,71 @@
       }
     }
   },
-  "component WallCoveringConfig": {
-    "name": "component WallCoveringConfig",
+  "CraftLogic": {
+    "name": "CraftLogic",
     "description": "",
     "shouldHaveParent": true,
     "parents": [
-      "entity"
+      "components"
+    ],
+    "parameters": {}
+  },
+  "CopyFrames": {
+    "name": "CopyFrames",
+    "description": "It is unknown what this block does.",
+    "shouldHaveParent": true,
+    "parents": [
+      "animation"
     ],
     "parameters": {
-      "sign": {
-        "name": "sign"
+      "frame": {
+        "name": "frame"
       },
-      "type": {
-        "name": "type"
+      "source": {
+        "name": "source"
+      },
+      "sourceframe1": {
+        "name": "sourceFrame1"
+      },
+      "sourceframe2": {
+        "name": "sourceFrame2"
       }
     }
   },
-  "xuiSkin": {
-    "name": "xuiSkin",
-    "description": "Defines a XUI interface skin.",
+  "tile": {
+    "name": "tile",
+    "description": "Defines some tile properties from a tileset.",
     "shouldHaveParent": true,
     "parents": [
-      "module"
-    ],
-    "needsChildren": [
-      "entity"
-    ],
-    "ID": {},
-    "parameters": {}
-  },
-  "component": {
-    "name": "component",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "item",
-      "entity"
-    ],
-    "ID": {
-      "values": [
-        "CraftRecipe",
-        "SpriteConfig",
-        "UiConfig",
-        "CraftBench",
-        "CraftBenchSounds",
-        "Resources",
-        "DryingCraftLogic",
-        "SpriteOverlayConfig",
-        "Durability",
-        "FluidContainer",
-        "ContextMenuConfig",
-        "WallCoveringConfig"
-      ],
-      "asType": true
-    },
-    "parameters": {}
-  },
-  "Fluids": {
-    "name": "Fluids",
-    "description": "",
-    "shouldHaveParent": true,
-    "parents": [
-      "component FluidContainer"
+      "tileset"
     ],
     "parameters": {
-      "fluid": {
-        "name": "fluid",
-        "allowedDuplicate": true
+      "xy": {
+        "name": "xy"
+      },
+      "isprofessiontrait": {
+        "name": "IsProfessionTrait"
+      },
+      "runtime": {
+        "name": "runtime"
+      },
+      "modelscript": {
+        "name": "modelScript"
+      },
+      "translate": {
+        "name": "translate"
+      },
+      "rotate": {
+        "name": "rotate"
+      },
+      "scale": {
+        "name": "scale"
+      },
+      "animation": {
+        "name": "animation"
+      },
+      "animationtime": {
+        "name": "animationTime"
       }
     }
   }
