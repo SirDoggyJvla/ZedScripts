@@ -1,7 +1,14 @@
 import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
 import { ScriptBlock } from "./scriptBlocks";
-import { ThemeColorType, DiagnosticType, DefaultText, diagnostic } from '../models/enums';
+import { 
+    ThemeColorType, 
+    DiagnosticType, 
+    DefaultText, 
+    diagnostic,
+    WIKI_LINK,
+    formatText
+} from '../models/enums';
 import { 
     getScriptBlockData, 
     ScriptBlockParameter, 
@@ -120,6 +127,10 @@ export class ScriptParameter {
         return parents + " → " + parameter;
     }
 
+    private getWikiPage(): string {
+        return WIKI_LINK + this.parameter + '_(' + this.parent.scriptBlock + '_parameter)';
+    }
+
     public getHoverText(): MarkdownString {
         const markdown = new vscode.MarkdownString();
         markdown.isTrusted = true; // needed for html rendering
@@ -132,6 +143,10 @@ export class ScriptParameter {
         markdown.appendMarkdown(`${tree}  \n`);
         markdown.appendMarkdown('\n\n---\n\n');
         markdown.appendMarkdown(desc);
+        markdown.appendMarkdown('\n\n' + formatText(
+            DefaultText.MORE_INFORMATION, 
+            { wikiPage: this.getWikiPage() }
+        ));
         
         return markdown;
     }
