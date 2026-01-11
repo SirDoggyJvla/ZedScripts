@@ -1,8 +1,8 @@
 {
   "name": "project-zomboid-scripts",
-  "displayName": "Project Zomboid Scripts",
+  "displayName": "ZedScripts",
   "icon": "images/pz-script.png",
-  "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files.",
+  "description": "A Visual Studio Code extension to aid in editing Project Zomboid script files, also known as ZedScripts.",
   "version": "1.4.1",
   "publisher": "SimKDT",
   "engines": {
@@ -26,7 +26,7 @@
       "type": "object",
       "title": "Project Zomboid Script",
       "properties": {
-        "pz-scripts.searchDirectories": {
+        "ZedScripts.searchDirectories": {
           "type": "array",
           "items": {
             "type": "string"
@@ -36,7 +36,7 @@
           ],
           "description": "Directories to search for item definition files."
         },
-        "pz-scripts.pzFilenames": {
+        "ZedScripts.pzFilenames": {
           "type": "array",
           "items": {
             "type": "string"
@@ -50,10 +50,10 @@
     },
     "languages": [
       {
-        "id": "pz-scripts",
+        "id": "ZedScripts",
         "aliases": [
-          "Project Zomboid Script",
-          "pz-script"
+          "ZedScripts",
+          "pz-scripts"
         ],
         "firstLine": "^\\s*module\\s+\\w+\\s*\\{?",
         "configuration": "./language-configuration.json"
@@ -61,9 +61,9 @@
     ],
     "grammars": [
       {
-        "language": "pz-scripts",
+        "language": "ZedScripts",
         "scopeName": "source.pz-script",
-        "path": "./syntaxes/pz-scripts.tmLanguage.json"
+        "path": "./syntaxes/ZedScripts.tmLanguage.json"
       }
     ],
     "semanticTokenScopes": [
@@ -92,7 +92,7 @@
     ],
     "commands": [
       {
-        "command": "pz-scripts.resetScriptCache",
+        "command": "ZedScripts.resetScriptCache",
         "title": "PZ Scripts: Force fetch Scripts Data"
       }
     ]

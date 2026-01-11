@@ -10,7 +10,7 @@ import { initScriptBlocks } from "./scripts/scriptData";
 import { DefaultText } from "./models/enums";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
-    if (document.languageId === "pz-scripts") {
+    if (document.languageId === "ZedScripts") {
         const config = vscode.workspace.getConfiguration("pzSyntaxExtension");
         const pzFilenames = config.get<string[]>("pzFilenames", []);
         console.debug(pzFilenames);
@@ -31,7 +31,7 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
             console.debug(
                 `Fichier ${document.fileName} détecté comme un fichier de script PZ (par pattern).`
             );
-            vscode.languages.setTextDocumentLanguage(document, "pz-scripts");
+            vscode.languages.setTextDocumentLanguage(document, "ZedScripts");
             return;
         }
         
@@ -43,7 +43,7 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
             console.debug(
                 `Fichier ${document.fileName} détecté comme un fichier de script PZ (par module).`
             );
-            vscode.languages.setTextDocumentLanguage(document, "pz-scripts");
+            vscode.languages.setTextDocumentLanguage(document, "ZedScripts");
         }
     }
 }
@@ -68,7 +68,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // add a force reset cache function
     vscode.commands.registerCommand(
-        "pz-scripts.resetScriptCache",
+        "ZedScripts.resetScriptCache",
         async () => {
             const result = await initScriptBlocks(context, true);
             if (result) {
@@ -104,19 +104,19 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         watcher,
         vscode.workspace.onDidOpenTextDocument((document) => {
-            if (document.languageId === "pz-scripts") {
+            if (document.languageId === "ZedScripts") {
                 diagnosticProvider.updateDiagnostics(document);
             }
         }),
         
         vscode.workspace.onDidChangeTextDocument((event) => {
-            if (event.document.languageId === "pz-scripts") {
+            if (event.document.languageId === "ZedScripts") {
                 diagnosticProvider.updateDiagnostics(event.document);
             }
         }),
 
         vscode.languages.registerCompletionItemProvider(
-            "pz-scripts",
+            "ZedScripts",
             new PZCompletionItemProvider(),
             ".",
             " ",
@@ -125,17 +125,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
         // handle mouse hover words
         vscode.languages.registerHoverProvider(
-            "pz-scripts",
+            "ZedScripts",
             new PZHoverProvider()
         ),
         
         // format document with right click > Format document
-        vscode.languages.registerDocumentFormattingEditProvider("pz-scripts", {
+        vscode.languages.registerDocumentFormattingEditProvider("ZedScripts", {
             provideDocumentFormattingEdits,
         }),
         
         // apparently used when ctrl + click something
-        vscode.languages.registerDefinitionProvider("pz-scripts", {
+        vscode.languages.registerDefinitionProvider("ZedScripts", {
             provideDefinition,
         })
     );

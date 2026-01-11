@@ -6,7 +6,7 @@ export class DiagnosticProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
     
     constructor() {
-        this.diagnosticCollection = vscode.languages.createDiagnosticCollection("pz-scripts");
+        this.diagnosticCollection = vscode.languages.createDiagnosticCollection("ZedScripts");
     }
     
     public updateDiagnostics(document: vscode.TextDocument): void {

@@ -22,7 +22,7 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 - Install the extension from the VS Code Marketplace.
 - Open a `.txt` script file.
 - Press Ctrl + Shift + P and select "Change Language Mode".
-- Choose "Project Zomboid Scripts (pz-scripts)" from the list.
+- Choose "Project Zomboid Scripts (ZedScripts)" from the list.
 
 The extension automatically downloads the latest script data from the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository and caches it for 12 hours, which it will fetch once more after this time. If it doesn't manage to fetch this data, it will fall back to the bundled data with the extension, which may get outdated.
 
