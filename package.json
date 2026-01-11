@@ -11,11 +11,11 @@
   "editor.semanticHighlighting.enabled": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/SirDoggyJvla/pz-syntax-extension"
+    "url": "https://github.com/SirDoggyJvla/ZedScripts"
   },
   "bugs": {
     "type": "git",
-    "url": "https://github.com/SirDoggyJvla/pz-syntax-extension/issues"
+    "url": "https://github.com/SirDoggyJvla/ZedScripts/issues"
   },
   "categories": [
     "Programming Languages"
@@ -24,7 +24,7 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Project Zomboid Script",
+      "title": "ZedScripts",
       "properties": {
         "ZedScripts.searchDirectories": {
           "type": "array",
@@ -93,7 +93,7 @@
     "commands": [
       {
         "command": "ZedScripts.resetScriptCache",
-        "title": "PZ Scripts: Force fetch Scripts Data"
+        "title": "ZedScripts: Force fetch Scripts Data"
       }
     ]
   },
