@@ -18,6 +18,10 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 - Detection for script blocks used in wrong parent blocks.
 - Missing IDs detection.
 
+![ZedScripts syntax highlighting preview in VS Code](images/ZedScripts_preview1.png)
+![ZedScripts parameter hovering preview in VS Code](images/ZedScripts_preview2.png)
+![ZedScripts diagnostics preview in VS Code](images/ZedScripts_preview3.png)
+
 ### Usage
 - Install the extension from the VS Code Marketplace.
 - Open a `.txt` script file.
