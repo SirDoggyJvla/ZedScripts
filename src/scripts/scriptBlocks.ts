@@ -438,7 +438,9 @@ export class ScriptBlock {
                     this.diagnostic(
                         DiagnosticType.MISSING_CHILD_BLOCK,
                         { scriptBlock: this.scriptBlock, childBlocks: validChildren.map(p => `'${p}'`).join(", ") },
-                        this.headerStart
+                        this.headerStart,
+                        this.headerStart,
+                        vscode.DiagnosticSeverity.Hint
                     )
                     return false;
                 }

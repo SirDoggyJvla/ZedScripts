@@ -95,9 +95,9 @@ export class PZCompletionItemProvider implements vscode.CompletionItemProvider {
             for (const childBlock of needsChildren) {
                 snippetStr += this.formatBlock(childBlock, blockType, level + 1) + '\n';
             }
-        } else {
-            snippetStr += `${tabs}` + CompletionText.MIDDLE;
-        }
+        } //else {
+            // snippetStr += `${tabs}` + CompletionText.MIDDLE;
+        //}
 
         // ending
         snippetStr += `${tabs}` + CompletionText.END;

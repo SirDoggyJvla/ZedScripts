@@ -33,7 +33,7 @@ export enum DefaultText {
 
 export enum CompletionText {
     BLOCK = `{scriptBlock} {id}{\n`,
-    MIDDLE = '',
+    // MIDDLE = '',
     END = '}',
     ID = `\${{level}:id} `,
 
@@ -52,8 +52,8 @@ export enum DiagnosticType {
     MISSING_PARENT_BLOCK = "'{scriptBlock}' block must be inside a valid parent block: {parentBlocks}.",
     HAS_PARENT_BLOCK = "'{scriptBlock}' block cannot be inside any parent block.",
     WRONG_PARENT_BLOCK = "'{scriptBlock}' block cannot be inside parent block '{parentBlock}'. Valid parent blocks are: {parentBlocks}.",
-    MISSING_CHILD_BLOCK = "'{scriptBlock}' block must have child blocks: {childBlocks}.",
-   
+    MISSING_CHILD_BLOCK = "'{scriptBlock}' block must have child blocks: {childBlocks}. This might be intentional for soft overrides of an existing block.", // TODO: add data regarding which blocks can get such soft overrides to properly diagnostic missing child blocks
+
     // ID related diagnostics
     MISSING_ID = "'{scriptBlock}' block is missing an ID.",
     HAS_ID = "'{scriptBlock}' block cannot have an ID.",
