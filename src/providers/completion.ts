@@ -29,8 +29,10 @@ export class PZCompletionItemProvider implements vscode.CompletionItemProvider {
         if (!documentBlock) { return completion; }
 
         // retrieve the block at the position of the word
-        const parentBlock = documentBlock.getBlock(document.offsetAt(position));
-        if (!parentBlock) { return completion; }
+        let parentBlock = documentBlock.getBlock(document.offsetAt(position));
+        if (!parentBlock) {
+            parentBlock = documentBlock;
+        }
 
         // parameter completion
         const blockData = getScriptBlockData(parentBlock.scriptBlock);

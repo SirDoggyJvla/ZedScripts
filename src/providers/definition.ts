@@ -23,7 +23,7 @@ export async function provideDefinition(
     return cachedLocations;
   }
 
-  const config = vscode.workspace.getConfiguration("pzSyntaxExtension");
+  const config = vscode.workspace.getConfiguration("ZedScripts");
   const searchDirectories: string[] = config.get("searchDirectories", [DEFAULT_DIR]);
 
   // Filtrage des répertoires valides

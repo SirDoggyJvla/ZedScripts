@@ -14,10 +14,9 @@ function handleOpenTextDocument(editor: vscode.TextEditor) {
     if (!editor || editor.document.languageId === EXTENSION_LANGUAGE) { return; }
     const document = editor.document;
     const filePath = path.posix.normalize(document.fileName);
-    console.debug(`Opened file: ${filePath}`);
 
     if (scriptFileRegex.test(filePath)) {
-        console.debug(`The opened file is identified as a script file.`);
+        console.debug(`The opened file is identified as a script file: `, filePath);
         
         // set the file to ZedScripts
         vscode.languages.setTextDocumentLanguage(document, EXTENSION_LANGUAGE);

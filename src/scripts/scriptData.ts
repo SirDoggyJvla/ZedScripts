@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { window } from 'vscode';
 import { TextDocument, ExtensionContext } from 'vscode';
 import { DocumentBlock } from './scriptBlocks';
@@ -78,8 +79,18 @@ export async function initScriptBlocks(context: ExtensionContext, forceFetch: bo
     // clear DocumentBlock cache to update diagnostics
     DocumentBlock.clearCache();
 
+
+    const config = vscode.workspace.getConfiguration("ZedScripts");
+    const onlyUseLocalData: boolean = config.get("onlyUseLocalData", false);
+    if (onlyUseLocalData) {
+        SCRIPTS_TYPES = require('../data/scriptBlocks.json');
+        initBlockRegex();
+        console.log("Using local script block data as per configuration.");
+        return true;
+    }
+
     // if cached and less than the config time, use it
-    if (!forceFetch && cached && Date.now() - lastFetch < CACHE_DURATION_MS) {
+    if (cached && (onlyUseLocalData || (!forceFetch && Date.now() - lastFetch < CACHE_DURATION_MS))) {
         SCRIPTS_TYPES = cached;
         initBlockRegex();
         console.log("Using cached script block data.");
@@ -175,9 +186,9 @@ export function getScriptBlockData(blockType: string): ScriptBlockData {
 
 export function canHaveParent(blockType: string, parentType: string): boolean {
     const blockData = getScriptBlockData(blockType);
-    if (!blockData.shouldHaveParent && parentType === DOCUMENT_IDENTIFIER) {
-        return true;
-    }
+    // if (!blockData.shouldHaveParent && blockType === DOCUMENT_IDENTIFIER) {
+    //     return true;
+    // }
     return blockData.parents.includes(parentType);
 }
 

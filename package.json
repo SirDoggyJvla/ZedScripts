@@ -36,15 +36,10 @@
           ],
           "description": "Directories to search for item definition files."
         },
-        "ZedScripts.pzFilenames": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": [
-            "console.txt"
-          ],
-          "description": "list of filenames to consider as pz-script files (regex can be possible)"
+        "ZedScripts.onlyUseLocalData": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to only use local data for scripts."
         }
       }
     },
