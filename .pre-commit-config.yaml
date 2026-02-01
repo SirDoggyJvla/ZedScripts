@@ -8,3 +8,4 @@ repos:
         files: ^external/pz-scripts-data/data/scriptBlocks\.json$
         pass_filenames: false
         always_run: true
+        
