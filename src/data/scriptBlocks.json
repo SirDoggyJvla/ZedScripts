@@ -11,7 +11,7 @@
     "ID": {
       "parentsWithout": [
         "vehicle",
-        "template"
+        "part"
       ]
     },
     "parameters": {
@@ -224,8 +224,10 @@
   "module": {
     "name": "module",
     "description": "A module holds different types of script definitions.",
-    "shouldHaveParent": false,
-    "parents": [],
+    "shouldHaveParent": true,
+    "parents": [
+      "_DOCUMENT"
+    ],
     "ID": {},
     "parameters": {}
   },
@@ -350,8 +352,10 @@
   "spriteModel": {
     "name": "spriteModel",
     "description": "Used to define tileset properties.",
-    "shouldHaveParent": false,
-    "parents": [],
+    "shouldHaveParent": true,
+    "parents": [
+      "_DOCUMENT"
+    ],
     "parameters": {
       "version": {
         "name": "VERSION",
@@ -367,6 +371,13 @@
       "module"
     ],
     "ID": {},
+    "parameters": {}
+  },
+  "_DOCUMENT": {
+    "name": "_DOCUMENT",
+    "description": "Not exactly a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
+    "shouldHaveParent": false,
+    "parents": [],
     "parameters": {}
   },
   "clip": {
@@ -478,6 +489,7 @@
       "module"
     ],
     "ID": {},
+    "softOverride": true,
     "parameters": {
       "acceptitemfunction": {
         "name": "AcceptItemFunction",
@@ -1167,24 +1179,7 @@
         ]
       },
       "displaycategory": {
-        "name": "DisplayCategory",
-        "itemTypes": [
-          "alarmclock",
-          "alarmclockclothing",
-          "animal",
-          "clothing",
-          "container",
-          "drainable",
-          "food",
-          "key",
-          "literature",
-          "map",
-          "moveable",
-          "normal",
-          "radio",
-          "weapon",
-          "weaponpart"
-        ]
+        "name": "DisplayCategory"
       },
       "doordamage": {
         "name": "DoorDamage",
@@ -1495,6 +1490,9 @@
           "food"
         ]
       },
+      "hidden": {
+        "name": "Hidden"
+      },
       "hitanglemod": {
         "name": "HitAngleMod",
         "itemTypes": [
@@ -1538,23 +1536,6 @@
       },
       "icon": {
         "name": "Icon",
-        "itemTypes": [
-          "alarmclock",
-          "alarmclockclothing",
-          "animal",
-          "clothing",
-          "container",
-          "drainable",
-          "food",
-          "key",
-          "literature",
-          "map",
-          "moveable",
-          "normal",
-          "radio",
-          "weapon",
-          "weaponpart"
-        ],
         "type": "string",
         "default": "None"
       },
@@ -1706,23 +1687,6 @@
       },
       "itemtype": {
         "name": "ItemType",
-        "itemTypes": [
-          "alarmclock",
-          "alarmclockclothing",
-          "animal",
-          "clothing",
-          "container",
-          "drainable",
-          "food",
-          "key",
-          "literature",
-          "map",
-          "moveable",
-          "normal",
-          "radio",
-          "weapon",
-          "weaponpart"
-        ],
         "values": [
           "base:alarmclock",
           "base:alarmclockclothing",
@@ -3029,23 +2993,6 @@
       },
       "weight": {
         "name": "Weight",
-        "itemTypes": [
-          "alarmclock",
-          "alarmclockclothing",
-          "animal",
-          "clothing",
-          "container",
-          "drainable",
-          "food",
-          "key",
-          "literature",
-          "map",
-          "moveable",
-          "normal",
-          "radio",
-          "weapon",
-          "weaponpart"
-        ],
         "type": "float",
         "default": 1
       },
@@ -3115,23 +3062,7 @@
         ]
       },
       "worldstaticmodel": {
-        "name": "WorldStaticModel",
-        "itemTypes": [
-          "alarmclock",
-          "alarmclockclothing",
-          "clothing",
-          "container",
-          "drainable",
-          "food",
-          "key",
-          "literature",
-          "map",
-          "moveable",
-          "normal",
-          "radio",
-          "weapon",
-          "weaponpart"
-        ]
+        "name": "WorldStaticModel"
       },
       "worldstaticmodelsbyindex": {
         "name": "WorldStaticModelsByIndex",
@@ -3171,6 +3102,7 @@
     "name": "inputs",
     "description": "",
     "shouldHaveParent": true,
+    "softOverride": false,
     "parents": [
       "craftRecipe",
       "component CraftRecipe"
@@ -3280,6 +3212,7 @@
     "name": "ouputs",
     "description": "",
     "shouldHaveParent": true,
+    "softOverride": false,
     "parents": [
       "craftRecipe"
     ],
@@ -4009,9 +3942,14 @@
   "option": {
     "name": "option",
     "description": "Defines a custom sandbox option for a mod.",
-    "shouldHaveParent": false,
-    "parents": [],
+    "shouldHaveParent": true,
+    "parents": [
+      "_DOCUMENT"
+    ],
     "ID": {},
+    "files": [
+      "sandbox-options.txt"
+    ],
     "parameters": {
       "type": {
         "name": "type",
@@ -4111,6 +4049,7 @@
       "inputs"
     ],
     "ID": {},
+    "softOverride": true,
     "parameters": {
       "allowbatchcraft": {
         "name": "AllowBatchCraft"
@@ -4192,6 +4131,15 @@
     ],
     "parameters": {}
   },
+  "imports": {
+    "name": "imports",
+    "description": "By importing the Base module or any other module, you give your scripts direct access to the elements from these modules, and you can use item IDs directly without the module prefix (for example, you can use Nails instead of Base.Nails).\n\nIt is overall suggested to not import modules and instead directly reference the IDs with their module.",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "parameters": {}
+  },
   "itemMapper": {
     "name": "itemMapper",
     "description": "",
@@ -4200,6 +4148,7 @@
       "craftRecipe"
     ],
     "ID": {},
+    "softOverride": true,
     "parameters": {}
   },
   "face": {
