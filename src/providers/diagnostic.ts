@@ -1,12 +1,13 @@
 import * as vscode from "vscode";
 import { DocumentBlock } from "../scripts/scriptBlocks";
+import { EXTENSION_LANGUAGE } from "../models/enums";
 
 export class DiagnosticProvider {
     // Static cache for DocumentBlock instances
     private diagnosticCollection: vscode.DiagnosticCollection;
     
     constructor() {
-        this.diagnosticCollection = vscode.languages.createDiagnosticCollection("ZedScripts");
+        this.diagnosticCollection = vscode.languages.createDiagnosticCollection(EXTENSION_LANGUAGE);
     }
     
     public updateDiagnostics(document: vscode.TextDocument): void {

@@ -1,6 +1,7 @@
 import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
 import * as path from "path";
 
+export const EXTENSION_LANGUAGE = "ZedScripts";
 export const DOCUMENT_IDENTIFIER = "_DOCUMENT";
 export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/scriptBlocks.json";
 export const DEFAULT_DIR = path.normalize(
@@ -25,7 +26,7 @@ export enum ThemeColorType {
 export enum DefaultText {
     SCRIPT_BLOCK_DESCRIPTION = "No description available for this script block.",
     PARAMETER_DESCRIPTION = "No description available for this parameter.",
-    MORE_INFORMATION = "For more information, visit the [wiki page]({wikiPage}).",
+    MORE_INFORMATION = "*For more information, visit the [wiki page]({wikiPage}).*",
 
     CACHE_RESET = "Script data cache has been reset.",
     CACHE_RESET_FAILED = "Project Zomboid Scripts Data fetch failed, using cached or default extension data. Information might be outdated.",

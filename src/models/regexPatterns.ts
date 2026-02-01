@@ -2,6 +2,9 @@
 export const itemBlockRegex = /\s*item\s+(\w+)\s*\{((?:[^{}]*|\{(?:[^{}]*|\{(?:[^{}]*|\{[^{}]*\})*\})*\})*)\}/g;
 
 
+// Script file identifier
+export const scriptFileRegex = /\/media\/scripts\/[\/\w\s]*\.txt/;
+
 
 /**
  * Matches script block headers.

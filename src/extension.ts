@@ -7,50 +7,33 @@ import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
 import { initScriptBlocks } from "./scripts/scriptData";
-import { DefaultText } from "./models/enums";
+import { DefaultText, EXTENSION_LANGUAGE } from "./models/enums";
+import { scriptFileRegex } from "./models/regexPatterns";
 
-function handleOpenTextDocument(document: vscode.TextDocument) {
-    if (document.languageId === "ZedScripts") {
-        const config = vscode.workspace.getConfiguration("pzSyntaxExtension");
-        const pzFilenames = config.get<string[]>("pzFilenames", []);
-        console.debug(pzFilenames);
+function handleOpenTextDocument(editor: vscode.TextEditor) {
+    if (!editor || editor.document.languageId === EXTENSION_LANGUAGE) { return; }
+    const document = editor.document;
+    const filePath = path.posix.normalize(document.fileName);
+    console.debug(`Opened file: ${filePath}`);
+
+    if (scriptFileRegex.test(filePath)) {
+        console.debug(`The opened file is identified as a script file.`);
         
-        // Vérification du nom de fichier avec regex
-        const fileName = path.basename(document.fileName);
-        const matchesPattern = pzFilenames.some(pattern => {
-            try {
-                const regex = new RegExp(pattern);
-                return regex.test(fileName);
-            } catch (e) {
-                // Si le pattern n'est pas une regex valide, faire une comparaison exacte
-                return pattern === fileName;
-            }
-        });
-        
-        if (matchesPattern) {
-            console.debug(
-                `Fichier ${document.fileName} détecté comme un fichier de script PZ (par pattern).`
-            );
-            vscode.languages.setTextDocumentLanguage(document, "ZedScripts");
-            return;
-        }
-        
-        // Vérification de la première ligne (existante)
-        const firstLine = document.lineAt(0).text;
-        const pattern = /^\s*module\s+\w+\s*\{?/;
-        
-        if (pattern.test(firstLine)) {
-            console.debug(
-                `Fichier ${document.fileName} détecté comme un fichier de script PZ (par module).`
-            );
-            vscode.languages.setTextDocumentLanguage(document, "ZedScripts");
-        }
+        // set the file to ZedScripts
+        vscode.languages.setTextDocumentLanguage(document, EXTENSION_LANGUAGE);
     }
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    // let documentLanguage = vscode.window.activeTextEditor?.document.languageId;
-    // console.debug(`Document language on activation: ${documentLanguage}`);
+    // Handle the initially active document on startup
+    if (vscode.window.activeTextEditor) {
+        handleOpenTextDocument(vscode.window.activeTextEditor);
+    }
+
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (!editor || editor.document.languageId === EXTENSION_LANGUAGE) { return; }
+        handleOpenTextDocument(editor);
+    });
 
     // vscode.workspace.onDidOpenTextDocument(handleOpenTextDocument);
     
@@ -104,19 +87,19 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         watcher,
         vscode.workspace.onDidOpenTextDocument((document) => {
-            if (document.languageId === "ZedScripts") {
+            if (document.languageId === EXTENSION_LANGUAGE) {
                 diagnosticProvider.updateDiagnostics(document);
             }
         }),
         
         vscode.workspace.onDidChangeTextDocument((event) => {
-            if (event.document.languageId === "ZedScripts") {
+            if (event.document.languageId === EXTENSION_LANGUAGE) {
                 diagnosticProvider.updateDiagnostics(event.document);
             }
         }),
 
         vscode.languages.registerCompletionItemProvider(
-            "ZedScripts",
+            EXTENSION_LANGUAGE,
             new PZCompletionItemProvider(),
             ".",
             " ",
@@ -125,17 +108,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
         // handle mouse hover words
         vscode.languages.registerHoverProvider(
-            "ZedScripts",
+            EXTENSION_LANGUAGE,
             new PZHoverProvider()
         ),
         
         // format document with right click > Format document
-        vscode.languages.registerDocumentFormattingEditProvider("ZedScripts", {
+        vscode.languages.registerDocumentFormattingEditProvider(EXTENSION_LANGUAGE, {
             provideDocumentFormattingEdits,
         }),
         
         // apparently used when ctrl + click something
-        vscode.languages.registerDefinitionProvider("ZedScripts", {
+        vscode.languages.registerDefinitionProvider(EXTENSION_LANGUAGE, {
             provideDefinition,
         })
     );
