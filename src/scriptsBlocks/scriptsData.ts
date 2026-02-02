@@ -119,7 +119,7 @@ export async function initScriptBlocks(context: ExtensionContext, forceFetch: bo
 
 // generates a regex pattern to match any script block line
 export let BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
-let blockPattern: RegExp;
+export let blockPattern: RegExp;
 function initBlockRegex() {
     BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
     blockPattern = new RegExp(
@@ -127,105 +127,3 @@ function initBlockRegex() {
     );
 }
 
-
-
-// detects if a line is starting a script block and returns the block type
-function isScriptBlockLine(line: string): string | null {
-    const match = line.match(blockPattern);
-    return match ? match[1] : null;
-}
-
-export function isScriptBlock(word: string): boolean {
-    return word in SCRIPTS_TYPES;
-}
-
-// check if the position of the doc is within a script block
-export function getBlockType(document: TextDocument, lineNumber: number): string | null {
-    let currentLine = lineNumber;
-    
-    while (currentLine >= 0) {
-        let line = document.lineAt(currentLine).text.trim();
-        const nextLine = currentLine + 1 < document.lineCount ? document.lineAt(currentLine + 1).text.trim() : '';
-        
-        line = line + " " + nextLine;
-        
-        const blockName = isScriptBlockLine(line);
-        if (blockName) {
-            // check the line has { or the next line has {
-            if (line.endsWith('{')) {        
-                return blockName;
-            } else {
-                const nextLineNum = currentLine + 1;
-                if (nextLineNum < document.lineCount) {
-                    const nextLine = document.lineAt(nextLineNum).text.trim();
-                    if (nextLine.startsWith('{')) {            
-                        return blockName;
-                    }
-                }
-            }
-            
-            return blockName;
-        }
-        currentLine--;
-    }
-    return null;
-}
-
-
-/**
-* Retrieve the script block data for a given block type
-* @param blockType The script block type
-* @returns ScriptBlockData | null
-*/
-export function getScriptBlockData(blockType: string): ScriptBlockData {
-    if (!isScriptBlock(blockType)) {
-        throw new Error(`Block type ${blockType} is not a valid script block type. Ensure to check with isScriptBlock() before getting block data.`);
-    }
-    const blockData = SCRIPTS_TYPES[blockType as keyof typeof SCRIPTS_TYPES] as ScriptBlockData;
-    return blockData;
-}
-
-export function canHaveParent(blockType: string, parentType: string): boolean {
-    const blockData = getScriptBlockData(blockType);
-    // if (!blockData.shouldHaveParent && blockType === DOCUMENT_IDENTIFIER) {
-    //     return true;
-    // }
-    return blockData.parents.includes(parentType);
-}
-
-export function shouldHaveID(blockType: string, parentType: string): boolean {
-    const blockData = getScriptBlockData(blockType);
-    const IDData = blockData.ID;
-    if (!IDData) { return false; }
-
-    return shouldChildrenHaveID(blockType, parentType);
-}
-
-export function shouldChildrenHaveID(blockType: string, parentType: string): boolean {
-    const childrenBlockData = getScriptBlockData(blockType);
-    const IDData = childrenBlockData.ID;
-    if (!IDData) { return false; }
-
-    // used to check if the parent block requires an ID for this subblock
-    const invalidBlocks = IDData.parentsWithout;
-    let shouldHaveIDfromParent = true;
-    if (invalidBlocks) {
-        if (invalidBlocks.includes(parentType)) {
-            shouldHaveIDfromParent = false;
-        }
-    }
-
-    return shouldHaveIDfromParent;
-}
-
-export function listRequiredParameters(blockType: string): ScriptBlockParameter[] {
-    const blockData = getScriptBlockData(blockType);
-    const requiredParams: ScriptBlockParameter[] = [];
-    for (const paramName in blockData.parameters) {
-        const param = blockData.parameters[paramName];
-        if (param.required) {
-            requiredParams.push(param);
-        }
-    }
-    return requiredParams;
-}

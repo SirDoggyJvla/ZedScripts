@@ -11,7 +11,9 @@ import {
     formatText
 } from '../models/enums';
 import { getColor, getFontStyle } from "../utils/themeColors";
-import { isScriptBlock, getScriptBlockData, ScriptBlockData, IndexRange } from './scriptsData';
+import { ScriptBlockData, IndexRange } from './scriptsData';
+import { getScriptBlockData } from './blocksUtility';
+import { isScriptBlock } from './blocksUtility';
 import { colorText } from '../utils/htmlFormat';
 import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsParameter';
 

@@ -10,12 +10,12 @@ import {
     formatText
 } from '../models/enums';
 import { 
-    getScriptBlockData, 
     ScriptBlockParameter, 
     IndexRange, 
     InputAnalysisProperty,
     InputParameterData
 } from './scriptsData';
+import { getScriptBlockData } from "../scriptsBlocks/blocksUtility";
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { colorText } from '../utils/htmlFormat';
 import { inputsOutputsRegex } from '../models/regexPatterns';
