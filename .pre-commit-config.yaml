@@ -8,3 +8,17 @@ repos:
         files: ^external/pz-scripts-data/data/scriptBlocks\.json$
         pass_filenames: false
         always_run: true
+      - id: copy-languageCodes
+        name: Copy languageCodes.json to src/data
+        entry: bash -c 'cp external/pz-scripts-data/data/languageCodes.json src/data/languageCodes.json && git add src/data/languageCodes.json'
+        language: system
+        files: ^external/pz-scripts-data/data/languageCodes\.json$
+        pass_filenames: false
+        always_run: true
+      - id: copy-translationFiles
+        name: Copy translationFiles.json to src/data
+        entry: bash -c 'cp external/pz-scripts-data/data/translationFiles.json src/data/translationFiles.json && git add src/data/translationFiles.json'
+        language: system
+        files: ^external/pz-scripts-data/data/translationFiles\.json$
+        pass_filenames: false
+        always_run: true
