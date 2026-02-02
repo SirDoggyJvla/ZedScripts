@@ -79,7 +79,7 @@ export async function initScriptBlocks(context: ExtensionContext, forceFetch: bo
     // clear DocumentBlock cache to update diagnostics
     DocumentBlock.clearCache();
 
-
+    // check if the user wants to use the local copy only
     const config = vscode.workspace.getConfiguration("ZedScripts");
     const onlyUseLocalData: boolean = config.get("onlyUseLocalData", false);
     if (onlyUseLocalData) {
