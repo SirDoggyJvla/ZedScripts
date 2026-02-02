@@ -1,14 +1,13 @@
 import * as vscode from 'vscode';
-import { window } from 'vscode';
 import { TextDocument, ExtensionContext } from 'vscode';
-import { DocumentBlock } from './scriptBlocks';
+import { DocumentBlock } from './scriptsBlocks';
 
 export interface ScriptData {
     [key: string]: ScriptBlockData;
 }
 
 export let SCRIPTS_TYPES: ScriptData = require('../data/scriptBlocks.json');
-import { DOCUMENT_IDENTIFIER, CACHE_DURATION_MS, SCRIPT_DATA_LINK } from '../models/enums';
+import { CACHE_DURATION_MS, SCRIPT_DATA_LINK } from '../models/enums';
 
 
 
@@ -127,6 +126,8 @@ function initBlockRegex() {
         `^\\s*(${BLOCK_NAMES.join('|')})\\s+.*\\{.*$`
     );
 }
+
+
 
 // detects if a line is starting a script block and returns the block type
 function isScriptBlockLine(line: string): string | null {

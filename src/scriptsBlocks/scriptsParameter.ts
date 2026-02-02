@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
-import { ScriptBlock } from "./scriptBlocks";
+import { ScriptBlock } from "./scriptsBlocks";
 import { 
     ThemeColorType, 
     DiagnosticType, 
@@ -15,7 +15,7 @@ import {
     IndexRange, 
     InputAnalysisProperty,
     InputParameterData
-} from './scriptData';
+} from './scriptsData';
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { colorText } from '../utils/htmlFormat';
 import { inputsOutputsRegex } from '../models/regexPatterns';

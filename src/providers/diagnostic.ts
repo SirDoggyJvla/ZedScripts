@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { DocumentBlock } from "../scripts/scriptBlocks";
+import * as path from "path";
+import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { EXTENSION_LANGUAGE } from "../models/enums";
 
 export class DiagnosticProvider {
@@ -12,6 +13,9 @@ export class DiagnosticProvider {
     
     public updateDiagnostics(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
+
+        const filePath = path.posix.normalize(document.fileName);
+
         new DocumentBlock(document, diagnostics);
         this.diagnosticCollection.set(document.uri, diagnostics);
         return;

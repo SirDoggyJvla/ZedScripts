@@ -3,7 +3,7 @@ import { Position, TextDocument } from "vscode";
 import { provideDefinition } from "./definition";
 import path from "path";
 import { itemBlockRegex } from "../models/regexPatterns";
-import { DocumentBlock } from "../scripts/scriptBlocks";
+import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 
 export class PZHoverProvider implements vscode.HoverProvider {
     async provideHover(

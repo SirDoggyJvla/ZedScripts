@@ -13,8 +13,8 @@ import {
     canHaveParent, 
     shouldHaveID,
     listRequiredParameters,
-} from "../scripts/scriptData";
-import { DocumentBlock } from "../scripts/scriptBlocks";
+} from "../scriptsBlocks/scriptsData";
+import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { CompletionText, formatText } from "../models/enums";
 
 export class PZCompletionItemProvider implements vscode.CompletionItemProvider {

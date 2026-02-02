@@ -3,10 +3,15 @@ import * as path from "path";
 
 export const EXTENSION_LANGUAGE = "ZedScripts";
 export const DOCUMENT_IDENTIFIER = "_DOCUMENT";
+
 export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/scriptBlocks.json";
+export const TRANSLATION_FILES_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/translationFiles.json";
+export const LANGUAGE_CODES_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/languageCodes.json";
+
 export const DEFAULT_DIR = path.normalize(
     "C:/Program Files (x86)/Steam/steamapps/common/ProjectZomboid/media/scripts/"
 );
+
 const CACHE_DURATION_HOURS = 12;
 export const CACHE_DURATION_MS = CACHE_DURATION_HOURS * 60 * 60 * 1000; // in milliseconds
 export const WIKI_LINK = "https://pzwiki.net/wiki/";
