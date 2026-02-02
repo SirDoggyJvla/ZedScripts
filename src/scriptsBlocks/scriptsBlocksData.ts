@@ -119,9 +119,15 @@ export async function initScriptBlocks(context: ExtensionContext, forceFetch: bo
 
 // generates a regex pattern to match any script block line
 export let BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
+export let SCRIPTS_TYPES_LOWER = Object.fromEntries(
+    Object.entries(SCRIPTS_TYPES).map(([key, value]) => [key.toLowerCase(), value])
+);
 export let blockPattern: RegExp;
 function initBlockRegex() {
     BLOCK_NAMES = Object.keys(SCRIPTS_TYPES);
+    SCRIPTS_TYPES_LOWER = Object.fromEntries(
+        Object.entries(SCRIPTS_TYPES).map(([key, value]) => [key.toLowerCase(), value])
+    );
     blockPattern = new RegExp(
         `^\\s*(${BLOCK_NAMES.join('|')})\\s+.*\\{.*$`
     );
