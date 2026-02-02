@@ -11,11 +11,11 @@ import {
     formatText
 } from '../models/enums';
 import { getColor, getFontStyle } from "../utils/themeColors";
-import { ScriptBlockData, IndexRange } from './scriptsData';
-import { getScriptBlockData } from './blocksUtility';
-import { isScriptBlock } from './blocksUtility';
+import { ScriptBlockData, IndexRange } from './scriptsBlocksData';
+import { getScriptBlockData } from './scriptsBlocksUtility';
+import { isScriptBlock } from './scriptsBlocksUtility';
 import { colorText } from '../utils/htmlFormat';
-import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsParameter';
+import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsBlocksParameter';
 
 /**
  * Represents a script block in a PZ script file. Handles nested blocks and diagnostics.

@@ -4,7 +4,7 @@ import {
     ScriptData, ScriptBlockData, ScriptBlockParameter,
     SCRIPTS_TYPES, 
     blockPattern 
-} from "./scriptsData";
+} from "./scriptsBlocksData";
 
 
 export function isScriptBlock(word: string): boolean {

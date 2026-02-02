@@ -6,13 +6,13 @@ import {
     SnippetString,
 } from "vscode";
 import * as vscode from "vscode";
-import { ScriptBlockParameter, BLOCK_NAMES } from "../scriptsBlocks/scriptsData";
+import { ScriptBlockParameter, BLOCK_NAMES } from "../scriptsBlocks/scriptsBlocksData";
 import {
     getScriptBlockData, 
     canHaveParent, 
     shouldHaveID,
     listRequiredParameters,
-} from "../scriptsBlocks/blocksUtility";
+} from "../scriptsBlocks/scriptsBlocksUtility";
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { CompletionText, formatText } from "../models/enums";
 

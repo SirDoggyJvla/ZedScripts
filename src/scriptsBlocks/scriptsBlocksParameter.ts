@@ -14,8 +14,8 @@ import {
     IndexRange, 
     InputAnalysisProperty,
     InputParameterData
-} from './scriptsData';
-import { getScriptBlockData } from "../scriptsBlocks/blocksUtility";
+} from './scriptsBlocksData';
+import { getScriptBlockData } from "./scriptsBlocksUtility";
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { colorText } from '../utils/htmlFormat';
 import { inputsOutputsRegex } from '../models/regexPatterns';

@@ -6,7 +6,7 @@ import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-import { initScriptBlocks } from "./scriptsBlocks/scriptsData";
+import { initScriptBlocks } from "./scriptsBlocks/scriptsBlocksData";
 import { DefaultText, EXTENSION_LANGUAGE } from "./models/enums";
 import { scriptFileRegex } from "./models/regexPatterns";
 
