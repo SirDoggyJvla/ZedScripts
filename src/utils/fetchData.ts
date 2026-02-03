@@ -24,6 +24,7 @@ export async function fetchData(context: vscode.ExtensionContext, forceFetch: bo
         setScriptsTypes(require('../data/scriptBlocks.json'));
         setTranslationTypes(require('../data/translationFiles.json'));
         setLanguageTypes(require('../data/languageCodes.json'));
+        console.log("Using local data as per configuration.");
         return true;
     }
 

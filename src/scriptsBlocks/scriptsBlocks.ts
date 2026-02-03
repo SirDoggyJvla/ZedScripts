@@ -79,7 +79,7 @@ export class ScriptBlock {
 // INFORMATION
 
     public isWord(word: string): boolean {
-        return this.scriptBlock === word;
+        return this.scriptBlock.toLowerCase() === word.toLowerCase();
     }
 
     public isIndexOf(index: number): boolean {
