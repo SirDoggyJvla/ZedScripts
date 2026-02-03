@@ -3695,23 +3695,11 @@
     ],
     "ID": {},
     "parameters": {
-      "blendwhitelist": {
-        "name": "BlendWhiteList"
-      },
-      "categories": {
-        "name": "Categories"
-      },
       "colorreference": {
         "name": "ColorReference"
       },
       "displayname": {
         "name": "DisplayName"
-      },
-      "poison": {
-        "name": "Poison"
-      },
-      "properties": {
-        "name": "Properties"
       }
     }
   },

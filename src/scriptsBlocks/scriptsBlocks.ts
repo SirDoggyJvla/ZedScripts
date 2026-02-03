@@ -187,7 +187,7 @@ export class ScriptBlock {
     public canHaveParent(parentBlock: string): boolean {
         const blockData = getScriptBlockData(this.scriptBlock);
         const validParents = blockData.parents;
-        if (this.scriptBlock in validParents) {
+        if (validParents.includes(parentBlock)) {
             return true;
         }
         return false;
@@ -227,7 +227,7 @@ export class ScriptBlock {
         const children: ScriptBlock[] = [];
 
         const document = this.document;
-        const text = document.getText()
+        const text = document.getText();
 
         const blockHeader = scriptBlockRegex;
         let match: RegExpExecArray | null;

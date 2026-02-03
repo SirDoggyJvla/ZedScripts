@@ -1,8 +1,8 @@
-import { ScriptBlockData, ScriptBlockParameter, SCRIPTS_TYPES } from "./scriptsBlocksData";
+import { ScriptBlockData, ScriptBlockParameter, SCRIPTS_TYPES_LOWER } from "./scriptsBlocksData";
 
 
 export function isScriptBlock(word: string): boolean {
-    return word in SCRIPTS_TYPES;
+    return word.toLowerCase() in SCRIPTS_TYPES_LOWER;
 }
 
 /**
@@ -14,7 +14,7 @@ export function getScriptBlockData(blockType: string): ScriptBlockData {
     if (!isScriptBlock(blockType)) {
         throw new Error(`Block type ${blockType} is not a valid script block type. Ensure to check with isScriptBlock() before getting block data.`);
     }
-    const blockData = SCRIPTS_TYPES[blockType as keyof typeof SCRIPTS_TYPES] as ScriptBlockData;
+    const blockData =   SCRIPTS_TYPES_LOWER[blockType.toLowerCase()] as ScriptBlockData;
     return blockData;
 }
 

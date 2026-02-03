@@ -1,1 +1,0 @@
-git submodule update --remote external/pz-scripts-data
