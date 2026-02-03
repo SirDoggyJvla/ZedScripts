@@ -221,6 +221,20 @@
       }
     }
   },
+  "BlendWhiteList": {
+    "name": "BlendWhiteList",
+    "description": "Seems to define blend properties with other fluids.",
+    "shouldHaveParent": true,
+    "parents": [
+      "fluid"
+    ],
+    "parameters": {
+      "whitelist": {
+        "name": "whitelist",
+        "type": "boolean"
+      }
+    }
+  },
   "module": {
     "name": "module",
     "description": "A module holds different types of script definitions.",
@@ -255,6 +269,35 @@
       },
       "area": {
         "name": "area"
+      }
+    }
+  },
+  "Poison": {
+    "name": "Poison",
+    "description": "Defines poison properties for a fluid script.",
+    "shouldHaveParent": true,
+    "parents": [
+      "fluid"
+    ],
+    "parameters": {
+      "maxeffect": {
+        "name": "maxEffect",
+        "type": "string",
+        "description": "Defines the strength of the poison.",
+        "values": [
+          "Deadly",
+          "Medium"
+        ]
+      },
+      "minamount": {
+        "name": "minAmount",
+        "type": "number",
+        "description": "The minimum amount required to consume to poison the player."
+      },
+      "diluteratio": {
+        "name": "diluteRatio",
+        "type": "number",
+        "description": "The ratio at which the poison is diluted when mixed with other fluids."
       }
     }
   },
@@ -371,6 +414,16 @@
       "module"
     ],
     "ID": {},
+    "parameters": {}
+  },
+  "Categories": {
+    "name": "Categories",
+    "description": "Acts as a sort of tag list. Notably used in fluid scripts. Doesn't have parameters and instead just functions as a list.",
+    "shouldHaveParent": true,
+    "parents": [
+      "fluid",
+      "BlendWhiteList"
+    ],
     "parameters": {}
   },
   "_DOCUMENT": {
@@ -3529,6 +3582,69 @@
     "parameters": {
       "name": {
         "name": "name"
+      }
+    }
+  },
+  "Properties": {
+    "name": "Properties",
+    "description": "Define properties for a fluid script.",
+    "shouldHaveParent": true,
+    "parents": [
+      "fluid"
+    ],
+    "parameters": {
+      "thirstchange": {
+        "name": "ThirstChange",
+        "type": "number",
+        "description": "The amount of thirst this fluid changes when consumed. Positive values increase thirst, negative values decrease it."
+      },
+      "alcohol": {
+        "name": "alcohol",
+        "type": "number"
+      },
+      "hungerchange": {
+        "name": "HungerChange",
+        "type": "number",
+        "description": "The amount of hunger this fluid changes when consumed. Positive values increase hunger, negative values decrease it."
+      },
+      "calories": {
+        "name": "Calories",
+        "type": "number",
+        "description": "The number of calories this fluid provides when consumed."
+      },
+      "carbohydrates": {
+        "name": "Carbohydrates",
+        "type": "number",
+        "description": "The amount of carbohydrates this fluid provides when consumed."
+      },
+      "lipids": {
+        "name": "Lipids",
+        "type": "number",
+        "description": "The amount of lipids (fats) this fluid provides when consumed."
+      },
+      "proteins": {
+        "name": "Proteins",
+        "type": "number",
+        "description": "The amount of proteins this fluid provides when consumed."
+      },
+      "flureduction": {
+        "name": "fluReduction",
+        "type": "number"
+      },
+      "painreduction": {
+        "name": "painReduction",
+        "type": "number",
+        "description": "The amount of pain this fluid reduces when consumed."
+      },
+      "endurancechange": {
+        "name": "enduranceChange",
+        "type": "number",
+        "description": "The amount of endurance given back."
+      },
+      "foodsicknesschange": {
+        "name": "foodSicknessChange",
+        "type": "number",
+        "description": "The amount of food sickness provides."
       }
     }
   },

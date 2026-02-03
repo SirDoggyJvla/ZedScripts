@@ -1,10 +1,4 @@
-import { TextDocument } from "vscode";
-import { ExtensionContext } from "vscode";
-import { 
-    ScriptData, ScriptBlockData, ScriptBlockParameter,
-    SCRIPTS_TYPES, 
-    blockPattern 
-} from "./scriptsBlocksData";
+import { ScriptBlockData, ScriptBlockParameter, SCRIPTS_TYPES } from "./scriptsBlocksData";
 
 
 export function isScriptBlock(word: string): boolean {

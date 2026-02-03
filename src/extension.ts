@@ -6,7 +6,7 @@ import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-import { initScriptBlocks } from "./scriptsBlocks/scriptsBlocksData";
+import { fetchData } from "./utils/fetchData";
 import { DefaultText, EXTENSION_LANGUAGE } from "./models/enums";
 import { scriptFileRegex } from "./models/regexPatterns";
 
@@ -46,13 +46,13 @@ export async function activate(context: vscode.ExtensionContext) {
     // access the cached script data first
 
     // try to fetch the latest scriptBlocks.json from the GitHub repository
-    await initScriptBlocks(context);
+    await fetchData(context);
 
     // add a force reset cache function
     vscode.commands.registerCommand(
         "ZedScripts.resetScriptCache",
         async () => {
-            const result = await initScriptBlocks(context, true);
+            const result = await fetchData(context, true);
             if (result) {
                 vscode.window.showInformationMessage(
                     DefaultText.CACHE_RESET
