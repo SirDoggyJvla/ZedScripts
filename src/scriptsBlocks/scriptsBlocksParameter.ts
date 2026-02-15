@@ -231,7 +231,8 @@ export class ScriptParameter {
             this.diagnostic(
                 DiagnosticType.DEPRECATED_PARAMETER,
                 { parameter: name, scriptBlock: this.parent.scriptBlock },
-                this.parameterRange.start
+                this.parameterRange.start, this.parameterRange.end,
+                vscode.DiagnosticSeverity.Warning
             );
         }
 
