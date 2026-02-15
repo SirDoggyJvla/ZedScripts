@@ -39,7 +39,7 @@ export function initTranslationBlockRegex() {
     loadTranslationPrefixes();
     const prefixes = Object.keys(TRANSLATION_PREFIXES);
     translationPattern = new RegExp(
-        `\/Translate\/(?<languageCode>\w+)\/(?<prefix>${prefixes.join('|')})(?<code>\w+)(?<extension>.txt)`
+        `\/Translate\/(?<folderCode>\\w+)\/(?<prefix>${prefixes.join('|')})(?<fileCode>\\w+)(?<extension>.txt)`
     )
 }
 
