@@ -52,8 +52,7 @@
     },
     {
       "name": "string.quoted.double.pz",
-      "begin": "\"",
-      "end": "\""
+      "match": "\"(?:[^\"\\\\\\r\\n]|\\\\.)*\""
     },
     {
       "name": "constant.numeric.pz",
