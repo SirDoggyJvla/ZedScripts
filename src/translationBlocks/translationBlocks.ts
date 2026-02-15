@@ -70,7 +70,7 @@ export class TranslationBlock {
         
         // read line by line, ignore first line as it is the file starter
         const lines = text.split(/\r?\n/);
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 1; i < lines.length; i++) {
             const line = lines[i];
             const match = line.match(KEY_VALUE_TRANSLATION_REGEX);
             if (!match || !match.groups) {

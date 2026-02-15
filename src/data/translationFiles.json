@@ -2,176 +2,176 @@
   "Moveables": {
     "name": "Moveables",
     "description": "",
-    "filePrefix": "Moveables_",
+    "filePrefix": "Moveables",
     "fileStarter": "Moveables_"
   },
   "Entity": {
     "name": "Entity",
     "description": "",
-    "filePrefix": "Entity_",
+    "filePrefix": "Entity",
     "fileStarter": "Entity_"
   },
   "Farming": {
     "name": "Farming",
     "description": "",
-    "filePrefix": "Farming_",
+    "filePrefix": "Farming",
     "fileStarter": "Farming_"
   },
   "GameSound": {
     "name": "GameSound",
     "description": "",
-    "filePrefix": "GameSound_",
+    "filePrefix": "GameSound",
     "fileStarter": "GameSound_"
   },
   "Recipes": {
     "name": "Recipes",
     "description": "",
-    "filePrefix": "Recipes_",
+    "filePrefix": "Recipes",
     "fileStarter": "Recipes_"
   },
   "Sandbox": {
     "name": "Sandbox",
     "description": "",
-    "filePrefix": "Sandbox_",
+    "filePrefix": "Sandbox",
     "fileStarter": "Sandbox_"
   },
   "BodyParts": {
     "name": "BodyParts",
     "description": "",
-    "filePrefix": "BodyParts_",
+    "filePrefix": "BodyParts",
     "fileStarter": "BodyParts_"
   },
   "IGUI": {
     "name": "IGUI",
     "description": "Translation file for in-game user interface elements.",
-    "filePrefix": "IG_UI_",
+    "filePrefix": "IG_UI",
     "fileStarter": "IGUI_",
     "keyPrefix": "IGUI_"
   },
   "Stash": {
     "name": "Stash",
     "description": "",
-    "filePrefix": "Stash_",
+    "filePrefix": "Stash",
     "fileStarter": "Stash_"
   },
   "MakeUp": {
     "name": "MakeUp",
     "description": "",
-    "filePrefix": "MakeUp_",
+    "filePrefix": "MakeUp",
     "fileStarter": "MakeUp_"
   },
   "Moodles": {
     "name": "Moodles",
     "description": "",
-    "filePrefix": "Moodles_",
+    "filePrefix": "Moodles",
     "fileStarter": "Moodles_"
   },
   "ContextMenu": {
     "name": "ContextMenu",
     "description": "",
-    "filePrefix": "ContextMenu_",
+    "filePrefix": "ContextMenu",
     "fileStarter": "ContextMenu_"
   },
   "Attributes": {
     "name": "Attributes",
     "description": "",
-    "filePrefix": "Attributes_",
+    "filePrefix": "Attributes",
     "fileStarter": "Attributes_"
   },
   "ItemName": {
     "name": "ItemName",
     "description": "",
-    "filePrefix": "ItemName_",
+    "filePrefix": "ItemName",
     "fileStarter": "ItemName_"
   },
   "Tooltip": {
     "name": "Tooltip",
     "description": "",
-    "filePrefix": "Tooltip_",
+    "filePrefix": "Tooltip",
     "fileStarter": "Tooltip_"
   },
   "RadioData": {
     "name": "RadioData",
     "description": "",
-    "filePrefix": "RadioData_",
+    "filePrefix": "RadioData",
     "fileStarter": "RadioData_"
   },
   "SurvivorNames": {
     "name": "SurvivorNames",
     "description": "",
-    "filePrefix": "SurvivorNames_",
+    "filePrefix": "SurvivorNames",
     "fileStarter": "SurvivorNames_"
   },
   "DynamicRadio": {
     "name": "DynamicRadio",
     "description": "",
-    "filePrefix": "DynamicRadio_",
+    "filePrefix": "DynamicRadio",
     "fileStarter": "DynamicRadio_"
   },
   "EvolvedRecipeName": {
     "name": "EvolvedRecipeName",
     "description": "",
-    "filePrefix": "EvolvedRecipeName_",
+    "filePrefix": "EvolvedRecipeName",
     "fileStarter": "EvolvedRecipeName_"
   },
   "Challenge": {
     "name": "Challenge",
     "description": "",
-    "filePrefix": "Challenge_",
+    "filePrefix": "Challenge",
     "fileStarter": "Challenge_"
   },
   "SurvivalGuide": {
     "name": "SurvivalGuide",
     "description": "",
-    "filePrefix": "SurvivalGuide_",
+    "filePrefix": "SurvivalGuide",
     "fileStarter": "SurvivalGuide_"
   },
   "Fluids": {
     "name": "Fluids",
     "description": "",
-    "filePrefix": "Fluids_",
+    "filePrefix": "Fluids",
     "fileStarter": "Fluids_"
   },
   "RecipeGroups": {
     "name": "RecipeGroups",
     "description": "",
-    "filePrefix": "RecipeGroups_",
+    "filePrefix": "RecipeGroups",
     "fileStarter": "RecipeGroups_"
   },
   "UI": {
     "name": "UI",
     "description": "Translation file for user interface elements.",
-    "filePrefix": "UI_",
+    "filePrefix": "UI",
     "fileStarter": "UI_"
   },
   "MultiStageBuild": {
     "name": "MultiStageBuild",
     "description": "",
-    "filePrefix": "MultiStageBuild_",
+    "filePrefix": "MultiStageBuild",
     "fileStarter": "MultiStageBuild_"
   },
   "Print_Text": {
     "name": "Print_Text",
     "description": "",
-    "filePrefix": "Print_Text_",
+    "filePrefix": "Print_Text",
     "fileStarter": "Print_Text_"
   },
   "MapLabel": {
     "name": "MapLabel",
     "description": "",
-    "filePrefix": "MapLabel_",
+    "filePrefix": "MapLabel",
     "fileStarter": "MapLabel_"
   },
   "Print_Media": {
     "name": "Print_Media",
     "description": "",
-    "filePrefix": "Print_Media_",
+    "filePrefix": "Print_Media",
     "fileStarter": "Print_Media_"
   },
   "Recorded_Media": {
     "name": "Recorded_Media",
     "description": "",
-    "filePrefix": "Recorded_Media_",
+    "filePrefix": "Recorded_Media",
     "fileStarter": "Recorded_Media_"
   }
 }
