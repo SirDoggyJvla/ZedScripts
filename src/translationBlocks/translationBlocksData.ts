@@ -25,20 +25,21 @@ export interface LanguageCodesData {
 
 
 
-export let TRANSLATION_PREFIXES: { [key: string]: string } = {};
+export let TRANSLATION_FILE_PREFIXES: { [key: string]: string } = {};
 function loadTranslationPrefixes() {
-    TRANSLATION_PREFIXES = {};
+    TRANSLATION_FILE_PREFIXES = {};
     for (const key in TRANSLATION_TYPES) {
         const blockData = TRANSLATION_TYPES[key];
-        TRANSLATION_PREFIXES[blockData.filePrefix] = key;
+        TRANSLATION_FILE_PREFIXES[blockData.filePrefix] = key;
     }
+    return;
 }
 
-export let translationPattern: RegExp;
+export let TRANSLATION_PATTERN: RegExp;
 export function initTranslationBlockRegex() {
     loadTranslationPrefixes();
-    const prefixes = Object.keys(TRANSLATION_PREFIXES);
-    translationPattern = new RegExp(
+    const prefixes = Object.keys(TRANSLATION_FILE_PREFIXES);
+    TRANSLATION_PATTERN = new RegExp(
         `\/Translate\/(?<folderCode>\\w+)\/(?<prefix>${prefixes.join('|')})(?<fileCode>\\w+)(?<extension>.txt)`
     )
 }
@@ -47,7 +48,6 @@ export function setTranslationTypes(newTypes: TranslationBlocks) {
     TRANSLATION_TYPES = newTypes;
     initTranslationBlockRegex();
 }
-
 
 export function setLanguageTypes(newTypes: LanguageCodes) {
     LANGUAGE_CODES = newTypes;

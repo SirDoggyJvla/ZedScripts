@@ -4,9 +4,11 @@ import * as path from "path";
 
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { TranslationBlock } from "../translationBlocks/translationBlocks";
-import { translationPattern } from "../translationBlocks/translationBlocksData";
+import { TRANSLATION_FILE_PREFIXES } from "../translationBlocks/translationBlocksData";
 
+import { LANGUAGE_FILE_REGEX } from "../models/regexPatterns";
 import { EXTENSION_LANGUAGE, DiagnosticType } from "../models/enums";
+import { isTranslationBlock } from "../translationBlocks/translationBlocksUtility";
 
 
 export class DiagnosticProvider {
@@ -23,16 +25,29 @@ export class DiagnosticProvider {
         const filePath = path.posix.normalize(document.fileName);
 
         // Check if the file is a translation block
-        console.log(translationPattern);
-        const translationMatch = filePath.match(translationPattern);
+        const translationMatch = filePath.match(LANGUAGE_FILE_REGEX);
         if (translationMatch && translationMatch.groups) {
             const groups = translationMatch.groups;
             const folderCode = groups.folderCode;
             const fileCode = groups.fileCode;
-            const prefix = groups.prefix;
-            // const extension = groups.extension;
+            const filePrefix = groups.filePrefix;
 
-            new TranslationBlock(document, diagnostics, folderCode, fileCode, prefix);
+            // verify file prefix is a valid one
+            if (!isTranslationBlock(filePrefix)) {
+                diagnostic(
+                    document,
+                    diagnostics,
+                    DiagnosticType.INVALID_FILE_PREFIX,
+                    { filePrefix: filePrefix, validPrefixes: Object.keys(TRANSLATION_FILE_PREFIXES).map(p => `'${p}'`).join(", ") },
+                    0,
+                    document.getText().length,
+                    vscode.DiagnosticSeverity.Error
+                );
+            } else {
+                const translationBlock = TRANSLATION_FILE_PREFIXES[filePrefix];
+
+                new TranslationBlock(document, diagnostics, translationBlock, folderCode, fileCode, filePrefix);
+            }
         } else {
             new DocumentBlock(document, diagnostics);
         }

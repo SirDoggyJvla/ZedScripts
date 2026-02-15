@@ -87,6 +87,13 @@ export enum DiagnosticType {
     SPACES_IN_ITEM = "An item full type (module and ID) cannot contain spaces. ({value})",
     INVALID_VALUE = "'{value}' is not a valid value for '{property}'. Valid values are: {validValues}.",
 
+    // translations diagnostics
+    UNMATCHED_CODE = "Unmatched language code between folder name '{folderCode}' and file name '{fileCode}'. They should be the same.",
+    IN_FIRST_LINE = "Translation key-value pairs cannot be in the first line of the file as it is not parsed.",
+    UNECESSARY_COMMA = "Unnecessary comma. Translation files do not need a comma compared to script files.",
+    INVALID_FILE_PREFIX = "The file '{filePrefix}' is not a valid translation file prefix. Valid prefixes are: {validPrefixes}.",
+    MISSING_QUOTES = "Missing quotes around value.",
+
     _DEBUG = "This is a debug diagnostic with value: {value}.",
 }
 

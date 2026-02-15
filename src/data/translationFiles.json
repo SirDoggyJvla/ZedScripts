@@ -45,7 +45,8 @@
     "name": "IGUI",
     "description": "Translation file for in-game user interface elements.",
     "filePrefix": "IG_UI_",
-    "fileStarter": "IGUI_"
+    "fileStarter": "IGUI_",
+    "keyPrefix": "IGUI_"
   },
   "Stash": {
     "name": "Stash",

@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
-import { keyValueTranslation } from '../models/regexPatterns';
+import { KEY_VALUE_TRANSLATION_REGEX } from '../models/regexPatterns';
 import { TranslationKeyValue } from './translationBlocksValue';
+import { TRANSLATION_FILE_PREFIXES } from './translationBlocksData';
 import { IndexRange, createIndexRange } from '../utils/positions';
+import { diagnostic, DiagnosticType } from '../models/enums';
 
 export class TranslationBlock {
     private static documentBlockCache: Map<string, TranslationBlock> = new Map();
@@ -13,30 +15,53 @@ export class TranslationBlock {
     diagnostics: Diagnostic[];
 
     // block data
+    translationBlock: string;
     folderCode: string;
     fileCode: string;
-    prefix: string;
+    filePrefix: string;
     keyValues: TranslationKeyValue[] = [];
-    block: string;
+    filename: string;
 
     constructor(
         document: TextDocument,
         diagnostics: Diagnostic[],
+        translationBlock: string,
         folderCode: string,
         fileCode: string,
-        prefix: string
+        filePrefix: string
     ) {
         this.document = document;
         this.diagnostics = diagnostics;
+        this.translationBlock = translationBlock;
         this.folderCode = folderCode;
         this.fileCode = fileCode;
-        this.prefix = prefix;
+        this.filePrefix = filePrefix;
 
-        this.block = prefix + fileCode;
+        // recreate filename
+        this.filename = filePrefix + fileCode;
 
         TranslationBlock.documentBlockCache.set(document.uri.toString(), this);
 
-        this.extractKeyValues();
+        const test = this.validateTranslationFile();
+        if (test) {
+            this.extractKeyValues();
+        }
+    }
+
+    private validateTranslationFile(): boolean {
+        if (this.folderCode != this.fileCode) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.UNMATCHED_CODE,
+                { folderCode: this.folderCode, fileCode: this.fileCode },
+                0,
+                this.document.getText().length
+            );
+            return false;
+        }
+
+        return true;
     }
 
     private extractKeyValues(): void {
@@ -45,9 +70,9 @@ export class TranslationBlock {
         
         // read line by line, ignore first line as it is the file starter
         const lines = text.split(/\r?\n/);
-        for (let i = 1; i < lines.length; i++) {
+        for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const match = line.match(keyValueTranslation);
+            const match = line.match(KEY_VALUE_TRANSLATION_REGEX);
             if (!match || !match.groups) {
                 continue;
             }
@@ -103,5 +128,10 @@ export class TranslationBlock {
 
     public isParameterOf(key: string): boolean {
         return this.keyValues.some(kv => kv.key === key);
+    }
+
+    protected getKeyPrefix(): string | undefined {   
+        
+        return;
     }
 }

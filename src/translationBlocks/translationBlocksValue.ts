@@ -81,8 +81,47 @@ export class TranslationKeyValue {
             return false;
         }
 
+        // if has comma, it's optional
+        if (this.comma) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.UNECESSARY_COMMA,
+                {},
+                this.commaRange.start, this.commaRange.end,
+                vscode.DiagnosticSeverity.Hint
+            );
+        }
+
+        // verify quotes
+        if (!this.quote) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.MISSING_QUOTES,
+                {},
+                this.valueRange.start, this.valueRange.end
+            );
+            return false;
+        }
+
+        // verify it isn't in first line of the file
+        // const firstLineRange = this.document.lineAt(0).range;
+        const keyLine = this.document.positionAt(this.keyRange.start).line;
+        if (keyLine === 0) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.IN_FIRST_LINE,
+                {},
+                this.keyRange.start, this.commaRange.end
+            );
+            return false;
+        }
+
         return true;
     }
+
 
 
 
@@ -100,7 +139,7 @@ export class TranslationKeyValue {
             this.document,
             this.diagnostics,
             DiagnosticType.DUPLICATE_PARAMETER,
-            { parameter: this.key, scriptBlock: this.parent.block },
+            { parameter: this.key, scriptBlock: this.parent.filename },
             this.keyRange.start,
             this.commaRange.end,
             vscode.DiagnosticSeverity.Warning
