@@ -101,21 +101,13 @@ export class ScriptBlock {
 
     public getParameter(name: string, parameters?: ScriptParameter[]): ScriptParameter | null {
         const paramsToSearch = parameters || this.parameters;
-        for (const param of paramsToSearch) {
-            if (param.parameter === name) {
-                return param;
-            }
-        }
-        return null;
+        const lowerCase = name.toLowerCase();
+        return paramsToSearch.find(param => param.parameter.toLowerCase() === lowerCase) || null;
     }
 
     public isParameterOf(name: string): boolean {
-        for (const param of this.parameters) {
-            if (param.parameter === name) {
-                return true;
-            }
-        }
-        return false;
+        const lowerCase = name.toLowerCase();
+        return this.parameters.some(param => param.parameter.toLowerCase() === lowerCase);
     }
 
     public canHaveParameter(name: string): boolean {

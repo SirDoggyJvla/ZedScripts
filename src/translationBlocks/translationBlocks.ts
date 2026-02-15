@@ -16,7 +16,8 @@ export class TranslationBlock {
     folderCode: string;
     fileCode: string;
     prefix: string;
-    keyValues: { [key: string]: TranslationKeyValue } = {};
+    keyValues: TranslationKeyValue[] = [];
+    block: string;
 
     constructor(
         document: TextDocument,
@@ -31,41 +32,57 @@ export class TranslationBlock {
         this.fileCode = fileCode;
         this.prefix = prefix;
 
+        this.block = prefix + fileCode;
+
         TranslationBlock.documentBlockCache.set(document.uri.toString(), this);
 
-        this.keyValues = this.extractKeyValues();
+        this.extractKeyValues();
     }
 
-    private extractKeyValues(): { [key: string]: TranslationKeyValue } {
-        const keyValues: { [key: string]: TranslationKeyValue } = {};
+    private extractKeyValues(): void {
+        const keyValues = this.keyValues;
         const text = this.document.getText();
         
         // read line by line, ignore first line as it is the file starter
         const lines = text.split(/\r?\n/);
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i];
-            const lineNumber = i + 1;
             const match = line.match(keyValueTranslation);
             if (!match || !match.groups) {
                 continue;
             }
 
-            const lineStart = text.indexOf(line);
+            const lineStart = this.document.offsetAt(new vscode.Position(i, 0));
 
             const fullMatch = match[0];
             const key = match.groups['key'];
-            const value = match.groups['value'];
-            const quote = match.groups['quote'];
-            const comma = match.groups['comma'];
+            const value = match.groups['value'] || '';
+            const quote = match.groups['quote'] || '';
+            const comma = match.groups['comma'] || '';
 
             const index = match.index!;
 
+            // find ranges
             const keyRange = createIndexRange(lineStart, index, fullMatch, key);
             const valueRange = createIndexRange(lineStart, index, fullMatch, value);
             const quoteRange = createIndexRange(lineStart, index, fullMatch, quote);
             const commaRange = createIndexRange(lineStart, index, fullMatch, comma);
+
+            if (key == "IGUI_ContainerTitle_trough") {
+                console.log("debug");
+            }
+
+            // check duplicate
+            const existingParam = this.getParameter(key);
+            const isDuplicate = existingParam !== undefined;
+            if (existingParam) {
+                existingParam.setAsDuplicate();
+            }
             
             const keyVal = new TranslationKeyValue(
+                this.document,
+                this,
+                this.diagnostics,
                 key,
                 value,
                 quote,
@@ -73,11 +90,18 @@ export class TranslationBlock {
                 keyRange,
                 valueRange,
                 quoteRange,
-                commaRange
+                commaRange,
+                isDuplicate
             );
-            keyValues[key] = keyVal;
+            keyValues.push(keyVal);
         }
+    }
 
-        return keyValues;
+    public getParameter(key: string): TranslationKeyValue | undefined {
+        return this.keyValues.find(kv => kv.key === key);
+    }
+
+    public isParameterOf(key: string): boolean {
+        return this.keyValues.some(kv => kv.key === key);
     }
 }

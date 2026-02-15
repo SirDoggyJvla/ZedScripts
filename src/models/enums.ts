@@ -86,6 +86,8 @@ export enum DiagnosticType {
     ALL_WITH_OTHERS = "'*' was provided along with other item types. '*' must be used alone.",
     SPACES_IN_ITEM = "An item full type (module and ID) cannot contain spaces. ({value})",
     INVALID_VALUE = "'{value}' is not a valid value for '{property}'. Valid values are: {validValues}.",
+
+    _DEBUG = "This is a debug diagnostic with value: {value}.",
 }
 
 

@@ -5,7 +5,7 @@ export const itemBlockRegex = /\s*item\s+(\w+)\s*\{((?:[^{}]*|\{(?:[^{}]*|\{(?:[
 // Script file identifier
 export const scriptFileRegex = /\/media\/scripts\/[\/\w\s]*\.txt/;
 
-export const keyValueTranslation = /^(?!\s*[--])\s*(?<key>\S+[ \S]*\S+)\s*=\s*(?<quote>"(?<value>[\S ]*)")?(?<comma>,?)/;
+export const keyValueTranslation = /^(?!\s*[--])\s*(?<key>\S+[^=]*\S+)\s*=\s*(?<quote>"(?<value>[\S ]*)")?(?<comma>,?)/;
 
 
 /**
