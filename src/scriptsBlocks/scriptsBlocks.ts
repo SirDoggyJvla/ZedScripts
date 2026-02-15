@@ -6,10 +6,10 @@ import {
     ThemeColorType, 
     DiagnosticType, 
     DefaultText, 
-    diagnostic, 
     WIKI_LINK,
     formatText
 } from '../models/enums';
+import { diagnostic } from '../providers/diagnostic';
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { ScriptBlockData } from './scriptsBlocksData';
 import { getScriptBlockData } from './scriptsBlocksUtility';
