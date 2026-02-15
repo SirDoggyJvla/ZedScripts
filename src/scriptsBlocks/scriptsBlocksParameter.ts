@@ -11,13 +11,13 @@ import {
 } from '../models/enums';
 import { 
     ScriptBlockParameter, 
-    IndexRange, 
     InputAnalysisProperty,
     InputParameterData
 } from './scriptsBlocksData';
 import { getScriptBlockData } from "./scriptsBlocksUtility";
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { colorText } from '../utils/htmlFormat';
+import { IndexRange } from '../utils/positions';
 import { inputsOutputsRegex } from '../models/regexPatterns';
 
 export class ScriptParameter {

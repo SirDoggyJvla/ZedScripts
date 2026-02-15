@@ -11,10 +11,11 @@ import {
     formatText
 } from '../models/enums';
 import { getColor, getFontStyle } from "../utils/themeColors";
-import { ScriptBlockData, IndexRange } from './scriptsBlocksData';
+import { ScriptBlockData } from './scriptsBlocksData';
 import { getScriptBlockData } from './scriptsBlocksUtility';
 import { isScriptBlock } from './scriptsBlocksUtility';
 import { colorText } from '../utils/htmlFormat';
+import { IndexRange, createIndexRange } from '../utils/positions';
 import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsBlocksParameter';
 
 /**
@@ -314,16 +315,20 @@ export class ScriptBlock {
 
             const index = match.index!;
 
-            const nameStart = this.start + index + fullMatch.indexOf(name);
-            const nameEnd = nameStart + name.length;
-            const nameRange: IndexRange = {start: nameStart, end: nameEnd};
+            const nameRange = createIndexRange(this.start, index, fullMatch, name);
+
+            // const nameStart = this.start + index + fullMatch.indexOf(name);
+            // const nameEnd = nameStart + name.length;
+            // const nameRange: IndexRange = {start: nameStart, end: nameEnd};
+
+            const valueRange = createIndexRange(this.start, index, fullMatch, value);
             
-            const valueStart = this.start + index + fullMatch.indexOf(value);
-            const valueEnd = valueStart + value.length;
-            const valueRange: IndexRange = {start: valueStart, end: valueEnd};
+            // const valueStart = this.start + index + fullMatch.indexOf(value);
+            // const valueEnd = valueStart + value.length;
+            // const valueRange: IndexRange = {start: valueStart, end: valueEnd};
 
             // verify it is within this block and not in a child block
-            if (!this.isIndexOf(nameStart) || !this.isIndexOf(valueEnd - 1)) {
+            if (!this.isIndexOf(nameRange.start) || !this.isIndexOf(nameRange.end - 1)) {
                 continue;
             }
 
