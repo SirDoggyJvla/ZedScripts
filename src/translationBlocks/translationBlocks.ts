@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { MarkdownString, TextDocument, Diagnostic } from "vscode";
 import { KEY_VALUE_TRANSLATION_REGEX } from '../models/regexPatterns';
 import { TranslationKeyValue } from './translationBlocksValue';
-import { TRANSLATION_FILE_PREFIXES } from './translationBlocksData';
+import { LANGUAGE_CODES } from './translationBlocksData';
 import { IndexRange, createIndexRange } from '../utils/positions';
 import { diagnostic, DiagnosticType } from '../models/enums';
 
@@ -46,22 +46,6 @@ export class TranslationBlock {
         if (test) {
             this.extractKeyValues();
         }
-    }
-
-    private validateTranslationFile(): boolean {
-        if (this.folderCode != this.fileCode) {
-            diagnostic(
-                this.document,
-                this.diagnostics,
-                DiagnosticType.UNMATCHED_CODE,
-                { folderCode: this.folderCode, fileCode: this.fileCode },
-                0,
-                this.document.getText().length
-            );
-            return false;
-        }
-
-        return true;
     }
 
     private extractKeyValues(): void {
@@ -121,6 +105,38 @@ export class TranslationBlock {
             keyValues.push(keyVal);
         }
     }
+
+    private validateTranslationFile(): boolean {
+        // verify folder code and file code are the same
+        if (this.folderCode != this.fileCode) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.UNMATCHED_CODE,
+                { folderCode: this.folderCode, fileCode: this.fileCode },
+                0,
+                this.document.getText().length
+            );
+            return false;
+        }
+
+        // verify the translation code exists
+        if (!(this.folderCode in LANGUAGE_CODES)) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.NON_EXISTENT_CODE,
+                { code: this.folderCode, validCodes: Object.keys(LANGUAGE_CODES).map(p => `'${p}'`).join(", ") },
+                0,
+                this.document.getText().length
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     public getParameter(key: string): TranslationKeyValue | undefined {
         return this.keyValues.find(kv => kv.key === key);
