@@ -3,6 +3,7 @@ import { MarkdownString, TextDocument, Diagnostic } from "vscode";
 import { KEY_VALUE_TRANSLATION_REGEX } from '../models/regexPatterns';
 import { TranslationKeyValue } from './translationBlocksValue';
 import { LANGUAGE_CODES } from './translationBlocksData';
+import { getTranslationblockData } from './translationBlocksUtility';
 import { IndexRange, createIndexRange } from '../utils/positions';
 import { diagnostic, DiagnosticType } from '../models/enums';
 
@@ -146,8 +147,8 @@ export class TranslationBlock {
         return this.keyValues.some(kv => kv.key === key);
     }
 
-    protected getKeyPrefix(): string | undefined {   
-        
-        return;
+    public getKeyPrefix(): string | undefined {   
+        const blockData = getTranslationblockData(this.translationBlock);
+        return blockData.keyPrefix;
     }
 }

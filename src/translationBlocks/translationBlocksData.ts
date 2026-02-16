@@ -15,6 +15,7 @@ export interface TranslationBlocksData {
     description: string;
     filePrefix: string;
     fileStarter: string;
+    keyPrefix?: string;
 }
 
 export interface LanguageCodesData {

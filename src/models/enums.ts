@@ -94,6 +94,7 @@ export enum DiagnosticType {
     UNECESSARY_COMMA = "Unnecessary comma. Translation files do not need a comma compared to script files.",
     INVALID_FILE_PREFIX = "The file '{filePrefix}' is not a valid translation file prefix. Valid prefixes are: {validPrefixes}.",
     MISSING_QUOTES = "Missing quotes around value.",
+    MISSING_PREFIX = "Missing prefix {prefix} for key '{key}'.",
 
     _DEBUG = "This is a debug diagnostic with value: {value}.",
 }

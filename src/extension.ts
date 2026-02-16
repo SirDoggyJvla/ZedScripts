@@ -8,14 +8,16 @@ import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, EXTENSION_LANGUAGE } from "./models/enums";
+
 import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
+import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns";
 
 function handleOpenTextDocument(editor: vscode.TextEditor) {
     if (!editor || editor.document.languageId === EXTENSION_LANGUAGE) { return; }
     const document = editor.document;
     const filePath = path.posix.normalize(document.fileName);
 
-    if (SCRIPT_FILE_REGEX.test(filePath)) {
+    if (SCRIPT_FILE_REGEX.test(filePath) || LANGUAGE_FILE_REGEX.test(filePath)) {
         console.debug(`The opened file is identified as a script file: `, filePath);
         
         // set the file to ZedScripts

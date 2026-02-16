@@ -118,6 +118,19 @@ export class TranslationKeyValue {
         //     );
         //     return false;
         // }
+        
+        // verify key prefix
+        const expectedPrefix = this.parent.getKeyPrefix();
+        if (expectedPrefix && !this.key.startsWith(expectedPrefix)) {
+            diagnostic(
+                this.document,
+                this.diagnostics,
+                DiagnosticType.MISSING_PREFIX,
+                { prefix: expectedPrefix, key: this.key },
+                this.keyRange.start, this.keyRange.end
+            );
+            return false;
+        }
 
         return true;
     }

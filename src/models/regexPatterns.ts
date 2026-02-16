@@ -4,7 +4,7 @@ export const itemBlockRegex = /\s*item\s+(\w+)\s*\{((?:[^{}]*|\{(?:[^{}]*|\{(?:[
 
 // Script file identifier
 export const SCRIPT_FILE_REGEX = /\/media\/scripts\/[\/\w\s]*\.txt/;
-export const LANGUAGE_FILE_REGEX = /\/Translate\/(?<folderCode>\w+)\/(?<filePrefix>\w+_)(?<fileCode>\w+)(?<extension>.txt)/;
+export const LANGUAGE_FILE_REGEX = /\/Translate\/(?<folderCode>\w+)\/(?<filePrefix>\w+)_(?<fileCode>\w+)(?<extension>.txt)/;
 
 export const KEY_VALUE_TRANSLATION_REGEX = /^(?!\s*[--])\s*(?<key>\S+[^=]*\S+)\s*=\s*(?<quote>"(?<value>[\S ]*)")?(?<comma>,?)/;
 
