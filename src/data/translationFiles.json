@@ -9,31 +9,36 @@
     "name": "Entity",
     "description": "",
     "filePrefix": "Entity",
-    "fileStarter": "Entity_"
+    "fileStarter": "Entity_",
+    "keyPrefix": "EC_"
   },
   "Farming": {
     "name": "Farming",
     "description": "",
     "filePrefix": "Farming",
-    "fileStarter": "Farming_"
+    "fileStarter": "Farming_",
+    "keyPrefix": "Farming_"
   },
   "GameSound": {
     "name": "GameSound",
     "description": "",
     "filePrefix": "GameSound",
-    "fileStarter": "GameSound_"
+    "fileStarter": "GameSound_",
+    "keyPrefix": "GameSound_"
   },
   "Recipes": {
     "name": "Recipes",
     "description": "",
     "filePrefix": "Recipes",
-    "fileStarter": "Recipes_"
+    "fileStarter": "Recipes_",
+    "keyPrefix": "Recipe_"
   },
   "Sandbox": {
     "name": "Sandbox",
     "description": "",
     "filePrefix": "Sandbox",
-    "fileStarter": "Sandbox_"
+    "fileStarter": "Sandbox_",
+    "keyPrefix": "Sandbox_"
   },
   "BodyParts": {
     "name": "BodyParts",
@@ -52,7 +57,8 @@
     "name": "Stash",
     "description": "",
     "filePrefix": "Stash",
-    "fileStarter": "Stash_"
+    "fileStarter": "Stash_",
+    "keyPrefix": "Stash_"
   },
   "MakeUp": {
     "name": "MakeUp",
@@ -64,13 +70,15 @@
     "name": "Moodles",
     "description": "",
     "filePrefix": "Moodles",
-    "fileStarter": "Moodles_"
+    "fileStarter": "Moodles_",
+    "keyPrefix": "Moodles_"
   },
   "ContextMenu": {
     "name": "ContextMenu",
     "description": "",
     "filePrefix": "ContextMenu",
-    "fileStarter": "ContextMenu_"
+    "fileStarter": "ContextMenu_",
+    "keyPrefix": "ContextMenu_"
   },
   "Attributes": {
     "name": "Attributes",
@@ -82,19 +90,22 @@
     "name": "ItemName",
     "description": "",
     "filePrefix": "ItemName",
-    "fileStarter": "ItemName_"
+    "fileStarter": "ItemName_",
+    "keyPrefix": "ItemName_"
   },
   "Tooltip": {
     "name": "Tooltip",
     "description": "",
     "filePrefix": "Tooltip",
-    "fileStarter": "Tooltip_"
+    "fileStarter": "Tooltip_",
+    "keyPrefix": "Tooltip_"
   },
   "RadioData": {
     "name": "RadioData",
     "description": "",
     "filePrefix": "RadioData",
-    "fileStarter": "RadioData_"
+    "fileStarter": "RadioData_",
+    "keyPrefix": "RD_"
   },
   "SurvivorNames": {
     "name": "SurvivorNames",
@@ -118,60 +129,70 @@
     "name": "Challenge",
     "description": "",
     "filePrefix": "Challenge",
-    "fileStarter": "Challenge_"
+    "fileStarter": "Challenge_",
+    "keyPrefix": "Challenge_"
   },
   "SurvivalGuide": {
     "name": "SurvivalGuide",
     "description": "",
     "filePrefix": "SurvivalGuide",
-    "fileStarter": "SurvivalGuide_"
+    "fileStarter": "SurvivalGuide_",
+    "keyPrefix": "SurvivalGuide_"
   },
   "Fluids": {
     "name": "Fluids",
     "description": "",
     "filePrefix": "Fluids",
-    "fileStarter": "Fluids_"
+    "fileStarter": "Fluids_",
+    "keyPrefix": "Fluid_Name_"
   },
   "RecipeGroups": {
     "name": "RecipeGroups",
     "description": "",
     "filePrefix": "RecipeGroups",
-    "fileStarter": "RecipeGroups_"
+    "fileStarter": "RecipeGroups_",
+    "keyPrefix": "RecipeGroup_"
   },
   "UI": {
     "name": "UI",
     "description": "Translation file for user interface elements.",
     "filePrefix": "UI",
-    "fileStarter": "UI_"
+    "fileStarter": "UI_",
+    "keyPrefix": "UI_"
   },
   "MultiStageBuild": {
     "name": "MultiStageBuild",
     "description": "",
     "filePrefix": "MultiStageBuild",
-    "fileStarter": "MultiStageBuild_"
+    "fileStarter": "MultiStageBuild_",
+    "keyPrefix": "MultiStageBuild_"
   },
   "Print_Text": {
     "name": "Print_Text",
     "description": "",
     "filePrefix": "Print_Text",
-    "fileStarter": "Print_Text_"
+    "fileStarter": "Print_Text_",
+    "keyPrefix": "Print_Text_"
   },
   "MapLabel": {
     "name": "MapLabel",
     "description": "",
     "filePrefix": "MapLabel",
-    "fileStarter": "MapLabel_"
+    "fileStarter": "MapLabel_",
+    "keyPrefix": "MapLabel_"
   },
   "Print_Media": {
     "name": "Print_Media",
     "description": "",
     "filePrefix": "Print_Media",
-    "fileStarter": "Print_Media_"
+    "fileStarter": "Print_Media_",
+    "keyPrefix": "Print_Media_"
   },
   "Recorded_Media": {
     "name": "Recorded_Media",
     "description": "",
     "filePrefix": "Recorded_Media",
-    "fileStarter": "Recorded_Media_"
+    "fileStarter": "Recorded_Media_",
+    "keyPrefix": "RM_"
   }
 }
