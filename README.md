@@ -17,6 +17,7 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 - Auto-completion for script elements based on the Project Zomboid data (automatic mandatory parameters and subblocks).
 - Detection for script blocks used in wrong parent blocks.
 - Missing IDs detection.
+- Translation files syntax highlighting and diagnostics.
 
 ![ZedScripts syntax highlighting preview in VS Code](images/ZedScripts_preview1.png)
 ![ZedScripts parameter hovering preview in VS Code](images/ZedScripts_preview2.png)
