@@ -1,7 +1,9 @@
 import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
 import * as path from "path";
 
-export const EXTENSION_LANGUAGE = "ZedScripts";
+export const EXTENSION_ID = "ZedScripts";
+export const LANG_ZEDSCRIPTS = "ZedScripts";
+export const LANG_TRANSLATIONSCRIPTS = "TranslationScripts";
 export const DOCUMENT_IDENTIFIER = "_DOCUMENT";
 
 export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/scriptBlocks.json";

@@ -7,7 +7,7 @@ import { TranslationBlock } from "../translationBlocks/translationBlocks";
 import { TRANSLATION_FILE_PREFIXES } from "../translationBlocks/translationBlocksData";
 
 import { LANGUAGE_FILE_REGEX } from "../models/regexPatterns";
-import { EXTENSION_LANGUAGE, DiagnosticType } from "../models/enums";
+import { LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS, EXTENSION_ID, DiagnosticType } from "../models/enums";
 import { isTranslationBlock } from "../translationBlocks/translationBlocksUtility";
 
 
@@ -16,16 +16,33 @@ export class DiagnosticProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
     
     constructor() {
-        this.diagnosticCollection = vscode.languages.createDiagnosticCollection(EXTENSION_LANGUAGE);
+        this.diagnosticCollection = vscode.languages.createDiagnosticCollection(EXTENSION_ID);
     }
     
     public updateDiagnostics(document: vscode.TextDocument): void {
+    console.debug(`Updating diagnostics for document: ${document.fileName}`);
+        if (document.languageId === LANG_ZEDSCRIPTS) {
+            this.updateDiagnosticsZedScripts(document);
+        } else if (document.languageId === LANG_TRANSLATIONSCRIPTS) {
+            this.updateDiagnosticsTranslationScripts(document);
+        } else {
+            // Clear diagnostics for unsupported languages
+            this.diagnosticCollection.delete(document.uri);
+        }
+    }
+
+    private updateDiagnosticsZedScripts(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
 
-        const filePath = path.posix.normalize(document.fileName);
+        new DocumentBlock(document, diagnostics);
 
-        // Check if the file is a translation block
-        const translationMatch = filePath.match(LANGUAGE_FILE_REGEX);
+        this.diagnosticCollection.set(document.uri, diagnostics);
+    }
+
+    private updateDiagnosticsTranslationScripts(document: vscode.TextDocument): void {
+        const diagnostics: vscode.Diagnostic[] = [];
+
+        const translationMatch = document.fileName.match(LANGUAGE_FILE_REGEX);
         if (translationMatch && translationMatch.groups) {
             const groups = translationMatch.groups;
             const folderCode = groups.folderCode;
@@ -48,8 +65,6 @@ export class DiagnosticProvider {
 
                 new TranslationBlock(document, diagnostics, translationBlock, folderCode, fileCode, filePrefix);
             }
-        } else {
-            new DocumentBlock(document, diagnostics);
         }
 
         this.diagnosticCollection.set(document.uri, diagnostics);

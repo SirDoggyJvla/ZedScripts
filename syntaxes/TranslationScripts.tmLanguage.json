@@ -1,0 +1,58 @@
+{
+  "scopeName": "source.pz-translation",
+  "patterns": [
+    {
+      "name": "entity.name.recipe.pz",
+      "match": "([\\w.!]*)(?:\\s*([=])\\s*){",
+      "captures": {
+        "1": {"name": "keyword.control"},
+        "2": {"name": "entity.name.class"}
+      }
+    },
+    {
+      "name": "entity.name.property.pz",
+      "match": "([\\w.!]*)(?:\\s*([=])\\s*)",
+      "captures": {
+        "1": { "name": "variable.parameter" },
+        "2": { "name": "keyword.operator.assignment" }
+      }
+    },
+    {
+      "name": "entity.name.inputs.pz",
+      "match": "\\b(item)(?:\\s+(\\d+))\\b",
+      "captures": {
+        "1": {
+          "name": "variable.parameter"
+        },
+        "2": {
+          "name": "constant.numeric.pz"
+        }
+      }
+    },
+    {
+      "name": "comment.line.double-slash.pz",
+      "match": "(?:--).*"
+    },
+    {
+      "name": "comment.block.pz",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "invalid.illegal.comment.double-slash.pz",
+      "match": "(?://).*"
+    },
+    {
+      "name": "constant.language.boolean.pz",
+      "match": "\\b(true|false)\\b"
+    },
+    {
+      "name": "string.quoted.double.pz",
+      "match": "\"[\\S ]*\""
+    },
+    {
+      "name": "keyword.operator.assignment.pz",
+      "match": "[=:,;.]"
+    }
+  ]
+}

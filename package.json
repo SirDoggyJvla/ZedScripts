@@ -50,8 +50,15 @@
           "ZedScripts",
           "pz-scripts"
         ],
-        "firstLine": "^\\s*module\\s+\\w+\\s*\\{?",
-        "configuration": "./language-configuration.json"
+        "configuration": "./language/ZedScripts-configuration.json"
+      },
+      {
+        "id": "TranslationScripts",
+        "aliases": [
+          "TranslationScripts",
+          "pz-translations"
+        ],
+        "configuration": "./language/TranslationScripts-configuration.json"
       }
     ],
     "grammars": [
@@ -59,6 +66,11 @@
         "language": "ZedScripts",
         "scopeName": "source.pz-script",
         "path": "./syntaxes/ZedScripts.tmLanguage.json"
+      },
+      {
+        "language": "TranslationScripts",
+        "scopeName": "source.pz-translation",
+        "path": "./syntaxes/TranslationScripts.tmLanguage.json"
       }
     ],
     "semanticTokenScopes": [
