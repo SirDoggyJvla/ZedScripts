@@ -5,6 +5,7 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 > Note: This extension is designed specifically for Build 42.
 
 ### Features
+#### ZedScripts
 - Syntax highlighting for Project Zomboid script files.
 - Auto-formatting of script files to maintain consistent style.
 - Diagnostics for:
@@ -17,24 +18,30 @@ This VS Code extension provides comprehensive support for Project Zomboid's [scr
 - Auto-completion for script elements based on the Project Zomboid data (automatic mandatory parameters and subblocks).
 - Detection for script blocks used in wrong parent blocks.
 - Missing IDs detection.
-- Translation files syntax highlighting and diagnostics.
 
 ![ZedScripts syntax highlighting preview in VS Code](images/ZedScripts_preview1.png)
 ![ZedScripts parameter hovering preview in VS Code](images/ZedScripts_preview2.png)
 ![ZedScripts diagnostics preview in VS Code](images/ZedScripts_preview3.png)
 
+#### TranslationScripts
+- Translation files syntax highlighting and diagnostics.
+
+![TranslationScripts syntax highlighting and diagnostics preview in VS Code](images/TranslationScripts_preview1.png)
+
 ### Usage
 - Install the extension from the VS Code Marketplace.
 - Open a `.txt` script file.
 - Press Ctrl + Shift + P and select "Change Language Mode".
-- Choose "ZedScripts" from the list.
+- Choose from the list one of the following languages:
+  - "ZedScripts" for scripts files
+  - "TranslationScripts" for translation files
 
 The extension automatically downloads the latest script data from the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository and caches it for 12 hours, which it will fetch once more after this time. If it doesn't manage to fetch this data, it will fall back to the bundled data with the extension, which may get outdated until the next update.
 
 You can fetch data manually by running the command "ZedScripts: Force fetch Scripts Data" from the Command Palette (Ctrl + Shift + P). This won't directly update the diagnostics (due to a bug to fix, see [issue #2](https://github.com/SirDoggyJvla/ZedScripts/issues/2)), but you can simply start typing a single character to trigger an update.
 
 ### Configuration
-By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts.
+By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts. However this is a part of the old code I've yet to touch, so I do not know how well it works.
 
 ### Contributing
 Want to contribute to the project ? Feel free to do so ! You can also help by providing descriptions and data for scripts in the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository.
