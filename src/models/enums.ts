@@ -94,7 +94,7 @@ export enum DiagnosticType {
     NON_EXISTENT_CODE = "The language code '{code}' does not exist. Valid codes are: {validCodes}.",
     IN_FIRST_LINE = "Translation key-value pairs cannot be in the first line of the file as it is not parsed.",
     UNECESSARY_COMMA = "Unnecessary comma. Translation files do not need a comma compared to script files.",
-    INVALID_FILE_PREFIX = "The file '{filePrefix}' is not a valid translation file prefix. Valid prefixes are: {validPrefixes}.",
+    INVALID_FILE_PREFIX = "The file '{filePrefix}' is not a valid translation file prefix. Make sure to separate the language code and prefix with an underscore. Valid prefixes are: {validPrefixes}.",
     MISSING_QUOTES = "Missing quotes around value.",
     MISSING_PREFIX = "Missing prefix {prefix} for key '{key}'.",
 

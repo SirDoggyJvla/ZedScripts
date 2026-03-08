@@ -20,7 +20,7 @@ export class DiagnosticProvider {
     }
     
     public updateDiagnostics(document: vscode.TextDocument): void {
-    console.debug(`Updating diagnostics for document: ${document.fileName}`);
+    // console.debug(`Updating diagnostics for document: ${document.fileName}`);
         if (document.languageId === LANG_ZEDSCRIPTS) {
             this.updateDiagnosticsZedScripts(document);
         } else if (document.languageId === LANG_TRANSLATIONSCRIPTS) {

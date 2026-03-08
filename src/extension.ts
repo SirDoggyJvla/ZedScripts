@@ -12,10 +12,15 @@ import { DefaultText, LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from "./models/
 import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
 import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns";
 
-function handleOpenTextDocument(editor: vscode.TextEditor) {
-    if (!editor || editor.document.languageId === LANG_ZEDSCRIPTS) { return; }
-    const document = editor.document;
+function handleOpenTextDocument(document: vscode.TextDocument) {
+    console.debug(`Handling opened document: ${document.fileName}`);
+    if (
+        document.languageId === LANG_ZEDSCRIPTS
+        || document.languageId === LANG_TRANSLATIONSCRIPTS
+    ) { return; }
+
     const filePath = path.posix.normalize(document.fileName);
+    console.debug(`Opened file: `, filePath);
 
     if (SCRIPT_FILE_REGEX.test(filePath)) {
         console.debug(`The opened file is identified as a script file: `, filePath);
@@ -31,33 +36,32 @@ function handleOpenTextDocument(editor: vscode.TextEditor) {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
+    console.debug('Activating extension "pz-syntax-extension"...');
+
+    const activeEditorChangeDisposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
+        console.debug(`Active editor changed: ${editor?.document.fileName}`);
+        if (!editor) { return; }
+        handleOpenTextDocument(editor.document);
+    });
+
+    const openDocumentDisposable = vscode.workspace.onDidOpenTextDocument((document) => {
+        console.debug(`Document opened: ${document.fileName}`);
+        handleOpenTextDocument(document);
+    });
+
     // handle the initially active document on startup
     if (vscode.window.activeTextEditor) {
-        const editor = vscode.window.activeTextEditor;
-        // if (
-        //     !editor 
-        //     || editor.document.languageId === LANG_ZEDSCRIPTS
-        //     || editor.document.languageId === LANG_TRANSLATIONSCRIPTS
-        // ) { return; }
-        handleOpenTextDocument(editor);
+        console.debug(`Active editor found on startup: ${vscode.window.activeTextEditor.document.fileName}`);
+        handleOpenTextDocument(vscode.window.activeTextEditor.document);
     }
-
-    // handle newly opened documents
-    vscode.window.onDidChangeActiveTextEditor((editor) => {
-        if (
-            !editor 
-            // || editor.document.languageId === LANG_ZEDSCRIPTS
-            // || editor.document.languageId === LANG_TRANSLATIONSCRIPTS
-        ) { return; }
-        handleOpenTextDocument(editor);
-    });
 
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await fetchData(context);
+    console.debug(context.globalStorageUri);
 
 
     // add a force reset cache function
-    vscode.commands.registerCommand(
+    const resetScriptCacheCommand = vscode.commands.registerCommand(
         "ZedScripts.resetScriptCache",
         async () => {
             const result = await fetchData(context, true);
@@ -93,6 +97,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }
     
     context.subscriptions.push(
+        activeEditorChangeDisposable,
+        openDocumentDisposable,
+        resetScriptCacheCommand,
         watcher,
 
         // diagnostics

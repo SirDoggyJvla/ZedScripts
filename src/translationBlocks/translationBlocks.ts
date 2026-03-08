@@ -39,7 +39,7 @@ export class TranslationBlock {
         this.filePrefix = filePrefix;
 
         // recreate filename
-        this.filename = filePrefix + fileCode;
+        this.filename = filePrefix + '_' + fileCode;
 
         TranslationBlock.documentBlockCache.set(document.uri.toString(), this);
 
