@@ -72,7 +72,7 @@
   },
   "component": {
     "name": "component",
-    "description": "",
+    "description": "A component is a block which can be added as a child to a specific block type like an item, vehicle etc, to provide additional functionalities.",
     "shouldHaveParent": true,
     "parents": [
       "item",
@@ -132,6 +132,7 @@
     "name": "component WallCoveringConfig",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -305,6 +306,7 @@
     "name": "component CraftBenchSounds",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -428,7 +430,7 @@
   },
   "_DOCUMENT": {
     "name": "_DOCUMENT",
-    "description": "Not exactly a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
+    "description": "Not a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
     "shouldHaveParent": false,
     "parents": [],
     "parameters": {}
@@ -1505,7 +1507,8 @@
           "weapon"
         ],
         "type": "boolean",
-        "default": true
+        "default": true,
+        "description": "Whether the weapon has a chamber that can hold a round in addition to its magazine."
       },
       "headcondition": {
         "name": "HeadCondition",
@@ -3509,6 +3512,7 @@
     "name": "component Durability",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "item"
     ],
@@ -3538,6 +3542,7 @@
     "name": "component ContextMenuConfig",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "item"
     ],
@@ -3769,6 +3774,7 @@
     "name": "component SpriteOverlayConfig",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -3778,6 +3784,7 @@
     "name": "component UiConfig",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -3797,6 +3804,7 @@
     "name": "component CraftRecipe",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -4006,6 +4014,7 @@
     "name": "component DryingCraftLogic",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -4015,6 +4024,7 @@
     "name": "component Resources",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -4096,6 +4106,7 @@
     "name": "component FluidContainer",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "item"
     ],
@@ -4300,6 +4311,7 @@
     "name": "component SpriteConfig",
     "description": "",
     "shouldHaveParent": true,
+    "isVariant": "components",
     "parents": [
       "entity"
     ],
@@ -4394,6 +4406,21 @@
       },
       "sourceframe2": {
         "name": "sourceFrame2"
+      }
+    }
+  },
+  "component CraftBench": {
+    "name": "component CraftBench",
+    "description": "",
+    "shouldHaveParent": true,
+    "isVariant": "components",
+    "parents": [
+      "entity"
+    ],
+    "parameters": {
+      "recipes": {
+        "name": "Recipes",
+        "type": "list"
       }
     }
   },
