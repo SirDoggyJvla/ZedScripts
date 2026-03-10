@@ -68,3 +68,9 @@ This pre-commit hook will make a copy of the singular JSON file from the submodu
 
 ### License
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+### Changelog
+
+1.7.1:
+- minor handling tweaks for the file activation
+- force translation data to use an old copy of the translation data which dates pre-42.15, and force fetch to retrieve from an old copy from the new translation files dataset
