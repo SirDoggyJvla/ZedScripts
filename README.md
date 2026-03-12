@@ -114,6 +114,10 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ### Changelog
 
+1.8.0:
+- added a master switch to disable all diagnostics at once
+- added ability to disable specific diagnostics via configuration
+
 1.7.1:
 - minor handling tweaks for the file activation
 - force translation data to use an old copy of the translation data which dates pre-42.15, and force fetch to retrieve from an old copy from the new translation files dataset
