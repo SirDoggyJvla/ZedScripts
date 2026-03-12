@@ -53,6 +53,7 @@
           "type": "boolean",
           "default": false,
           "description": "Whether to disable all diagnostics."
+        }
       }
     },
     "languages": [
