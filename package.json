@@ -40,7 +40,19 @@
           "type": "boolean",
           "default": false,
           "description": "Whether to only use local data for scripts."
-        }
+        },
+        "ZedScripts.disabledDiagnostics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "List of diagnostic IDs to disable."
+        },
+        "ZedScripts.disableAllDiagnostics": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to disable all diagnostics."
       }
     },
     "languages": [

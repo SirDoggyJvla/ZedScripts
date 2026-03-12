@@ -238,21 +238,23 @@ export class ScriptParameter {
 
         // check for duplicate
         if (this.isDuplicate && !this.canBeDuplicate()) {
-            this.diagnosticDuplicate();
-            return false;
+            if (this.diagnosticDuplicate()) {
+                return false;
+            }
         }
 
         // check if value is missing
         if (this.value === "" && !this.canBeEmpty()) {
             const lineEnd = this.getLineEnd();
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.MISSING_VALUE,
                 { parameter: name },
                 this.valueRange.start,
                 lineEnd,
                 vscode.DiagnosticSeverity.Hint
-            );
-            return false;
+            )) {
+                return false;
+            }
         }
 
         // verify if parameter has accepted value
@@ -260,33 +262,37 @@ export class ScriptParameter {
             const parameterData = this.getParameterData();
             const values = parameterData?.values;
             if (values) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.WRONG_VALUE,
                     { value: this.value, parameter: name, validValues: values.map(p => `'${p}'`).join(", ") },
                     this.valueRange.start,
                     this.valueRange.end
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
         }
 
         // check if missing comma at the end
         if (this.comma === "") {
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.MISSING_COMMA,
                 {},
                 this.parameterRange.start,
                 this.valueRange.end
-            );
-            return false;
-        } else if (this.comma !== ",") {
-            this.diagnostic(
+            )) {
+                return false;
+            }
+        } 
+        if (this.comma !== ",") {
+            if (this.diagnostic(
                 DiagnosticType.INVALID_COMMA,
                 {},
                 this.parameterRange.start,
                 this.valueRange.end + this.comma.length
-            );
-            return false;
+            )) {
+                return false;
+            }
         }
 
         return true;
@@ -303,8 +309,8 @@ export class ScriptParameter {
         }
     }
 
-    private diagnosticDuplicate(): void {
-        this.diagnostic(
+    private diagnosticDuplicate(): boolean {
+        return this.diagnostic(
             DiagnosticType.DUPLICATE_PARAMETER,
             { parameter: this.parameter, scriptBlock: this.parent.scriptBlock },
             this.parameterRange.start,
@@ -318,8 +324,8 @@ export class ScriptParameter {
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
-    ): void {
-        diagnostic(
+    ): boolean {
+        return diagnostic(
             this.document,
             this.diagnostics,
             type,
@@ -490,7 +496,7 @@ export class InputsParameter {
                 }
             }
             if (!hasOne) {
-                diagnostic(
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.MISSING_ONEOF_PROPERTY,
@@ -498,8 +504,9 @@ export class InputsParameter {
                     this.valuesRange.start,
                     this.valuesRange.end,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
         }
         
@@ -536,7 +543,7 @@ export class InputsParameter {
 
             // report invalid value
             if (!pass) {
-                diagnostic(
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.INVALID_VALUE,
@@ -544,8 +551,9 @@ export class InputsParameter {
                     property.range.start,
                     property.range.end,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
 
         }
@@ -657,13 +665,13 @@ export class InputsItemParameter extends InputsParameter {
 
 // INITIALIZERS
     /**
-     * The amount for the iteùs parameter should be an integer.
+     * The amount for the items parameter should be an integer.
      */
     protected handleAmount(amount: string): number {
         // transform into a number
         const num = parseFloat(amount);
         if (isNaN(num) || num < 0) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.INVALID_AMOUNT,
@@ -671,13 +679,14 @@ export class InputsItemParameter extends InputsParameter {
                 this.amountRange.start,
                 this.amountRange.end,
                 vscode.DiagnosticSeverity.Error
-            );
-            return -1;
+            )) {
+                return -1;
+            }
         }
 
         // verify if integer
         if (!Number.isInteger(num)) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.INTEGER_AMOUNT,
@@ -685,8 +694,9 @@ export class InputsItemParameter extends InputsParameter {
                 this.amountRange.start,
                 this.amountRange.end,
                 vscode.DiagnosticSeverity.Warning
-            );
-            return -1;
+            )) {
+                return -1;
+            }
         }
 
         return num;
@@ -724,7 +734,7 @@ export class InputsItemParameter extends InputsParameter {
             // check value is *, don't allow for other values
             if (item === "*") {
                 if (itemCount > 1) {
-                    diagnostic(
+                    if (diagnostic(
                         this.document,
                         this.diagnostics,
                         DiagnosticType.ALL_WITH_OTHERS,
@@ -732,15 +742,16 @@ export class InputsItemParameter extends InputsParameter {
                         itemStart,
                         itemEnd,
                         vscode.DiagnosticSeverity.Error
-                    );
-                    return false;
+                    )) {
+                        return false;
+                    }
                 }
                 break; // no need to check other items, only need to correct that one
             }
             
             // verify the item isn't empty
             if (item.trim() === "") {
-                diagnostic(
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.MISSING_VALUE,
@@ -748,13 +759,14 @@ export class InputsItemParameter extends InputsParameter {
                     itemStart,
                     itemEnd,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
 
             // verify the item doesn't have spaces in its module.id
             if (item.includes(" ")) {
-                diagnostic(
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.SPACES_IN_ITEM,
@@ -762,14 +774,15 @@ export class InputsItemParameter extends InputsParameter {
                     itemStart,
                     itemEnd,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
             
             // verify the item doesn't have dots in its ID
             const splittedItem = item.split(".");
             if (splittedItem.length > 2) {
-                diagnostic(
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.NO_DOTS_ITEM,
@@ -777,12 +790,14 @@ export class InputsItemParameter extends InputsParameter {
                     itemStart,
                     itemEnd,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                };
 
             // verify the item has a module part
-            } else if (splittedItem.length === 1) {
-                diagnostic(
+            }
+            if (splittedItem.length === 1) {
+                if (diagnostic(
                     this.document,
                     this.diagnostics,
                     DiagnosticType.MISSING_MODULE,
@@ -790,8 +805,9 @@ export class InputsItemParameter extends InputsParameter {
                     itemStart,
                     itemEnd,
                     vscode.DiagnosticSeverity.Error
-                );
-                return false;
+                )) {
+                    return false;
+                }
             }
         }
         
@@ -875,7 +891,7 @@ export class InputsFluidParameter extends InputsParameter {
         // transform into a number
         const num = parseFloat(amount);
         if (isNaN(num) || num < 0) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.INVALID_AMOUNT,
@@ -883,8 +899,9 @@ export class InputsFluidParameter extends InputsParameter {
                 this.valuesRange.start,
                 this.valuesRange.end,
                 vscode.DiagnosticSeverity.Error
-            );
-            return -1;
+            )) {
+                return -1;
+            }
         }
 
         return num;

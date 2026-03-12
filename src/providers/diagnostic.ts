@@ -92,7 +92,23 @@ export function diagnostic(
     params: Record<string, string>,
     index_start: number, index_end: number = index_start,
     severity: DiagnosticSeverity = DiagnosticSeverity.Error
-): void {
+): boolean {
+    const config = vscode.workspace.getConfiguration(EXTENSION_ID);
+
+    // Skip all diagnostics if the master switch is on
+    if (config.get("disableAllDiagnostics")) {
+        return false;
+    }
+
+    // Check if this diagnostic type is disabled in configuration
+    const disabledDiagnostics: string[] = config.get("disabledDiagnostics") || [];
+    
+    // Find the key name for this diagnostic type value
+    const diagnosticKey = Object.entries(DiagnosticType).find(([_, value]) => value === type)?.[0];
+    if (diagnosticKey && disabledDiagnostics.includes(diagnosticKey)) {
+        return false; // Skip adding this diagnostic
+    }
+
     const positionStart = document.positionAt(index_start);
     const positionEnd = document.positionAt(index_end);
     const message = formatText(type, params);
@@ -103,4 +119,5 @@ export function diagnostic(
     );
     diagnostics.push(diagnostic);
     // console.warn(message);
+    return true;
 }

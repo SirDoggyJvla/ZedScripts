@@ -254,12 +254,13 @@ export class ScriptBlock {
 
             // unmatched braces
             if (braceCount !== 0) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.UNMATCHED_BRACE,
                     { scriptBlock: blockType },
                     headerStart
-                );
-                break;
+                )) {
+                    break;
+                }
             }
 
             // create the child block
@@ -357,12 +358,13 @@ export class ScriptBlock {
 
         // verify it's a script block
         if (!isScriptBlock(type)) {
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.NOT_VALID_BLOCK,
                 { scriptBlock: type },
                 this.headerStart
-            )
-            return false;
+            )) {
+                return false;
+            }
         }
 
         // verify ID
@@ -386,24 +388,26 @@ export class ScriptBlock {
         if (shouldHaveParent) {
             if (!this.parent) {
                 const parentBlocks = blockData?.parents?.map(p => `'${p}'`).join(", ") || "unknown";
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.MISSING_PARENT_BLOCK,
                     { scriptBlock: this.scriptBlock, parentBlocks: parentBlocks },
                     this.headerStart
-                )
-                return false;
+                )) {
+                    return false;
+                }
             }
         
         // shouldn't have parent
         } else {
             // but has one when shouldn't
             if (this.parent && this.parent.scriptBlock !== DOCUMENT_IDENTIFIER) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.HAS_PARENT_BLOCK,
                     { scriptBlock: this.scriptBlock }, 
                     this.headerStart
-                )
-                return false;
+                )) {
+                    return false;
+                }
             }
             // all good, no parent as expected
             return true;
@@ -411,15 +415,16 @@ export class ScriptBlock {
 
         // check parent type
         const validParents = blockData.parents;
-        if (validParents) {
+        if (validParents && this.parent) {
             const parentType = this.parent.scriptBlock;
             if (!validParents.includes(parentType)) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.WRONG_PARENT_BLOCK,
                     { scriptBlock: this.scriptBlock, parentBlock: parentType, parentBlocks: validParents.map(p => `'${p}'`).join(", ") },
                     this.headerStart
-                )
-                return false;
+                )) {
+                    return false;
+                }
             }
         }
 
@@ -434,14 +439,15 @@ export class ScriptBlock {
             const childTypes = this.children.map(child => child.scriptBlock);
             for (const neededChild of validChildren) {
                 if (!childTypes.includes(neededChild)) {
-                    this.diagnostic(
+                    if (this.diagnostic(
                         DiagnosticType.MISSING_CHILD_BLOCK,
                         { scriptBlock: this.scriptBlock, childBlocks: validChildren.map(p => `'${p}'`).join(", ") },
                         this.headerStart,
                         this.headerStart,
                         vscode.DiagnosticSeverity.Hint
-                    )
-                    return false;
+                    )) {
+                        return false;
+                    }
                 }
             }
         }
@@ -464,12 +470,13 @@ export class ScriptBlock {
         const IDData = blockData.ID;
         if (!IDData) {
             if (hasID) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.HAS_ID,
                     { scriptBlock: this.scriptBlock }, 
                     this.headerStart
-                )
-                return false;
+                )) {
+                    return false;
+                }
             }
             return true;
         
@@ -487,27 +494,29 @@ export class ScriptBlock {
 
         // should have an ID
         if (!hasID && shouldHaveIDfromParent) {
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.MISSING_ID,
                 { scriptBlock: this.scriptBlock }, 
                 this.headerStart
-            )
-            return false;
+            )) {
+                return false;
+            }
         }
 
         // has an ID, so validate it
         if (hasID) {
             // check if parent block forbids an ID for this subblock
             if (!shouldHaveIDfromParent) {
-                this.diagnostic(
+                if (this.diagnostic(
                     DiagnosticType.HAS_ID_IN_PARENT,
                     { 
                         scriptBlock: this.scriptBlock, 
                         parentBlock: this.parent ? this.parent.scriptBlock : "unknown", 
                         invalidBlocks: invalidBlocks ? invalidBlocks.map(p => `'${p}'`).join(", ") : "unknown" }, 
                     this.headerStart
-                )
-                return false;
+                )) {
+                    return false;
+                }
             }
 
             // check if the ID has one or more valid value
@@ -515,12 +524,13 @@ export class ScriptBlock {
             if (validIDs) {
                 // verify the ID is valid
                 if (!validIDs.includes(id)) {
-                    this.diagnostic(
+                    if (this.diagnostic(
                         DiagnosticType.INVALID_ID,
                         { scriptBlock: this.scriptBlock, id: id, validIDs: validIDs.map(p => `'${p}'`).join(", ") },
                         this.headerStart
-                    )
-                    return false;
+                    )) {
+                        return false;
+                    }
                 }
 
                 // consider the ID as part of the script block type
@@ -549,8 +559,8 @@ export class ScriptBlock {
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
-    ): void {
-        diagnostic(
+    ): boolean {
+        return diagnostic(
             this.document,
             this.diagnostics,
             type,
@@ -635,22 +645,24 @@ export class TemplateBlock extends ScriptBlock {
 
         // verify it's a script block
         if (!isScriptBlock(type)) {
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.NOT_VALID_BLOCK,
                 { scriptBlock: type },
                 this.headerStart
-            )
-            return false;
+            )) {
+                return false;
+            }
         }
 
         // make sure an ID is provided
         if (!this.id) {
-            this.diagnostic(
+            if (this.diagnostic(
                 DiagnosticType.MISSING_ID,
                 { scriptBlock: this.scriptBlock },
                 this.headerStart
-            )
-            return false;
+            )) {
+                return false;
+            }
         }
 
         // verify ID

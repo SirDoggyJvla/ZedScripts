@@ -77,8 +77,9 @@ export class TranslationKeyValue {
 
         // check for duplicate
         if (this.isDuplicate) {
-            this.diagnosticDuplicate();
-            return false;
+            if (this.diagnosticDuplicate()) {
+                return false;
+            }
         }
 
         // if has comma, it's optional
@@ -95,14 +96,15 @@ export class TranslationKeyValue {
 
         // verify quotes
         if (!this.quote) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.MISSING_QUOTES,
                 {},
                 this.valueRange.start, this.valueRange.end
-            );
-            return false;
+            )) {
+                return false;
+            };
         }
 
         // // verify it isn't in first line of the file
@@ -122,14 +124,15 @@ export class TranslationKeyValue {
         // verify key prefix
         const expectedPrefix = this.parent.getKeyPrefix();
         if (expectedPrefix && !this.key.startsWith(expectedPrefix)) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.MISSING_PREFIX,
                 { prefix: expectedPrefix, key: this.key },
                 this.keyRange.start, this.keyRange.end
-            );
-            return false;
+            )) {
+                return false;
+            }
         }
 
         return true;
@@ -147,8 +150,8 @@ export class TranslationKeyValue {
         }
     }
 
-    private diagnosticDuplicate(): void {
-        diagnostic(
+    private diagnosticDuplicate(): boolean {
+        return diagnostic(
             this.document,
             this.diagnostics,
             DiagnosticType.DUPLICATE_PARAMETER,

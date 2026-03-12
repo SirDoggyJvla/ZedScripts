@@ -5,7 +5,8 @@ import { TranslationKeyValue } from './translationBlocksValue';
 import { LANGUAGE_CODES } from './translationBlocksData';
 import { getTranslationblockData } from './translationBlocksUtility';
 import { IndexRange, createIndexRange } from '../utils/positions';
-import { diagnostic, DiagnosticType } from '../models/enums';
+import { DiagnosticType } from '../models/enums';
+import { diagnostic } from '../providers/diagnostic';
 
 export class TranslationBlock {
     private static documentBlockCache: Map<string, TranslationBlock> = new Map();
@@ -110,28 +111,30 @@ export class TranslationBlock {
     private validateTranslationFile(): boolean {
         // verify folder code and file code are the same
         if (this.folderCode != this.fileCode) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.UNMATCHED_CODE,
                 { folderCode: this.folderCode, fileCode: this.fileCode },
                 0,
                 this.document.getText().length
-            );
-            return false;
+            )) {
+                return false;
+            };
         }
 
         // verify the translation code exists
         if (!(this.folderCode in LANGUAGE_CODES)) {
-            diagnostic(
+            if (diagnostic(
                 this.document,
                 this.diagnostics,
                 DiagnosticType.NON_EXISTENT_CODE,
                 { code: this.folderCode, validCodes: Object.keys(LANGUAGE_CODES).map(p => `'${p}'`).join(", ") },
                 0,
                 this.document.getText().length
-            );
-            return false;
+            )) {
+                return false;
+            }
         }
 
         return true;
