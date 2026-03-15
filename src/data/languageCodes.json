@@ -32,7 +32,7 @@
   "CA": {
     "name": "CA",
     "languageName": "Catalan",
-    "encoding": "ISO-8859-15"
+    "encoding": "UTF-8"
   },
   "ES": {
     "name": "ES",
@@ -102,7 +102,7 @@
   "CS": {
     "name": "CS",
     "languageName": "Czech",
-    "encoding": "Cp1250"
+    "encoding": "UTF-8"
   },
   "IT": {
     "name": "IT",
@@ -117,7 +117,7 @@
   "AR": {
     "name": "AR",
     "languageName": "Espanol (AR) - Argentina Spanish",
-    "encoding": "Cp1252"
+    "encoding": "UTF-8"
   },
   "RO": {
     "name": "RO",
