@@ -132,7 +132,7 @@
     "name": "component WallCoveringConfig",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -144,6 +144,17 @@
         "name": "type"
       }
     }
+  },
+  "ROOT-SandboxOptions": {
+    "name": "ROOT-SandboxOptions",
+    "description": "The root of a script file. Blocks than need to be in the root of the document should have this as parent.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "pattern": [
+      "media/sandbox-options.txt"
+    ],
+    "parameters": {}
   },
   "evolvedrecipe": {
     "name": "evolvedrecipe",
@@ -241,7 +252,8 @@
     "description": "A module holds different types of script definitions.",
     "shouldHaveParent": true,
     "parents": [
-      "_DOCUMENT"
+      "_DOCUMENT",
+      "ROOT-Scripts"
     ],
     "ID": {},
     "parameters": {}
@@ -306,7 +318,7 @@
     "name": "component CraftBenchSounds",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -399,7 +411,8 @@
     "description": "Used to define tileset properties.",
     "shouldHaveParent": true,
     "parents": [
-      "_DOCUMENT"
+      "_DOCUMENT",
+      "ROOT-Scripts"
     ],
     "parameters": {
       "version": {
@@ -433,6 +446,7 @@
     "description": "Not a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
     "shouldHaveParent": false,
     "parents": [],
+    "deprecated": true,
     "parameters": {}
   },
   "clip": {
@@ -741,6 +755,43 @@
           "container",
           "normal",
           "radio"
+        ],
+        "values": [
+          "Apron",
+          "ShirtNoSleeves",
+          "JumperNoSleeves",
+          "Shirt",
+          "ShirtLongSleeves",
+          "Jumper",
+          "Jacket",
+          "LongJacket",
+          "ShortsShort",
+          "Trousers",
+          "Shoes",
+          "FullHelmet",
+          "Bag",
+          "Hands",
+          "Head",
+          "Neck",
+          "Groin",
+          "UpperBody",
+          "LowerBody",
+          "LowerLegs",
+          "UpperLegs",
+          "LowerArms",
+          "UpperArms",
+          "Hand_L",
+          "Hand_R",
+          "ForeArm_L",
+          "ForeArm_R",
+          "UpperArm_L",
+          "UpperArm_R",
+          "UpperLeg_L",
+          "UpperLeg_R",
+          "LowerLeg_L",
+          "LowerLeg_R",
+          "Foot_L",
+          "Foot_R"
         ]
       },
       "bodylocation": {
@@ -3290,6 +3341,43 @@
       }
     }
   },
+  "ROOT-ModInfo": {
+    "name": "ROOT-ModInfo",
+    "description": "The mod.info file, which contains all the information about a mod.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "pattern": [
+      "mod.info"
+    ],
+    "parameters": {
+      "name": {
+        "name": "name",
+        "type": "string",
+        "description": "The name of the mod. A translation can be provided in the [Mod.json translation file](https://pzwiki.net/wiki/Translation)."
+      },
+      "description": {
+        "name": "description",
+        "type": "string",
+        "description": "A description of the mod. The description supports [rich text tags](https://pzwiki.net/wiki/ISRichTextPanel). A translation can be provided in the [Mod.json translation file](https://pzwiki.net/wiki/Translation)."
+      },
+      "id": {
+        "name": "id",
+        "type": "string",
+        "description": "The unique identifier of the mod."
+      },
+      "author": {
+        "name": "author",
+        "type": "string",
+        "description": "The author of the mod. Multiple authors are often separated by commas but no convention exists."
+      },
+      "poster": {
+        "name": "poster",
+        "type": "string",
+        "description": "The relative path to the mod's poster image. The image should be placed in the same folder as the mod's .mod file."
+      }
+    }
+  },
   "vehicle": {
     "name": "vehicle",
     "description": "Defines a vehicle.",
@@ -3512,7 +3600,7 @@
     "name": "component Durability",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "item"
     ],
@@ -3542,7 +3630,7 @@
     "name": "component ContextMenuConfig",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "item"
     ],
@@ -3708,6 +3796,17 @@
       }
     }
   },
+  "ROOT-Scripts": {
+    "name": "ROOT-Scripts",
+    "description": "The root of a script file. Blocks than need to be in the root of the document should have this as parent.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "pattern": [
+      "\\/media\\/scripts\\/[\\/\\w\\s]*\\.txt"
+    ],
+    "parameters": {}
+  },
   "character_trait_definition": {
     "name": "character_trait_definition",
     "description": "Defines a character trait.",
@@ -3774,7 +3873,7 @@
     "name": "component SpriteOverlayConfig",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -3784,7 +3883,7 @@
     "name": "component UiConfig",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -3804,7 +3903,7 @@
     "name": "component CraftRecipe",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -4014,7 +4113,7 @@
     "name": "component DryingCraftLogic",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -4024,7 +4123,7 @@
     "name": "component Resources",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -4058,7 +4157,7 @@
     "description": "Defines a custom sandbox option for a mod.",
     "shouldHaveParent": true,
     "parents": [
-      "_DOCUMENT"
+      "ROOT-SandboxOptions"
     ],
     "ID": {},
     "files": [
@@ -4106,7 +4205,7 @@
     "name": "component FluidContainer",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "item"
     ],
@@ -4311,7 +4410,7 @@
     "name": "component SpriteConfig",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],
@@ -4413,7 +4512,7 @@
     "name": "component CraftBench",
     "description": "",
     "shouldHaveParent": true,
-    "isVariant": "components",
+    "isVariant": "component",
     "parents": [
       "entity"
     ],

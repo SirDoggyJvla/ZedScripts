@@ -13,6 +13,7 @@ import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
 import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
+    // console.debug(`Handling opened document: ${document.fileName} with languageId: ${document.languageId}`);
     if (
         document.languageId === LANG_ZEDSCRIPTS
         || document.languageId === LANG_TRANSLATIONSCRIPTS
@@ -79,12 +80,12 @@ export async function activate(context: vscode.ExtensionContext) {
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
     watcher.onDidChange((uri) => {
         itemCache.clearForFile(uri.fsPath);
-        console.debug(`Cache invalidé pour : ${uri.fsPath}`);
+        console.debug(`Invalidated cache for : ${uri.fsPath}`);
     });
     
     watcher.onDidDelete((uri) => {
         itemCache.clearForFile(uri.fsPath);
-        console.debug(`Cache invalidé pour : ${uri.fsPath}`);
+        console.debug(`Invalidated cache for : ${uri.fsPath}`);
     });
     if (vscode.window.activeTextEditor) {
         diagnosticProvider.updateDiagnostics(

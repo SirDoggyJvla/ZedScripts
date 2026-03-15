@@ -10,5 +10,6 @@ npx ovsx publish
 VERSION=$(node -e "console.log(require('./package.json').version)")
 
 # release to GitHub
+git push --tags
 vsce package
 gh release create "v$VERSION" "project-zomboid-scripts-$VERSION.vsix" --notes "See [Changelog](https://github.com/SirDoggyJvla/ZedScripts/blob/main/README.md#Changelog) for details"
