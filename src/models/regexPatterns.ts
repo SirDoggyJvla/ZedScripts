@@ -27,7 +27,7 @@ export const KEY_VALUE_TRANSLATION_REGEX = /^(?!\s*[--])\s*(?<key>\S+[^=]*\S+)\s
  * {
  * ```
  */
-export const scriptBlockRegex = /^\s*(?<type>\w+)[^\r\n]?(?<name>[^\r\n]*?)\s*{/gm;
+export const scriptBlockRegex = /^\s*(?<type>\w+)[^\r\n]?(?<id>[^\r\n]*?)\s+{/gm;
 
 
 // NOTE(aoqia): I am not sure if the game ignores whitespace at the end of values.
