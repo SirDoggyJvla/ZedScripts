@@ -8,3 +8,10 @@ export function createIndexRange(start: number, index: number, fullMatch: string
     const rangeEnd = rangeStart + value.length;
     return { start: rangeStart, end: rangeEnd };
 }
+
+
+export function replaceCommentsWithWhitespace(text: string): string {
+	return text.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+		return ' '.repeat(match.length);
+	});
+}

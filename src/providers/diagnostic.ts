@@ -37,11 +37,8 @@ export class DiagnosticProvider {
         const diagnostics: vscode.Diagnostic[] = [];
 
         const path = document.fileName;
-        // if (!path.endsWith(".txt")) {
-        //     return;
-        // }
-
         const type = testForScriptRootFile(path);
+
         new DocumentBlock(document, diagnostics, type);
 
         this.diagnosticCollection.set(document.uri, diagnostics);

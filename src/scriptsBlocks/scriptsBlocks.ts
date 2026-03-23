@@ -15,7 +15,7 @@ import { ScriptBlockData } from './scriptsBlocksData';
 import { getScriptBlockData } from './scriptsBlocksUtility';
 import { isScriptBlock } from './scriptsBlocksUtility';
 import { colorText } from '../utils/htmlFormat';
-import { IndexRange, createIndexRange } from '../utils/positions';
+import { IndexRange, createIndexRange, replaceCommentsWithWhitespace } from '../utils/positions';
 import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsBlocksParameter';
 
 /**
@@ -225,7 +225,9 @@ export class ScriptBlock {
         const children: ScriptBlock[] = [];
 
         const document = this.document;
-        const text = document.getText();
+        const text = replaceCommentsWithWhitespace(
+            document.getText()
+        );
 
         const blockHeader = scriptBlockRegex;
         let match: RegExpExecArray | null;
@@ -297,7 +299,9 @@ export class ScriptBlock {
 
     protected findParameters(): ScriptParameter[] {
         const document = this.document;
-        const text = document.getText().slice(this.start, this.end);
+        const text = replaceCommentsWithWhitespace(
+            document.getText().slice(this.start, this.end)
+        );
 
         const parameters: ScriptParameter[] = [];
 
