@@ -114,6 +114,9 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ### Changelog
 
+1.9.1:
+- properly handle comments /* */ in script files now by replacing them with whitespaces before parsing, which allows to keep the correct character positions for diagnostics and syntax highlighting
+
 1.9.0:
 - update to new document files "ROOT-" files from pz-scripts-data
 - improved diagnostics for script files by splitting their handling into different document block types. This allows for specific parameters and child blocks to be defined for each document types (sandbox-options.txt, mod.info, generic script files and more)
