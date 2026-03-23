@@ -3,7 +3,7 @@ import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
 import * as path from "path";
 
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
-import { testForScriptRootFile } from "../scriptsBlocks/scriptsBlocksData";
+import { testForScriptRootFile, DEFAULT_ROOT_FILE } from "../scriptsBlocks/scriptsBlocksData";
 
 import { TranslationBlock } from "../translationBlocks/translationBlocks";
 import { TRANSLATION_FILE_PREFIXES } from "../translationBlocks/translationBlocksData";
@@ -37,7 +37,7 @@ export class DiagnosticProvider {
         const diagnostics: vscode.Diagnostic[] = [];
 
         const path = document.fileName;
-        const type = testForScriptRootFile(path);
+        const type = testForScriptRootFile(path) || DEFAULT_ROOT_FILE;
 
         new DocumentBlock(document, diagnostics, type);
 

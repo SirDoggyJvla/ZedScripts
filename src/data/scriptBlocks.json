@@ -128,6 +128,16 @@
     "ID": {},
     "parameters": {}
   },
+  "style": {
+    "name": "style",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "component SpriteOverlayConfig"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
   "component WallCoveringConfig": {
     "name": "component WallCoveringConfig",
     "description": "",
@@ -4444,7 +4454,8 @@
     "description": "",
     "shouldHaveParent": true,
     "parents": [
-      "component SpriteConfig"
+      "component SpriteConfig",
+      "style"
     ],
     "ID": {
       "values": [

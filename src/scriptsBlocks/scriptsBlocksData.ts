@@ -87,7 +87,6 @@ function mapRootFiles(data: ScriptData): ScriptBlockData[] {
     return Object.values(data).filter(block => block.isRoot);
 }
 
-export let DEFAULT_ROOT_FILE = "ROOT-Scripts"
 export let ROOT_FILES = mapRootFiles(SCRIPTS_TYPES);
 export function initRootFiles() {
     ROOT_FILES = mapRootFiles(SCRIPTS_TYPES);
@@ -101,7 +100,8 @@ export function setScriptsTypes(newTypes: ScriptData) {
 }
 
 
-export function testForScriptRootFile(filePath: string): string {
+export let DEFAULT_ROOT_FILE = "ROOT-Scripts";
+export function testForScriptRootFile(filePath: string): string | null{
     for (const rootFile of ROOT_FILES) {
         for (const pattern of rootFile.pattern || []) {
             const regex = new RegExp(pattern);
@@ -113,5 +113,5 @@ export function testForScriptRootFile(filePath: string): string {
     // default to scripts file in case of weird match case, 
     // since the user might just want to use the extension 
     // features without following the usual file naming conventions
-    return DEFAULT_ROOT_FILE;
+    return null;
 }

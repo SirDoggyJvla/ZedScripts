@@ -114,6 +114,9 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ### Changelog
 
+1.9.2:
+- patched any file being marked as a script file by default
+
 1.9.1:
 - properly handle comments /* */ in script files now by replacing them with whitespaces before parsing, which allows to keep the correct character positions for diagnostics and syntax highlighting
 
