@@ -402,8 +402,7 @@ export class ScriptParameter {
         if (parameterData && parameterData.type) {
             const expectedType = parameterData.type;
             const actualType = this.getTypeOfValue();
-            const isValidType = (expectedType === VALUE_TYPES.FLOAT && (actualType === VALUE_TYPES.INT || actualType === VALUE_TYPES.FLOAT))
-                || actualType === expectedType;
+            const isValidType = actualType === expectedType;
             if (!isValidType) {
                 this.diagnostic(
                     DiagnosticType.INVALID_TYPE_FOR_VALUE,
