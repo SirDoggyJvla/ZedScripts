@@ -1,3 +1,5 @@
+import * as path from "path";
+
 export interface ScriptData {
     [key: string]: ScriptBlockData;
 }
@@ -102,6 +104,9 @@ export function setScriptsTypes(newTypes: ScriptData) {
 
 export let DEFAULT_ROOT_FILE = "ROOT-Scripts";
 export function testForScriptRootFile(filePath: string): string | null{
+    filePath = filePath.replace(/\\/g, '/');
+    filePath = path.posix.normalize(filePath);
+    console.debug(`Testing file path for script root file: ${filePath}`);
     for (const rootFile of ROOT_FILES) {
         for (const pattern of rootFile.pattern || []) {
             const regex = new RegExp(pattern);
