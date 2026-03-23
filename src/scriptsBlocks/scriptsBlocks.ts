@@ -814,15 +814,19 @@ export class DocumentBlock extends ScriptBlock {
         }
 
         // recursive search for the block containing the index
-        const searchBlock = (block: ScriptBlock): ScriptBlock | null => {
+        const searchBlock = (block: ScriptBlock, level: number = 0): ScriptBlock | null => {
             for (const child of block.children) {
                 if (index >= child.headerStart && index < child.end) {
                     // found a child containing the index, search deeper
-                    const found = searchBlock(child);
+                    const found = searchBlock(child, level + 1);
                     return found || child;
                 }
             }
-            return this; // no child contains the index
+            if (level === 0) {
+                // if we are at the top level and no child contains the index, return the document block
+                return this;
+            }
+            return null; // no child contains the index
         }
         return searchBlock(this);
     }
