@@ -5,6 +5,13 @@ export interface ScriptData {
 }
 
 export let SCRIPTS_TYPES: ScriptData = require('../data/scriptBlocks.json');
+export enum VALUE_TYPES {
+    STRING = "string",
+    INT = "integer",
+    FLOAT = "float",
+    BOOLEAN = "boolean",
+    ARRAY = "array",
+}
 
 
 
@@ -31,7 +38,6 @@ export interface IndexRange {
 export interface ScriptBlockParameter {
     name: string;
     description?: string;
-    itemTypes?: string[];
     allowedDuplicate?: boolean;
     canBeEmpty?: boolean;
     default?: (string | number | boolean)[];
@@ -39,6 +45,13 @@ export interface ScriptBlockParameter {
     required?: boolean;
     deprecated?: boolean;
     values?: (string | number | boolean)[];
+    needs?: ScriptBlockNeeds[];
+}
+
+export interface ScriptBlockNeeds {
+    name: string; // the dependent parameter
+    values?: any[]; // list of possible values for the dependent parameter
+    valueToType?: { [key: string]: string } // mapping of dependent parameter values to types (for dynamic typing based on other parameter's value)
 }
 
 export interface ScriptBlockID {

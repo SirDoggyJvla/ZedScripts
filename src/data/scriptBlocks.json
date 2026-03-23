@@ -320,12 +320,12 @@
       },
       "minamount": {
         "name": "minAmount",
-        "type": "number",
+        "type": "float",
         "description": "The minimum amount required to consume to poison the player."
       },
       "diluteratio": {
         "name": "diluteRatio",
-        "type": "number",
+        "type": "float",
         "description": "The ratio at which the poison is diluted when mixed with other fluids."
       }
     }
@@ -587,7 +587,7 @@
         "itemTypes": [
           "radio"
         ],
-        "type": "int",
+        "type": "integer",
         "default": -1
       },
       "activateditem": {
@@ -989,7 +989,7 @@
         "itemTypes": [
           "container"
         ],
-        "type": "int",
+        "type": "integer",
         "default": -1
       },
       "carbohydrates": {
@@ -1088,7 +1088,7 @@
           "normal",
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 255
       },
       "colorgreen": {
@@ -1100,7 +1100,7 @@
           "normal",
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 255
       },
       "colorred": {
@@ -1112,7 +1112,7 @@
           "normal",
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 255
       },
       "combatspeedmodifier": {
@@ -1137,7 +1137,7 @@
           "normal",
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 10
       },
       "conditionloweroffroad": {
@@ -1164,7 +1164,7 @@
           "radio",
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 10
       },
       "consolidateoption": {
@@ -1199,7 +1199,7 @@
         "itemTypes": [
           "normal"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 1
       },
       "critdmgmultiplier": {
@@ -1308,7 +1308,7 @@
         "itemTypes": [
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 1
       },
       "doorhitsound": {
@@ -1914,7 +1914,7 @@
         "itemTypes": [
           "literature"
         ],
-        "type": "int",
+        "type": "integer",
         "default": -1
       },
       "magazine_subject": {
@@ -1959,7 +1959,7 @@
         "itemTypes": [
           "normal"
         ],
-        "type": "int",
+        "type": "integer",
         "default": -1
       },
       "maxchannel": {
@@ -1967,7 +1967,7 @@
         "itemTypes": [
           "radio"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 108000
       },
       "maxdamage": {
@@ -1983,7 +1983,7 @@
         "itemTypes": [
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 1000
       },
       "maxitemsize": {
@@ -2068,7 +2068,7 @@
         "itemTypes": [
           "radio"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 88000
       },
       "mindamage": {
@@ -2186,7 +2186,7 @@
         "itemTypes": [
           "literature"
         ],
-        "type": "int",
+        "type": "integer",
         "default": -1
       },
       "numlevelstrained": {
@@ -2194,7 +2194,7 @@
         "itemTypes": [
           "literature"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 1
       },
       "onbreak": {
@@ -2742,7 +2742,7 @@
         "itemTypes": [
           "weapon"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 2
       },
       "splatsize": {
@@ -2890,7 +2890,7 @@
         "itemTypes": [
           "drainable"
         ],
-        "type": "int",
+        "type": "integer",
         "default": 30
       },
       "tohitmodifier": {
@@ -3772,55 +3772,55 @@
     "parameters": {
       "thirstchange": {
         "name": "ThirstChange",
-        "type": "number",
+        "type": "float",
         "description": "The amount of thirst this fluid changes when consumed. Positive values increase thirst, negative values decrease it."
       },
       "alcohol": {
         "name": "alcohol",
-        "type": "number"
+        "type": "float"
       },
       "hungerchange": {
         "name": "HungerChange",
-        "type": "number",
+        "type": "float",
         "description": "The amount of hunger this fluid changes when consumed. Positive values increase hunger, negative values decrease it."
       },
       "calories": {
         "name": "Calories",
-        "type": "number",
+        "type": "float",
         "description": "The number of calories this fluid provides when consumed."
       },
       "carbohydrates": {
         "name": "Carbohydrates",
-        "type": "number",
+        "type": "float",
         "description": "The amount of carbohydrates this fluid provides when consumed."
       },
       "lipids": {
         "name": "Lipids",
-        "type": "number",
+        "type": "float",
         "description": "The amount of lipids (fats) this fluid provides when consumed."
       },
       "proteins": {
         "name": "Proteins",
-        "type": "number",
+        "type": "float",
         "description": "The amount of proteins this fluid provides when consumed."
       },
       "flureduction": {
         "name": "fluReduction",
-        "type": "number"
+        "type": "float"
       },
       "painreduction": {
         "name": "painReduction",
-        "type": "number",
+        "type": "float",
         "description": "The amount of pain this fluid reduces when consumed."
       },
       "endurancechange": {
         "name": "enduranceChange",
-        "type": "number",
+        "type": "float",
         "description": "The amount of endurance given back."
       },
       "foodsicknesschange": {
         "name": "foodSicknessChange",
-        "type": "number",
+        "type": "float",
         "description": "The amount of food sickness provides."
       }
     }
@@ -4263,15 +4263,45 @@
       },
       "min": {
         "name": "min",
-        "type": "float"
+        "type": "float",
+        "description": "The minimum value the option can have. Only for integer and double types.",
+        "needs": [
+          {
+            "name": "type",
+            "values": [
+              "integer",
+              "double"
+            ]
+          }
+        ]
       },
       "max": {
         "name": "max",
-        "type": "float"
+        "type": "float",
+        "description": "The maximum value the option can have. Only for integer and double types.",
+        "needs": [
+          {
+            "name": "type",
+            "values": [
+              "integer",
+              "double"
+            ]
+          }
+        ]
       },
       "default": {
         "name": "default",
-        "type": "float"
+        "needs": [
+          {
+            "name": "type",
+            "valueToType": {
+              "integer": "float",
+              "double": "float",
+              "boolean": "boolean",
+              "string": "string"
+            }
+          }
+        ]
       },
       "page": {
         "name": "page",
@@ -4604,7 +4634,7 @@
     "parameters": {
       "recipes": {
         "name": "Recipes",
-        "type": "list"
+        "type": "array"
       }
     }
   },

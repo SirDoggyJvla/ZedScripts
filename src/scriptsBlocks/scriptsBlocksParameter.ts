@@ -6,13 +6,15 @@ import {
     DiagnosticType, 
     DefaultText, 
     WIKI_LINK,
-    formatText
+    formatText,
+    formatList
 } from '../models/enums';
 import { diagnostic } from '../providers/diagnostic';
 import { 
     ScriptBlockParameter, 
     InputAnalysisProperty,
-    InputParameterData
+    InputParameterData,
+    VALUE_TYPES
 } from './scriptsBlocksData';
 import { getScriptBlockData } from "./scriptsBlocksUtility";
 import { getColor, getFontStyle } from "../utils/themeColors";
@@ -109,7 +111,7 @@ export class ScriptParameter {
                             // color array elements first
                             if (Array.isArray(defaultValue) && defaultValue.length > 1) {
                                 const coloredElements = (defaultValue as string[]).map(elem => this.color(elem, ThemeColorType.STRING));
-                                text = (coloredElements as string[]).join("; ")
+                                text = formatList(coloredElements, "; ");
                             }
                             break;
                     }
@@ -173,6 +175,17 @@ export class ScriptParameter {
     public getDescription(): string {
         const parameterData = this.getParameterData();
         return parameterData?.description || DefaultText.SCRIPT_BLOCK_DESCRIPTION;
+    }
+
+    public getTypeOfValue(): string {
+        const value = this.value;
+        if (value === "true" || value === "false") {
+            return VALUE_TYPES.BOOLEAN;
+        } else if (!isNaN(Number(value))) {
+            return value.includes(".") ? VALUE_TYPES.FLOAT : VALUE_TYPES.INT;
+        }
+        // need method to identify array
+        return VALUE_TYPES.STRING;
     }
 
     public canBeDuplicate(): boolean {
@@ -264,7 +277,7 @@ export class ScriptParameter {
             if (values) {
                 if (this.diagnostic(
                     DiagnosticType.WRONG_VALUE,
-                    { value: this.value, parameter: name, validValues: values.map(p => `'${p}'`).join(", ") },
+                    { value: this.value, parameter: name, validValues: formatList(values) },
                     this.valueRange.start,
                     this.valueRange.end
                 )) {
@@ -294,6 +307,90 @@ export class ScriptParameter {
                 )) {
                     return false;
                 }
+            }
+        }
+
+        // validate dependent parameters based on 'needs' property
+        const parameterData = this.getParameterData();
+        if (parameterData && parameterData.needs) {
+            const needs = parameterData.needs;
+            for (const need of needs) {
+                const name = need.name;
+                
+                // verify the block has the dependent parameter
+                const dependentParameter = this.parent.getParameter(name);
+                if (!dependentParameter) {
+                    this.diagnostic(
+                        DiagnosticType.MISSING_DEPENDENT_PARAMETER,
+                        { parameter: name, scriptBlock: this.parent.scriptBlock },
+                        this.parameterRange.start,
+                        this.valueRange.end,
+                        vscode.DiagnosticSeverity.Error
+                    );
+                } else {
+                    const values = need.values;
+                    const valueToType = need.valueToType;
+
+                    // check if the dependent parameter needs a specific value
+                    if (values && !values.includes(dependentParameter.value)) {
+                        this.diagnostic(
+                            DiagnosticType.DEPENDENT_PARAMETER_WRONG_VALUE,
+                            { 
+                                parameter: name, 
+                                dependentParameter: dependentParameter.parameter,
+                                scriptBlock: this.parent.scriptBlock, 
+                                value: dependentParameter.value, 
+                                validValues: formatList(values)
+                            },
+                            this.parameterRange.start,
+                            this.valueRange.end,
+                            vscode.DiagnosticSeverity.Error
+                        );
+
+                    // the parameter can be of different type based on the value of the dependent parameter
+                    } else if (valueToType) {
+                        const expectedType = valueToType[dependentParameter.value];
+                        const actualType = this.getTypeOfValue();
+                        if (expectedType && actualType !== expectedType) {
+                            this.diagnostic(
+                                DiagnosticType.INVALID_TYPE_FOR_VALUE,
+                                {
+                                    parameter: this.parameter,
+                                    scriptBlock: this.parent.scriptBlock,
+                                    value: this.value,
+                                    expectedType: expectedType,
+                                    type: actualType? actualType : "undefined",
+                                },
+                                this.parameterRange.start,
+                                this.valueRange.end,
+                                vscode.DiagnosticSeverity.Error
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        // verify the type
+        if (parameterData && parameterData.type) {
+            const expectedType = parameterData.type;
+            const actualType = this.getTypeOfValue();
+            const isValidType = (expectedType === VALUE_TYPES.FLOAT && (actualType === VALUE_TYPES.INT || actualType === VALUE_TYPES.FLOAT))
+                || actualType === expectedType;
+            if (!isValidType) {
+                this.diagnostic(
+                    DiagnosticType.INVALID_TYPE_FOR_VALUE,
+                    {
+                        parameter: this.parameter,
+                        scriptBlock: this.parent.scriptBlock,
+                        value: this.value,
+                        expectedType: expectedType,
+                        type: actualType,
+                    },
+                    this.parameterRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Error
+                );
             }
         }
 
@@ -419,6 +516,7 @@ export class InputsParameter {
         // properties starting position in document
         const valueStart = this.valuesRange.start;
 
+        // handle properties based on block data
         for (const key in this.properties) {
             // retrieve the matches for this property
             const property = this.properties[key];
@@ -502,7 +600,7 @@ export class InputsParameter {
                     this.document,
                     this.diagnostics,
                     DiagnosticType.MISSING_ONEOF_PROPERTY,
-                    { type: this.parameter, properties: oneOf.join(", ") },
+                    { type: this.parameter, properties: formatList(oneOf) },
                     this.valuesRange.start,
                     this.valuesRange.end,
                     vscode.DiagnosticSeverity.Error
@@ -531,14 +629,14 @@ export class InputsParameter {
                     for (const val of value as string[]) {
                         if (!values.includes(val)) {
                             pass = false;
-                            params = { value: val, property: key, validValues: values.join(", ") };
+                            params = { value: val, property: key, validValues: formatList(values) };
                         }
                     }
                     break;
                 case 'string':
                     if (!values.includes(value as string)) {
                         pass = false;
-                        params = { value: value as string, property: key, validValues: values.join(", ") };
+                        params = { value: value as string, property: key, validValues: formatList(values) };
                     }
                     break;
             }
