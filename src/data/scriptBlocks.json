@@ -162,7 +162,7 @@
     "parents": [],
     "isRoot": true,
     "pattern": [
-      "media/sandbox-options.txt"
+      "media\\/sandbox-options\\.txt$"
     ],
     "parameters": {
       "version": {
@@ -3371,7 +3371,7 @@
     "isRoot": true,
     "noComma": true,
     "pattern": [
-      "mod.info"
+      "mod\\.info$"
     ],
     "parameters": {
       "name": {
@@ -3887,7 +3887,7 @@
     "parents": [],
     "isRoot": true,
     "pattern": [
-      "media\\/scripts\\/[\\s\\S]+\\.txt"
+      "media\\/scripts\\/[\\s\\S]+\\.txt$"
     ],
     "parameters": {}
   },
