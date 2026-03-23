@@ -178,14 +178,41 @@ export class ScriptParameter {
     }
 
     public getTypeOfValue(): string {
-        const value = this.value;
-        if (value === "true" || value === "false") {
-            return VALUE_TYPES.BOOLEAN;
-        } else if (!isNaN(Number(value))) {
-            return value.includes(".") ? VALUE_TYPES.FLOAT : VALUE_TYPES.INT;
+        const expectedType = this.getParameterData()?.type;
+
+        // I don't know how I feel about that lol 
+        // but that's kind of the problem with scripts
+        if (expectedType === VALUE_TYPES.ARRAY) {
+            return VALUE_TYPES.ARRAY;
         }
-        // need method to identify array
-        return VALUE_TYPES.STRING;
+
+        // find the most fitting type
+        const value = this.value;
+        let type = undefined;
+
+        // check if boolean
+        if (value === "true" || value === "false") {
+            type = VALUE_TYPES.BOOLEAN;
+
+        // check if number
+        } else if (!isNaN(Number(value))) {
+            if (value.includes(".")) {
+                type = VALUE_TYPES.FLOAT;
+            
+            // if int, output a float anyway if expected is float
+            // done for easier handling of diagnostics later down the line
+            } else if (expectedType === VALUE_TYPES.FLOAT) {
+                type = VALUE_TYPES.FLOAT;
+            } else {
+                type = VALUE_TYPES.INT;
+            }
+
+        // default to string
+        } else {
+            type = VALUE_TYPES.STRING;
+        }
+
+        return type;
     }
 
     public canBeDuplicate(): boolean {
