@@ -3,6 +3,8 @@ import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
 import * as path from "path";
 
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
+import { testForScriptRootFile } from "../scriptsBlocks/scriptsBlocksData";
+
 import { TranslationBlock } from "../translationBlocks/translationBlocks";
 import { TRANSLATION_FILE_PREFIXES } from "../translationBlocks/translationBlocksData";
 
@@ -34,7 +36,13 @@ export class DiagnosticProvider {
     private updateDiagnosticsZedScripts(document: vscode.TextDocument): void {
         const diagnostics: vscode.Diagnostic[] = [];
 
-        new DocumentBlock(document, diagnostics);
+        const path = document.fileName;
+        // if (!path.endsWith(".txt")) {
+        //     return;
+        // }
+
+        const type = testForScriptRootFile(path);
+        new DocumentBlock(document, diagnostics, type);
 
         this.diagnosticCollection.set(document.uri, diagnostics);
     }

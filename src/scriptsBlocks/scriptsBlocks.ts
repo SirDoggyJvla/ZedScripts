@@ -51,7 +51,7 @@ export class ScriptBlock {
         diagnostics: Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
-        name: string | null,
+        id: string | null,
         start: number,
         end: number,
         headerStart: number
@@ -60,7 +60,7 @@ export class ScriptBlock {
         this.diagnostics = diagnostics;
         this.parent = parent;
         this.scriptBlock = type;
-        this.id = name;
+        this.id = id;
         this.start = start;
         this.end = end;
         this.headerStart = headerStart;
@@ -120,6 +120,11 @@ export class ScriptBlock {
             }
         }
         return false;
+    }
+
+    public shouldParameterHaveComma(): boolean {
+        const blockData = getScriptBlockData(this.scriptBlock);
+        return !blockData.noComma; // default is false, so should have comma by default
     }
 
     private color(txt: string, colorType: ThemeColorType = ThemeColorType.SCRIPT_BLOCK): string {
@@ -582,12 +587,12 @@ export class ComponentBlock extends ScriptBlock {
         diagnostics: Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
-        name: string | null,
+        id: string | null,
         start: number,
         end: number,
         headerStart: number
     ) {
-        super(document, diagnostics, parent, type, name, start, end, headerStart);
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
     }
 
     // override isWord to check original script block since ID and scriptBlock are merged
@@ -603,12 +608,12 @@ export class ItemMapperBlock extends ScriptBlock {
         diagnostics: Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
-        name: string | null,
+        id: string | null,
         start: number,
         end: number,
         headerStart: number
     ) {
-        super(document, diagnostics, parent, type, name, start, end, headerStart);
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
     }
 
     public canHaveParameter(name: string): boolean {
@@ -625,18 +630,18 @@ export class TemplateBlock extends ScriptBlock {
         diagnostics: Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
-        name: string | null,
+        id: string | null,
         start: number,
         end: number,
         headerStart: number
     ) {
-        const splittedID = name ? name.split(" ") : null;
+        const splittedID = id ? id.split(" ") : null;
         if (splittedID) {
             type = splittedID[0];
-            name = splittedID.slice(1).join(" ") || null;
+            id = splittedID.slice(1).join(" ") || null;
         }
         
-        super(document, diagnostics, parent, type, name, start, end, headerStart);
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
         this.isTemplate = true;
     }
 
@@ -686,12 +691,12 @@ export class InputsBlock extends ScriptBlock {
         diagnostics: Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
-        name: string | null,
+        id: string | null,
         start: number,
         end: number,
         headerStart: number
     ) {
-        super(document, diagnostics, parent, type, name, start, end, headerStart);
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
     }
 
     protected findParameters(): any[] {
@@ -771,14 +776,13 @@ export class InputsBlock extends ScriptBlock {
 export class DocumentBlock extends ScriptBlock {
     private static documentBlockCache: Map<string, DocumentBlock> = new Map();
     
-    constructor(document: TextDocument, diagnostics: Diagnostic[]) {
+    constructor(document: TextDocument, diagnostics: Diagnostic[], type: string) {
         // Only document is provided
         const parent = null;
-        const type = DOCUMENT_IDENTIFIER;
-        const name = null;
+        const id = null;
         const start = 0;
         const end = document.getText().length;
-        super(document, diagnostics, parent, type, name, start, end, start);
+        super(document, diagnostics, parent, type, id, start, end, start);
 
         // cache this document block
         DocumentBlock.documentBlockCache.set(document.uri.toString(), this);
@@ -806,7 +810,7 @@ export class DocumentBlock extends ScriptBlock {
     public getBlock(index: number): ScriptBlock | null {
         // check if index is within this document
         if (index < this.headerStart || index >= this.end) {
-            return null;
+            return this;
         }
 
         // recursive search for the block containing the index
@@ -818,7 +822,7 @@ export class DocumentBlock extends ScriptBlock {
                     return found || child;
                 }
             }
-            return null; // no child contains the index
+            return this; // no child contains the index
         }
         return searchBlock(this);
     }
@@ -827,7 +831,7 @@ export class DocumentBlock extends ScriptBlock {
     protected validateBlock(): boolean { return true; }
     protected validateChildren(): boolean { return true; }
     protected validateID(): boolean { return true; }
-    protected findParameters(): ScriptParameter[] { return []; }
+    // protected findParameters(): ScriptParameter[] { return []; }
 }
 
 

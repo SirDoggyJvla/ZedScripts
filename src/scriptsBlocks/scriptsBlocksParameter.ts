@@ -274,24 +274,26 @@ export class ScriptParameter {
         }
 
         // check if missing comma at the end
-        if (this.comma === "") {
-            if (this.diagnostic(
-                DiagnosticType.MISSING_COMMA,
-                {},
-                this.parameterRange.start,
-                this.valueRange.end
-            )) {
-                return false;
-            }
-        } 
-        if (this.comma !== ",") {
-            if (this.diagnostic(
-                DiagnosticType.INVALID_COMMA,
-                {},
-                this.parameterRange.start,
-                this.valueRange.end + this.comma.length
-            )) {
-                return false;
+        if (this.parent.shouldParameterHaveComma()) {
+            if (this.comma === "") {
+                if (this.diagnostic(
+                    DiagnosticType.MISSING_COMMA,
+                    {},
+                    this.parameterRange.start,
+                    this.valueRange.end
+                )) {
+                    return false;
+                }
+            } 
+            if (this.comma !== ",") {
+                if (this.diagnostic(
+                    DiagnosticType.INVALID_COMMA,
+                    {},
+                    this.parameterRange.start,
+                    this.valueRange.end + this.comma.length
+                )) {
+                    return false;
+                }
             }
         }
 

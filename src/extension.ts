@@ -9,8 +9,10 @@ import { itemCache } from "./providers/cache";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from "./models/enums";
 
-import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
-import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns";
+// import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
+import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns"; // DEPRECATED
+
+import { testForScriptRootFile } from "./scriptsBlocks/scriptsBlocksData";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
     // console.debug(`Handling opened document: ${document.fileName} with languageId: ${document.languageId}`);
@@ -21,11 +23,13 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
 
     const filePath = path.posix.normalize(document.fileName);
 
-    if (SCRIPT_FILE_REGEX.test(filePath)) {
+    if (testForScriptRootFile(filePath)) {
         // console.debug(`The opened file is identified as a script file: `, filePath);
         
         // set the file to ZedScripts
         vscode.languages.setTextDocumentLanguage(document, LANG_ZEDSCRIPTS);
+
+    // DEPRECATED
     } else if (LANGUAGE_FILE_REGEX.test(filePath)) {
         // console.debug(`The opened file is identified as a translation file: `, filePath);
         
