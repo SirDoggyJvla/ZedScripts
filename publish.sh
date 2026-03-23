@@ -13,3 +13,4 @@ VERSION=$(node -e "console.log(require('./package.json').version)")
 git push --tags
 vsce package
 gh release create "v$VERSION" "project-zomboid-scripts-$VERSION.vsix" --notes "See [Changelog](https://github.com/SirDoggyJvla/ZedScripts/blob/main/README.md#Changelog) for details"
+git push
