@@ -2,4 +2,4 @@ out
 node_modules
 .vscode
 *.vsix
-__snpashots__
+__snapshots__
