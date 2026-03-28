@@ -379,6 +379,16 @@
       }
     }
   },
+  "progress": {
+    "name": "progress",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "style"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
   "group": {
     "name": "group",
     "description": "",
@@ -3877,6 +3887,21 @@
         "name": "foodSicknessChange",
         "type": "float",
         "description": "The amount of food sickness provides."
+      },
+      "fatiguechange": {
+        "name": "fatigueChange",
+        "type": "float",
+        "description": "The amount of fatigue this fluid changes when consumed. Positive values increase fatigue, negative values decrease it."
+      },
+      "stresschange": {
+        "name": "StressChange",
+        "type": "float",
+        "description": "The amount of stress this fluid changes when consumed. Positive values increase stress, negative values decrease it."
+      },
+      "unhappychange": {
+        "name": "UnhappyChange",
+        "type": "float",
+        "description": "The amount of unhappiness this fluid changes when consumed. Positive values increase unhappiness, negative values decrease it."
       }
     }
   },
@@ -4268,7 +4293,23 @@
     "parents": [
       "entity"
     ],
-    "parameters": {}
+    "parameters": {
+      "recipes": {
+        "name": "Recipes"
+      },
+      "startmode": {
+        "name": "StartMode"
+      },
+      "inputgroup": {
+        "name": "inputGroup"
+      },
+      "outputgroup": {
+        "name": "outputGroup"
+      },
+      "actionanim": {
+        "name": "actionAnim"
+      }
+    }
   },
   "component Resources": {
     "name": "component Resources",
@@ -4570,7 +4611,8 @@
     "shouldHaveParent": true,
     "parents": [
       "component SpriteConfig",
-      "style"
+      "style",
+      "progress"
     ],
     "ID": {
       "values": [
@@ -4632,6 +4674,14 @@
       },
       "timedactiononisvalid": {
         "name": "TimedActionOnIsValid"
+      },
+      "health": {
+        "name": "health",
+        "type": "integer"
+      },
+      "skillbasehealth": {
+        "name": "skillBaseHealth",
+        "type": "integer"
       }
     }
   },
