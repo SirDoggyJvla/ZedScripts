@@ -3,3 +3,4 @@ node_modules
 .vscode
 *.vsix
 __snapshots__
+.vscode-test

@@ -123,7 +123,7 @@
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "@vscode/test-cli",
-    "test:jest": "jest",
+    "test:jest": "jest tests",
     "check": "tsc --noEmit && npm run test",
     "compile": "tsc -p ./tsconfig.json",
     "watch": "tsc -watch -p ./tsconfig.json",

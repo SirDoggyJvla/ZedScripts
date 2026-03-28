@@ -2,6 +2,10 @@ set -euo pipefail
 
 UPDATE_TYPE="${1:-patch}"
 
+# run tests
+npx @vscode/test-cli
+npm run test:jest
+
 # publish to registries (VS Code Marketplace and Open VSX)
 vsce publish "$UPDATE_TYPE"
 npx ovsx publish
