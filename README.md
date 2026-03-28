@@ -48,6 +48,7 @@ You can fetch data manually by running the command "ZedScripts: Force fetch Scri
 By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts. However this is a part of the old code I've yet to touch, so I do not know how well it works.
 
 You can disable a specific diagnostic by adding its ID to the `zedScripts.disabledDiagnostics` setting. Alternatively, you can disable all diagnostics via the `zedScripts.disableAllDiagnostics` setting. Below are all the available diagnostics for scripts:
+
 | ID                        | Description                                                                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MISSING_COMMA`           | Missing comma.                                                                                                                                                              |
