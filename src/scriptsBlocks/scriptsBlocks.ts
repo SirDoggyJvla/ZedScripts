@@ -7,13 +7,13 @@ import {
     DiagnosticType, 
     DefaultText, 
     WIKI_LINK,
-    formatText
+    formatText,
+    DOCS_LINK
 } from '../models/enums';
 import { diagnostic } from '../providers/diagnostic';
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { ScriptBlockData } from './scriptsBlocksData';
-import { getScriptBlockData } from './scriptsBlocksUtility';
-import { isScriptBlock } from './scriptsBlocksUtility';
+import { getScriptBlockData, getVariantTree, getMainVariant, isScriptBlock } from './scriptsBlocksUtility';
 import { colorText } from '../utils/htmlFormat';
 import { IndexRange, createIndexRange, replaceCommentsWithWhitespace } from '../utils/positions';
 import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsBlocksParameter';
@@ -133,8 +133,14 @@ export class ScriptBlock {
         return colorText(txt, color, fontStyle);
     }
 
-    private getWikiPage(): string {
-        return WIKI_LINK + this.scriptBlock + '_(scripts)';
+    public getWikiPage(): string {
+        const mainVariant = getMainVariant(this.scriptBlock);
+        return WIKI_LINK + mainVariant.replace(' ', '_') + '_(scripts)';
+    }
+
+    public getScriptsDocPage(): string {
+        const tree = getVariantTree(this.scriptBlock);
+        return (DOCS_LINK + 'blocks/' + (tree.join('/')).replace(' ', '_')).toLowerCase() + '.html';
     }
 
     public getTree(children: boolean = false): string {
@@ -171,7 +177,10 @@ export class ScriptBlock {
         markdown.appendMarkdown(desc);
         markdown.appendMarkdown('\n\n' + formatText(
             DefaultText.MORE_INFORMATION, 
-            { wikiPage: this.getWikiPage() }
+            { 
+                wikiPage: this.getWikiPage(),
+                scriptsDoc: this.getScriptsDocPage()
+            }
         ));
         
         return markdown;

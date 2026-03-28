@@ -17,6 +17,7 @@ export const DEFAULT_DIR = path.normalize(
 const CACHE_DURATION_HOURS = 12;
 export const CACHE_DURATION_MS = CACHE_DURATION_HOURS * 60 * 60 * 1000; // in milliseconds
 export const WIKI_LINK = "https://pzwiki.net/wiki/";
+export const DOCS_LINK = "https://sirdoggyjvla.github.io/pz-scripts-data/";
 
 export enum ThemeColorType {
     ID = "entity.name.class",
@@ -33,7 +34,7 @@ export enum ThemeColorType {
 export enum DefaultText {
     SCRIPT_BLOCK_DESCRIPTION = "No description available for this script block.",
     PARAMETER_DESCRIPTION = "No description available for this parameter.",
-    MORE_INFORMATION = "*For more information, visit the [wiki page]({wikiPage}).*",
+    MORE_INFORMATION = "*For more information, visit the [wiki page]({wikiPage}) or the [documentation]({scriptsDoc}).*",
 
     CACHE_RESET = "Script data cache has been reset.",
     CACHE_RESET_FAILED = "Project Zomboid Scripts Data fetch failed, using cached or default extension data. Information might be outdated.",

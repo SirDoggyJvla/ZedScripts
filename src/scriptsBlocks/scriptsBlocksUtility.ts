@@ -62,3 +62,27 @@ export function listRequiredParameters(blockType: string): ScriptBlockParameter[
     }
     return requiredParams;
 }
+
+export function getMainVariant(blockType: string): string {
+    const blockData = getScriptBlockData(blockType);
+    const variant = blockData.isVariant;
+    if (variant) {
+        return getMainVariant(variant);
+    }
+    return blockType;
+}
+
+export function getVariantTree(blockType: string): string[] {
+    const tree: string[] = [];
+    const blockData = getScriptBlockData(blockType);
+    const variant = blockData.isVariant;
+    if (variant) {
+        const treeVariant = getVariantTree(variant);
+        tree.push(...treeVariant);
+        // tree.push(variant);
+    }
+
+    tree.push(blockType);
+    
+    return tree;
+}

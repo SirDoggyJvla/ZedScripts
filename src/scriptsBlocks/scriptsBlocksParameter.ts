@@ -16,7 +16,7 @@ import {
     InputParameterData,
     VALUE_TYPES
 } from './scriptsBlocksData';
-import { getScriptBlockData } from "./scriptsBlocksUtility";
+import { getScriptBlockData, getMainVariant, isScriptBlock } from "./scriptsBlocksUtility";
 import { getColor, getFontStyle } from "../utils/themeColors";
 import { colorText } from '../utils/htmlFormat';
 import { IndexRange } from '../utils/positions';
@@ -129,8 +129,13 @@ export class ScriptParameter {
         return parents + " → " + parameter;
     }
 
-    private getWikiPage(): string {
-        return WIKI_LINK + this.parameter + '_(' + this.parent.scriptBlock + '_parameter)';
+    protected getWikiPage(): string {
+        const mainVariant = getMainVariant(this.parent.scriptBlock);
+        return WIKI_LINK + this.parameter + '_(' + mainVariant.replace(' ', '_') + '_parameter)';
+    }
+
+    protected getScriptsDocPage(): string {
+        return this.parent.getScriptsDocPage();
     }
 
     public getHoverText(): MarkdownString {
@@ -143,12 +148,18 @@ export class ScriptParameter {
 
         // assemble the hover content
         markdown.appendMarkdown(`${tree}  \n`);
-        markdown.appendMarkdown('\n\n---\n\n');
-        markdown.appendMarkdown(desc);
-        markdown.appendMarkdown('\n\n' + formatText(
-            DefaultText.MORE_INFORMATION, 
-            { wikiPage: this.getWikiPage() }
-        ));
+
+        if (this.parent.canHaveParameter(this.parameter)) {
+            markdown.appendMarkdown('\n\n---\n\n');
+            markdown.appendMarkdown(desc);
+            markdown.appendMarkdown('\n\n' + formatText(
+                DefaultText.MORE_INFORMATION, 
+                { 
+                    wikiPage: this.getWikiPage(),
+                    scriptsDoc: this.getScriptsDocPage()
+                }
+            ));
+        }
         
         return markdown;
     }
