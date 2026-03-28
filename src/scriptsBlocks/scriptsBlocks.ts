@@ -840,3 +840,8 @@ assignedClasses.set("inputs", InputsBlock);
 
 assignedClasses.set("table", IgnoreAll);
 assignedClasses.set("lua", IgnoreAll);
+
+// TODO: needs to implement properly, for now disable those
+// the items they refer to should be verified for existence and validity
+assignedClasses.set("itemMapper", IgnoreAll);
+assignedClasses.set("overlayMapper", IgnoreAll);
