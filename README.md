@@ -113,6 +113,19 @@ This pre-commit hook will make a copy of the singular JSON file from the submodu
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ### Changelog
+With each update, the extension fetches the latest data from the pz-scripts-data repository and make a local copy of it. If you're having issues, it might be because of outdated data, so make sure to fetch the latest data.
+
+1.9.3:
+- improved the logo
+- added tests for script files identification to run
+- add diagnostics for dependent parameters and type (parameters that require another parameter to be present with a specific value)
+- improved handling for types of parameters
+- adjusted parameter-value combo identification to take `//` comments in the parameter name since those are not valid for scripts
+- added some script blocks to be ignored for parsing
+- implemented handling for optional ID for blocks
+- added a link to the [ScriptsDocs](https://pzwiki.net/wiki/ScriptsDocs) in the hovering of blocks and parameters
+- fix hovering showing description and wiki page link for unrecognized parameters
+- fix small mistake which made some wiki page links broken
 
 1.9.2:
 - patched any file being marked as a script file by default
