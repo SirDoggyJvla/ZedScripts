@@ -37,7 +37,7 @@
           "default": [
             "C:/Program Files (x86)/Steam/steamapps/common/ProjectZomboid/media/scripts/"
           ],
-          "description": "Directories to search for item definition files."
+          "description": "Directories to search for the vanilla script files."
         },
         "ZedScripts.onlyUseLocalData": {
           "type": "boolean",

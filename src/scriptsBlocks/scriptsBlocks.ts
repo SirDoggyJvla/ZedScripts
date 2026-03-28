@@ -492,6 +492,13 @@ export class ScriptBlock {
         // check if ID is required
         }
 
+        const optionalBlocks = IDData.optional;
+        if (optionalBlocks && this.parent) {
+            if (optionalBlocks.includes(this.parent.scriptBlock)) {
+                return true; // ID is optional for this block, so we can skip the rest of the checks
+            }
+        }
+
         // used to check if the parent block requires an ID for this subblock
         const invalidBlocks = IDData.parentsWithout;
         let shouldHaveIDfromParent = true;

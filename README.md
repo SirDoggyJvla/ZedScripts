@@ -48,43 +48,43 @@ You can fetch data manually by running the command "ZedScripts: Force fetch Scri
 By default the Project Zomboid directory is `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\media\scripts`, but you can change this in the settings of the extension. The extension automatically retrieves the vanilla item scripts. However this is a part of the old code I've yet to touch, so I do not know how well it works.
 
 You can disable a specific diagnostic by adding its ID to the `zedScripts.disabledDiagnostics` setting. Alternatively, you can disable all diagnostics via the `zedScripts.disableAllDiagnostics` setting. Below are all the available diagnostics for scripts:
-| ID | Description |
-|---|---|
-| `MISSING_COMMA` | Missing comma. |
-| `INVALID_COMMA` | Invalid comma. |
-| `UNMATCHED_BRACE` | Missing closing bracket '}' for '{scriptBlock}' block. |
-| `NOT_VALID_BLOCK` | '{scriptBlock}' is an unknown script block. |
-| `MISSING_PARENT_BLOCK` | '{scriptBlock}' block must be inside a valid parent block: {parentBlocks}. |
-| `HAS_PARENT_BLOCK` | '{scriptBlock}' block cannot be inside any parent block. |
-| `WRONG_PARENT_BLOCK` | '{scriptBlock}' block cannot be inside parent block '{parentBlock}'. Valid parent blocks are: {parentBlocks}. |
-| `MISSING_CHILD_BLOCK` | '{scriptBlock}' block must have child blocks: {childBlocks}. This might be intentional for soft overrides of an existing block. |
-| `MISSING_ID` | '{scriptBlock}' block is missing an ID. |
-| `HAS_ID` | '{scriptBlock}' block cannot have an ID. |
-| `INVALID_ID` | '{scriptBlock}' block has an invalid ID '{id}'. Valid IDs are: {validIDs}. |
-| `HAS_ID_IN_PARENT` | '{scriptBlock}' block cannot have an ID when inside parent block '{parentBlock}', only for: {invalidBlocks}. |
-| `UNKNOWN_PARAMETER` | '{parameter}' is an unknown parameter for '{scriptBlock}' block. [WIP: not every parameters are documented yet] |
-| `MISSING_PARAMETER` | '{scriptBlock}' block is missing required parameter(s): {parameters}. |
-| `DUPLICATE_PARAMETER` | '{parameter}' is defined multiple times in '{scriptBlock}' block. |
-| `MISSING_VALUE` | Missing a value. |
-| `INVALID_PARAMETER_VALUE` | '{parameter}' has an invalid value '{value}'. |
-| `DEPRECATED_PARAMETER` | '{parameter}' parameter in '{scriptBlock}' block is deprecated. |
-| `WRONG_VALUE` | '{value}' is not a valid value for parameter '{parameter}'. Valid values are: {validValues}. |
-| `INVALID_AMOUNT` | '{amount}' is not a valid amount for '{type}'. |
-| `INTEGER_AMOUNT` | '{amount}' should be an integer for '{type}'. |
-| `DUPLICATE_PROPERTY` | '{property}' is provided multiple times. |
-| `MISSING_ONEOF_PROPERTY` | '{type}' is missing at least one of the following properties: {properties}. |
-| `NO_DOTS_ITEM` | An item type (ID) cannot have dots '.' in its name. ({value}) |
-| `MISSING_MODULE` | The provided item type (ID) is missing its module part: 'module.type'. ({value}) |
-| `ALL_WITH_OTHERS` | '*' was provided along with other item types. '*' must be used alone. |
-| `SPACES_IN_ITEM` | An item full type (module and ID) cannot contain spaces. ({value}) |
-| `INVALID_VALUE` | '{value}' is not a valid value for '{property}'. Valid values are: {validValues}. |
-| `UNMATCHED_CODE` | Unmatched language code between folder name '{folderCode}' and file name '{fileCode}'. They should be the same. |
-| `NON_EXISTENT_CODE` | The language code '{code}' does not exist. Valid codes are: {validCodes}. |
-| `IN_FIRST_LINE` | Translation key-value pairs cannot be in the first line of the file as it is not parsed. |
-| `UNECESSARY_COMMA` | Unnecessary comma. Translation files do not need a comma compared to script files. |
-| `INVALID_FILE_PREFIX` | The file '{filePrefix}' is not a valid translation file prefix. Make sure to separate the language code and prefix with an underscore. Valid prefixes are: {validPrefixes}. |
-| `MISSING_QUOTES` | Missing quotes around value. |
-| `MISSING_PREFIX` | Missing prefix {prefix} for key '{key}'. |
+| ID                        | Description                                                                                                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MISSING_COMMA`           | Missing comma.                                                                                                                                                              |
+| `INVALID_COMMA`           | Invalid comma.                                                                                                                                                              |
+| `UNMATCHED_BRACE`         | Missing closing bracket '}' for '{scriptBlock}' block.                                                                                                                      |
+| `NOT_VALID_BLOCK`         | '{scriptBlock}' is an unknown script block.                                                                                                                                 |
+| `MISSING_PARENT_BLOCK`    | '{scriptBlock}' block must be inside a valid parent block: {parentBlocks}.                                                                                                  |
+| `HAS_PARENT_BLOCK`        | '{scriptBlock}' block cannot be inside any parent block.                                                                                                                    |
+| `WRONG_PARENT_BLOCK`      | '{scriptBlock}' block cannot be inside parent block '{parentBlock}'. Valid parent blocks are: {parentBlocks}.                                                               |
+| `MISSING_CHILD_BLOCK`     | '{scriptBlock}' block must have child blocks: {childBlocks}. This might be intentional for soft overrides of an existing block.                                             |
+| `MISSING_ID`              | '{scriptBlock}' block is missing an ID.                                                                                                                                     |
+| `HAS_ID`                  | '{scriptBlock}' block cannot have an ID.                                                                                                                                    |
+| `INVALID_ID`              | '{scriptBlock}' block has an invalid ID '{id}'. Valid IDs are: {validIDs}.                                                                                                  |
+| `HAS_ID_IN_PARENT`        | '{scriptBlock}' block cannot have an ID when inside parent block '{parentBlock}', only for: {invalidBlocks}.                                                                |
+| `UNKNOWN_PARAMETER`       | '{parameter}' is an unknown parameter for '{scriptBlock}' block. [WIP: not every parameters are documented yet]                                                             |
+| `MISSING_PARAMETER`       | '{scriptBlock}' block is missing required parameter(s): {parameters}.                                                                                                       |
+| `DUPLICATE_PARAMETER`     | '{parameter}' is defined multiple times in '{scriptBlock}' block.                                                                                                           |
+| `MISSING_VALUE`           | Missing a value.                                                                                                                                                            |
+| `INVALID_PARAMETER_VALUE` | '{parameter}' has an invalid value '{value}'.                                                                                                                               |
+| `DEPRECATED_PARAMETER`    | '{parameter}' parameter in '{scriptBlock}' block is deprecated.                                                                                                             |
+| `WRONG_VALUE`             | '{value}' is not a valid value for parameter '{parameter}'. Valid values are: {validValues}.                                                                                |
+| `INVALID_AMOUNT`          | '{amount}' is not a valid amount for '{type}'.                                                                                                                              |
+| `INTEGER_AMOUNT`          | '{amount}' should be an integer for '{type}'.                                                                                                                               |
+| `DUPLICATE_PROPERTY`      | '{property}' is provided multiple times.                                                                                                                                    |
+| `MISSING_ONEOF_PROPERTY`  | '{type}' is missing at least one of the following properties: {properties}.                                                                                                 |
+| `NO_DOTS_ITEM`            | An item type (ID) cannot have dots '.' in its name. ({value})                                                                                                               |
+| `MISSING_MODULE`          | The provided item type (ID) is missing its module part: 'module.type'. ({value})                                                                                            |
+| `ALL_WITH_OTHERS`         | '*' was provided along with other item types. '*' must be used alone.                                                                                                       |
+| `SPACES_IN_ITEM`          | An item full type (module and ID) cannot contain spaces. ({value})                                                                                                          |
+| `INVALID_VALUE`           | '{value}' is not a valid value for '{property}'. Valid values are: {validValues}.                                                                                           |
+| `UNMATCHED_CODE`          | Unmatched language code between folder name '{folderCode}' and file name '{fileCode}'. They should be the same.                                                             |
+| `NON_EXISTENT_CODE`       | The language code '{code}' does not exist. Valid codes are: {validCodes}.                                                                                                   |
+| `IN_FIRST_LINE`           | Translation key-value pairs cannot be in the first line of the file as it is not parsed.                                                                                    |
+| `UNECESSARY_COMMA`        | Unnecessary comma. Translation files do not need a comma compared to script files.                                                                                          |
+| `INVALID_FILE_PREFIX`     | The file '{filePrefix}' is not a valid translation file prefix. Make sure to separate the language code and prefix with an underscore. Valid prefixes are: {validPrefixes}. |
+| `MISSING_QUOTES`          | Missing quotes around value.                                                                                                                                                |
+| `MISSING_PREFIX`          | Missing prefix {prefix} for key '{key}'.                                                                                                                                    |
 
 ### Contributing
 Want to contribute to the project ? Feel free to do so ! You can also help by providing descriptions and data for scripts in the [pz-scripts-data](https://github.com/SirDoggyJvla/pz-scripts-data) repository.

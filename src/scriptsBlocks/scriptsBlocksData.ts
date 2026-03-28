@@ -58,6 +58,7 @@ export interface ScriptBlockID {
     parentsWithout?: string[];
     values?: string[];
     asType?: boolean;
+    optional?: string[];
 }
 
 export interface InputAnalysisProperty {
