@@ -555,11 +555,6 @@ export class ScriptBlock {
         return true;
     }
 
-    protected validateParameters(): boolean {
-
-        return true;
-    }
-
 
 // DIAGNOSTICS HELPERS
 
@@ -648,44 +643,6 @@ export class TemplateBlock extends ScriptBlock {
         super(document, diagnostics, parent, type, id, start, end, headerStart);
         this.isTemplate = true;
     }
-
-    protected validateBlock(): boolean {
-        const type = this.scriptBlock;
-
-        // verify it's a script block
-        if (!isScriptBlock(type)) {
-            if (this.diagnostic(
-                DiagnosticType.NOT_VALID_BLOCK,
-                { scriptBlock: type },
-                this.headerStart
-            )) {
-                return false;
-            }
-        }
-
-        // make sure an ID is provided
-        if (!this.id) {
-            if (this.diagnostic(
-                DiagnosticType.MISSING_ID,
-                { scriptBlock: this.scriptBlock },
-                this.headerStart
-            )) {
-                return false;
-            }
-        }
-
-        // verify ID
-        if (!this.validateID()) {
-            // return false;
-        }
-
-        // verify parent block
-        if (!this.validateParent()) {
-            // return false;
-        }
-
-        return true;
-    }
 }
 
 
@@ -773,6 +730,29 @@ export class InputsBlock extends ScriptBlock {
     }
 }
 
+export class IgnoreAll extends ScriptBlock {
+    constructor(
+        document: TextDocument,
+        diagnostics: Diagnostic[],
+        parent: ScriptBlock | null,
+        type: string,
+        id: string | null,
+        start: number,
+        end: number,
+        headerStart: number
+    ) {
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
+    }
+
+    protected findChildBlocks(): ScriptBlock[] { 
+        return []; 
+    }
+
+    protected findParameters(): ScriptParameter[] {
+        return [];
+    }
+}
+
 
 /**
  * A ScriptBlock that represents the entire document. This is more a convenience class to handle everything easily.
@@ -848,5 +828,8 @@ export class DocumentBlock extends ScriptBlock {
 const assignedClasses = new Map<string, typeof ScriptBlock>();
 assignedClasses.set("component", ComponentBlock);
 assignedClasses.set("template", TemplateBlock);
-assignedClasses.set("itemMapper", ItemMapperBlock)
+assignedClasses.set("itemMapper", ItemMapperBlock);
 assignedClasses.set("inputs", InputsBlock);
+
+assignedClasses.set("table", IgnoreAll);
+assignedClasses.set("lua", IgnoreAll);

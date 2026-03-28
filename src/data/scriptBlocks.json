@@ -10,7 +10,9 @@
     ],
     "ID": {
       "parentsWithout": [
-        "vehicle",
+        "vehicle"
+      ],
+      "optional": [
         "part"
       ]
     },
@@ -67,6 +69,18 @@
       },
       "undocorescale": {
         "name": "undoCoreScale"
+      },
+      "attachmentparent": {
+        "name": "attachmentParent"
+      },
+      "attachmentself": {
+        "name": "attachmentSelf"
+      },
+      "ignorevehiclescale": {
+        "name": "ignoreVehicleScale"
+      },
+      "rotate": {
+        "name": "rotate"
       }
     }
   },
@@ -246,6 +260,12 @@
     "parameters": {
       "capacity": {
         "name": "capacity"
+      },
+      "conditionaffectscapacity": {
+        "name": "conditionAffectsCapacity"
+      },
+      "test": {
+        "name": "test"
       }
     }
   },
@@ -528,6 +548,12 @@
       },
       "require": {
         "name": "Require"
+      },
+      "globalitem": {
+        "name": "GlobalItem"
+      },
+      "conditionmodifier": {
+        "name": "ConditionModifier"
       }
     }
   },
@@ -3224,6 +3250,18 @@
       },
       "area": {
         "name": "area"
+      },
+      "mechanicrequirekey": {
+        "name": "mechanicRequireKey"
+      },
+      "repairmechanic": {
+        "name": "repairMechanic"
+      },
+      "parent": {
+        "name": "parent"
+      },
+      "specificitem": {
+        "name": "specificItem"
       }
     }
   },
@@ -3837,7 +3875,7 @@
   },
   "attachment": {
     "name": "attachment",
-    "description": "",
+    "description": "-| Defines an attachment point on a model or vehicle block. The ID is the attachment name, it can be a custom ID or an existing one often used to define specific attachments. While manually modifying the attachment block is definitely possible, it is recommended to use the [attachment editor](https://pzwiki.net/wiki/Attachment_Editor) to create and edit those attachments.",
     "shouldHaveParent": true,
     "parents": [
       "vehicle",
@@ -4145,6 +4183,18 @@
       },
       "rate": {
         "name": "rate"
+      },
+      "angle": {
+        "name": "angle"
+      },
+      "sound": {
+        "name": "sound"
+      },
+      "reverse": {
+        "name": "reverse"
+      },
+      "animate": {
+        "name": "animate"
       }
     }
   },
@@ -4315,6 +4365,20 @@
       }
     }
   },
+  "window": {
+    "name": "door",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "part"
+    ],
+    "parameters": {
+      "openable": {
+        "name": "openable",
+        "type": "boolean"
+      }
+    }
+  },
   "component FluidContainer": {
     "name": "component FluidContainer",
     "description": "",
@@ -4457,7 +4521,11 @@
       "template",
       "vehicle"
     ],
-    "parameters": {}
+    "parameters": {
+      "texture": {
+        "name": "texture"
+      }
+    }
   },
   "imports": {
     "name": "imports",
@@ -4557,7 +4625,11 @@
     "parents": [
       "part"
     ],
-    "ID": {},
+    "ID": {
+      "optional": [
+        "part"
+      ]
+    },
     "parameters": {}
   },
   "mannequin": {
