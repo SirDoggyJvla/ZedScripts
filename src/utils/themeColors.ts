@@ -1,6 +1,7 @@
 import { extensions, workspace } from "vscode";
 import path from "path";
 import { ThemeColorType } from "../models/enums";
+import { colorText } from './htmlFormat';
 
 const TokenColorsCache = new Map<string, (token: string) => any>();
 /**
@@ -86,4 +87,10 @@ export function getFontStyle(type: ThemeColorType): string | undefined {
 export function getTokenSettings(type: ThemeColorType): { foreground?: string; fontStyle?: string } {
     const tokenColors = getThemeColors();
     return tokenColors(type) || {};
+}
+
+export function color(txt: string, colorType: ThemeColorType = ThemeColorType.PARAMETER): string {
+    const color = getColor(colorType);
+    const fontStyle = getFontStyle(colorType);
+    return colorText(txt, color, fontStyle);
 }

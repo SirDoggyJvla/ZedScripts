@@ -16,7 +16,8 @@ import { ScriptBlockData } from './scriptsBlocksData';
 import { getScriptBlockData, getVariantTree, getMainVariant, isScriptBlock } from './scriptsBlocksUtility';
 import { colorText } from '../utils/htmlFormat';
 import { IndexRange, createIndexRange, replaceCommentsWithWhitespace } from '../utils/positions';
-import { ScriptParameter, InputsItemParameter, InputsFluidParameter, } from './scriptsBlocksParameter';
+import { ScriptParameter } from './scriptsBlocksParameter';
+import { InputsItemParameter, InputsFluidParameter } from './scriptsBlocksProperties';
 
 /**
  * Represents a script block in a PZ script file. Handles nested blocks and diagnostics.
@@ -101,8 +102,13 @@ export class ScriptBlock {
 
     public getParameter(name: string, parameters?: ScriptParameter[]): ScriptParameter | null {
         const paramsToSearch = parameters || this.parameters;
+        
+        // search by the parameter name
         const lowerCase = name.toLowerCase();
-        return paramsToSearch.find(param => param.parameter.toLowerCase() === lowerCase) || null;
+        const searchByName = paramsToSearch.find(param => param.parameter.toLowerCase() === lowerCase) || null;
+        if (searchByName) { return searchByName; }
+
+        return null;
     }
 
     public isParameterOf(name: string): boolean {

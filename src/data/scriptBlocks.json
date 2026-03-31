@@ -321,6 +321,51 @@
       }
     }
   },
+  "ROOT-MapInfo": {
+    "name": "ROOT-MapInfo",
+    "description": "The `map.info` file is used to define the map's information. It is used by the game to display the map in the map selection screen and to load the map into the world.\nIt needs to be located in:\n```\n📁 media\n    📁maps\n        📁 <map folder>\n            📄 map.info\n```",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "noComma": true,
+    "pattern": [
+      "media\\/maps\\/[\\s\\S]+\\/map\\.info$"
+    ],
+    "parameters": {
+      "title": {
+        "name": "title",
+        "description": "Title of the map."
+      },
+      "description": {
+        "name": "description",
+        "description": "Description of the map."
+      },
+      "lots": {
+        "name": "lots",
+        "description": "Refers to the world map the map will be loaded into. For a map which is inside the vanilla world map, use `lots=Muldraugh, KY`."
+      },
+      "fixed2x": {
+        "name": "fixed2x",
+        "description": "Boolean which fixes rendering issues. Leave it as `true` if you are not sure."
+      },
+      "zoomx": {
+        "name": "zoomX",
+        "description": "Position parameter used to define the position of the camera on the world map when chosing the map to spawn in."
+      },
+      "zoomy": {
+        "name": "zoomY",
+        "description": "Position parameter used to define the position of the camera on the world map when chosing the map to spawn in."
+      },
+      "zooms": {
+        "name": "zoomS",
+        "description": "Zoom parameter used to define the position of the camera on the world map when chosing the map to spawn in."
+      },
+      "demovideo": {
+        "name": "demoVideo",
+        "description": "[Video file](https://pzwiki.net/wiki/File_formats#Video_format) used to showcase the map when selecting it."
+      }
+    }
+  },
   "Poison": {
     "name": "Poison",
     "description": "Defines poison properties for a fluid script.",
@@ -403,6 +448,49 @@
       ]
     },
     "parameters": {}
+  },
+  "blend": {
+    "name": "blend",
+    "description": "Used to define blend rules for the [mapping tools](https://pzwiki.net/wiki/Mapping#Mapping_tools) painting tool.",
+    "shouldHaveParent": true,
+    "parents": [
+      "ROOT-Blends"
+    ],
+    "parameters": {
+      "layer": {
+        "name": "layer",
+        "description": "The layer the blend rule applies to. Should be one of the layers defined in the `TMXconfig.txt` file."
+      },
+      "maintile": {
+        "name": "mainTile",
+        "description": "Used to identify which tiles will trigger the blend. This can be a single tile or an array of tiles, and it supports `alias` blocks.\n\nFor example:\n```cpp\nmainTile = vegetation_farm_01_35\n```\n```cpp\nmainTile = [\n    vegetation_farm_01_32\n    vegetation_farm_01_33\n    vegetation_farm_01_34\n    vegetation_farm_01_35\n    vegetation_farm_01_36\n    vegetation_farm_01_37\n    vegetation_farm_01_38\n    vegetation_farm_01_39\n]\n```\n\nOr with one or more alias blocks:\n```cpp\nalias\n{\n    name = treez1\n    tiles = [\n        vegetation_trees_01_13\n        vegetation_trees_01_14\n        vegetation_trees_01_15\n        vegetation_trees_01_8\n        vegetation_trees_01_9\n        vegetation_trees_01_10\n        vegetation_trees_01_11\n        vegetation_trees_01_17\n    ]\n}\n```\n```cpp\nmainTile = [\n  treez1\n]\n```"
+      },
+      "blendtile": {
+        "name": "blendTile",
+        "description": "Used to define the tiles which will be used for the blend around the `mainTile`. This can be a single tile or an array of tiles, and it supports `alias` blocks.\n\nFor example:\n```cpp\nblendTile = vegetation_farm_01_35\n```\n```cpp\nblendTile = [\n    vegetation_farm_01_32\n    vegetation_farm_01_33\n    vegetation_farm_01_34\n    vegetation_farm_01_35\n    vegetation_farm_01_36\n    vegetation_farm_01_37\n    vegetation_farm_01_38\n    vegetation_farm_01_39\n]\n```\n\nOr with one or more alias blocks:\n```cpp\nalias\n{\n    name = treez1\n    tiles = [\n        vegetation_trees_01_13\n        vegetation_trees_01_14\n        vegetation_trees_01_15\n        vegetation_trees_01_8\n        vegetation_trees_01_9\n        vegetation_trees_01_10\n        vegetation_trees_01_11\n        vegetation_trees_01_17\n    ]\n}\n```\n```cpp\nblendTile = [\n  treez1\n]\n```"
+      },
+      "dir": {
+        "name": "dir",
+        "description": "The direction the blend applies to.",
+        "values": [
+          "n",
+          "ne",
+          "e",
+          "se",
+          "s",
+          "sw",
+          "w",
+          "nw"
+        ]
+      },
+      "exclude": {
+        "name": "exclude",
+        "description": "A list of tiles which will be excluded from being blended. This can be a single tile or an array of tiles, and it supports `alias` blocks.\n\nThe format needs to be like this:\n```cpp\nexclude = water lightgrass medgrass darkgrass\n```\nWhere each entries separated by a space are an alias."
+      },
+      "exclude2": {
+        "name": "exclude2"
+      }
+    }
   },
   "table": {
     "name": "table",
@@ -496,6 +584,18 @@
     ],
     "parameters": {}
   },
+  "ROOT-MapBaseXML": {
+    "name": "ROOT-MapBaseXML",
+    "description": "The `MapBaseXML.txt` file is used to configure the layers of the TMX file.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "noComma": true,
+    "pattern": [
+      "MapBaseXML\\.txt$"
+    ],
+    "parameters": {}
+  },
   "_DOCUMENT": {
     "name": "_DOCUMENT",
     "description": "Not a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
@@ -503,6 +603,24 @@
     "parents": [],
     "deprecated": true,
     "parameters": {}
+  },
+  "alias": {
+    "name": "alias",
+    "description": "Defines an alias for a list of tiles. This can be directly refered to in `rule` blocks to list a bunch of tiles in different blocks or to organize them by type. Say for example you can list all the trees in an alias to use later, or split by tree type to easily associate to a color.\n\nHere is an example of how to use it:\n```cpp\nalias\n{\n    name = treez1\n    tiles = [\n        e_americanholly_1_3\n        e_americanholly_1_2\n        e_americanholly_1_1\n        e_americanlinden_1_11\n        e_americanlinden_1_10\n        e_americanlinden_1_15\n        e_americanlinden_1_14\n        e_canadianhemlock_1_3\n        e_canadianhemlock_1_2\n        e_canadianhemlock_1_1\n        e_carolinasilverbell_1_15\n        e_carolinasilverbell_1_14\n        e_cockspurhawthorn_1_15\n        e_cockspurhawthorn_1_14\n        e_cockspurhawthorn_1_13\n        e_dogwood_1_15\n        e_dogwood_1_14\n        e_easternredbud_1_15\n        e_easternredbud_1_14\n        vegetation_trees_01_13\n        vegetation_trees_01_14\n        vegetation_trees_01_15\n        vegetation_trees_01_8\n        vegetation_trees_01_9\n        vegetation_trees_01_10\n        vegetation_trees_01_11\n        vegetation_trees_01_17\n    ]\n}\n\nrule\n{\n    label = General Trees\n    bitmap = 1\n    color = 139 156 68\n    tiles = [\n      treez1\n    ]\n    layer = 0_Vegetation\n}\n```",
+    "shouldHaveParent": true,
+    "noComma": true,
+    "parents": [
+      "ROOT-Rules"
+    ],
+    "parameters": {
+      "name": {
+        "name": "name",
+        "type": "string"
+      },
+      "tiles": {
+        "name": "tiles"
+      }
+    }
   },
   "clip": {
     "name": "clip",
@@ -3253,6 +3371,22 @@
       }
     }
   },
+  "ROOT-Blends": {
+    "name": "ROOT-Blends",
+    "description": "The `Blends.txt` file is used in the [mapping tools](https://pzwiki.net/wiki/Mapping#Mapping_tools) to assign blend tiles around the tiles you paint.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "noComma": true,
+    "pattern": [
+      "Blends\\.txt$"
+    ],
+    "parameters": {
+      "name": {
+        "name": "name"
+      }
+    }
+  },
   "part": {
     "name": "part",
     "description": "",
@@ -3403,8 +3537,8 @@
     "parameters": {}
   },
   "outputs": {
-    "name": "ouputs",
-    "description": "",
+    "name": "outputs",
+    "description": "The `outputs` block defines the items that will be created when the recipe is finished. Outputs are listed one after the other and follow the format below:\n```cpp\noutputs\n{\n\n    /* simple item output */\n    item quantity item,\n\n    /* using mappers */\n    item quantity mapper:mapperID,\n\n    ...\n}\n```\n\nFor example:\n```cpp\noutputs\n{\n    item 1 Base.Tissue,\n    item 1 Base.ScratchTicket,\n}\n```",
     "shouldHaveParent": true,
     "softOverride": false,
     "parents": [
@@ -4096,8 +4230,9 @@
       },
       "tags": {
         "name": "tags",
-        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`.",
-        "required": true
+        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`. The syntax is as follows:\n```cpp\n/* single tag */\nTags = tag1,\n\n/* multiple tags */\nTags = tag1;tag2;...,\n```\n\nFor example:\n```cpp\nTags = InHandCraft;CanAlwaysBeResearched,\n```",
+        "required": true,
+        "type": "array"
       },
       "time": {
         "name": "time",
@@ -4478,6 +4613,69 @@
       }
     }
   },
+  "layers": {
+    "name": "layers",
+    "description": "Used to define the default layers of a new TMX file.",
+    "shouldHaveParent": true,
+    "noComma": true,
+    "parents": [
+      "ROOT-TMXconfig"
+    ],
+    "parameters": {
+      "tile": {
+        "name": "tile",
+        "allowedDuplicate": true,
+        "type": "string"
+      },
+      "object": {
+        "name": "object",
+        "parentsOnly": [
+          "ROOT-MapBaseXML"
+        ],
+        "type": "string"
+      }
+    }
+  },
+  "ROOT-Rules": {
+    "name": "ROOT-Rules",
+    "description": "The `Rules.txt` file is used in the [mapping tools](https://pzwiki.net/wiki/Mapping#Mapping_tools) to define new [BMP to TMX](https://pzwiki.net/wiki/BMP_to_TMX) conversion rules. You can store this file anywhere on your computer and you need to reference it in the BMP Tool settings.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "pattern": [
+      "Rules\\.txt$"
+    ],
+    "parameters": {
+      "version": {
+        "name": "version",
+        "type": "integer",
+        "description": "Version of the rules file. Should be 1 for now."
+      }
+    }
+  },
+  "ROOT-TMXconfig": {
+    "name": "ROOT-TMXconfig",
+    "description": "The `TMXconfig.txt` file is used to configure the default layers which will be created in the TMX file.",
+    "shouldHaveParent": false,
+    "parents": [],
+    "isRoot": true,
+    "noComma": true,
+    "pattern": [
+      "TMXconfig\\.txt$"
+    ],
+    "parameters": {
+      "version": {
+        "name": "version",
+        "type": "integer",
+        "description": "Version of the TMXconfig file. Should be 1 for now."
+      },
+      "revision": {
+        "name": "revision",
+        "type": "integer",
+        "description": "Revision of the TMXconfig file. Keep it to 11 for now."
+      }
+    }
+  },
   "xuiSkin": {
     "name": "xuiSkin",
     "description": "Defines a XUI interface skin.",
@@ -4490,6 +4688,40 @@
     ],
     "ID": {},
     "parameters": {}
+  },
+  "rule": {
+    "name": "rule",
+    "description": "A `rule` block defines a conversion rule for the [BMP to TMX](https://pzwiki.net/wiki/BMP_to_TMX) conversion process in the [mapping tools](https://pzwiki.net/wiki/Mapping#Mapping_tools). It is used to associate a color on the BMP for the vegetation or main image to a list of tiles to apply on a specific layer in the TMX.\n\nFor example:\n```cpp\nrule\n{\n  label = Sand\n  bitmap = 0\n  color = 210 200 160\n  tiles = sand\n  layer = 0_Floor\n}\n```",
+    "shouldHaveParent": true,
+    "noComma": true,
+    "parents": [
+      "ROOT-Rules"
+    ],
+    "parameters": {
+      "label": {
+        "name": "label",
+        "type": "string"
+      },
+      "bitmap": {
+        "name": "bitmap",
+        "type": "integer",
+        "description": "A value of `1` will have this rule used for the vegetation image, while a value of `0` will have it used for the main tiles image. Trees will for example use `1` while ground tiles will use `0`."
+      },
+      "tiles": {
+        "name": "tiles",
+        "description": "A list of tiles to apply randomly for this color. You can also use an alias block here to reference a list of tiles.\n\nFor example:\n```cpp\ntiles = vegetation_farm_01_35\n```\n```cpp\ntiles = [\n    vegetation_farm_01_32\n    vegetation_farm_01_33\n    vegetation_farm_01_34\n    vegetation_farm_01_35\n    vegetation_farm_01_36\n    vegetation_farm_01_37\n    vegetation_farm_01_38\n    vegetation_farm_01_39\n]\n```\n\nOr with one or more alias blocks:\n```cpp\nalias\n{\n    name = treez1\n    tiles = [\n        vegetation_trees_01_13\n        vegetation_trees_01_14\n        vegetation_trees_01_15\n        vegetation_trees_01_8\n        vegetation_trees_01_9\n        vegetation_trees_01_10\n        vegetation_trees_01_11\n        vegetation_trees_01_17\n    ]\n}\n```\n```cpp\ntiles = [\n  treez1\n]\n```"
+      },
+      "color": {
+        "name": "color",
+        "description": "The RGB color to replace with the tiles in the `tiles` parameter. This is the color you painted in your image file to associate to this rule.",
+        "type": "array"
+      },
+      "layer": {
+        "name": "layer",
+        "description": "The layer to apply the tiles on.",
+        "type": "string"
+      }
+    }
   },
   "craftRecipe": {
     "name": "craftRecipe",
@@ -4560,8 +4792,9 @@
       },
       "tags": {
         "name": "tags",
-        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`.",
-        "required": true
+        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`. The syntax is as follows:\n```cpp\n/* single tag */\nTags = tag1,\n\n/* multiple tags */\nTags = tag1;tag2;...,\n```\n\nFor example:\n```cpp\nTags = InHandCraft;CanAlwaysBeResearched,\n```",
+        "required": true,
+        "type": "array"
       },
       "time": {
         "name": "time",
