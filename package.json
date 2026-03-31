@@ -41,7 +41,7 @@
         },
         "ZedScripts.onlyUseLocalData": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Whether to only use local data for scripts."
         },
         "ZedScripts.disabledDiagnostics": {

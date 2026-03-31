@@ -416,7 +416,7 @@
   },
   "timedAction": {
     "name": "timedAction",
-    "description": "Defines a callable action sound and/or animation.",
+    "description": "Defines a callable action sound and/or animation, including effects on calories burned and body heat generation.",
     "shouldHaveParent": true,
     "parents": [
       "module"
@@ -4077,7 +4077,7 @@
     "parameters": {
       "category": {
         "name": "category",
-        "description": "The category under which the recipe will be listed in the crafting menu."
+        "description": "The category under which the recipe will be listed in the crafting menu. Helps to organize and identify recipes in the crafting menu. Currently doesn't support translations (confirmed last 42.15)."
       },
       "needtobelearn": {
         "name": "NeedToBeLearn",
@@ -4087,31 +4087,34 @@
         "name": "OnAddToMenu"
       },
       "oncreate": {
-        "name": "OnCreate"
+        "name": "OnCreate",
+        "description": "The OnCreate parameter allows the referencing of a Lua function that will be called when the crafting recipe is finished. This can be used to add custom behavior to the crafting recipe when it gets finished. The Lua function needs to be a [global function](https://pzwiki.net/wiki/Lua_(language)#Local_and_global), it can also be in a global table. The vanilla game OnCreate's are stored in the [Java](https://pzwiki.net/wiki/Java).\n\nThe function should have the following structure:\n```lua\nfunction MyOnCreateFunction(craftRecipeData, character)\n    -- your custom code here\nend\n```\n\nThe `craftRecipeData` is a [java object](https://demiurgequantified.github.io/ProjectZomboidJavaDocs/zombie/entity/components/crafting/recipe/CraftRecipeData.html) that contains the data of the crafting recipe. The `character` is the player character who is crafting the recipe."
       },
       "skillrequired": {
         "name": "SkillRequired",
-        "description": "The skill required to craft the item."
+        "description": "Specifies the skill level required to perform this crafting action. It should be formated this way:\n```cpp\n/* a single skill */\nskillRequired = <skill name>:<level>,\n\n/* multiple skills */\nskillRequired = <skill1 name>:<level>;<skill2 name>:<level>,\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nskillRequired = Blacksmith:3;Tailoring:2,\n```"
       },
       "tags": {
         "name": "tags",
-        "description": "Tags to define the special behavior of the recipe.",
+        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`.",
         "required": true
       },
       "time": {
         "name": "time",
-        "description": "The time it takes to craft the item, not using a specific unit of time."
+        "description": "The time it takes to craft the item, not using a specific unit of time.",
+        "default": 50
       },
       "timedaction": {
         "name": "timedAction",
-        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
+        "description": "Refers to a timed action script block, used to trigger during the crafting process, for animations and/or sounds but also the calories burned and body heat generation."
       },
       "tooltip": {
-        "name": "Tooltip"
+        "name": "Tooltip",
+        "description": "Description of the crafting which is shown in the crafting menu."
       },
       "xpaward": {
         "name": "xpAward",
-        "description": "The amount of experience points awarded upon crafting the item."
+        "description": "Specifies the experience points awarded for crafting this item. The parameter should be formated this way:\n```cpp\n/* a single skill */\nxpAward = <skill name>:<xp amount>,\n\n/* multiple skills */\nxpAward = <skill1 name>:<xp amount>;<skill2 name>:<xp amount>,format\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nxpAward = Blacksmith:10;Tailoring:5,\n```"
       }
     }
   },
@@ -4502,36 +4505,42 @@
     "softOverride": true,
     "parameters": {
       "allowbatchcraft": {
-        "name": "AllowBatchCraft"
+        "name": "AllowBatchCraft",
+        "description": "The AllowBatchCraft parameter is used to allow the recipe to be crafted in batches. This will make a slider appear on the crafting to craft multiple ones at once. Needs to be a boolean and default is true, set to false to disable batch craft.",
+        "type": "boolean",
+        "default": true
       },
       "autolearnall": {
-        "name": "AutoLearnAll"
+        "name": "AutoLearnAll",
+        "description": "The `autoLearnAll` parameter specifies that all the provided skills and their associated level need to be reached to learn the recipe. The parameter should be formated this way:\n```cpp\n/* a single skill */\nautoLearnAll = <skill name>:<level amount>,\n\n/* multiple skills */\nautoLearnAll = <skill1 name>:<level amount>;<skill2 name>:<level amount>,format\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nautoLearnAll = Carving:3;Maintenance:2,\n```"
       },
       "autolearnany": {
-        "name": "AutoLearnAny"
+        "name": "AutoLearnAny",
+        "description": "The autoLearnAny parameter specifies that at least one of the skills and its associated level need to be reached to learn the recipe. The parameter should be formated this way:\n```cpp\n/* a single skill */\nautoLearnAny = <skill name>:<level amount>,\n\n/* multiple skills */\nautoLearnAny = <skill1 name>:<level amount>;<skill2 name>:<level amount>,format\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nautoLearnAny = Carving:3;Maintenance:2,\n```"
       },
       "category": {
         "name": "category",
-        "description": "The category under which the recipe will be listed in the crafting menu."
+        "description": "The category under which the recipe will be listed in the crafting menu. Helps to organize and identify recipes in the crafting menu. Currently doesn't support translations (confirmed last 42.15)."
       },
       "icon": {
-        "name": "Icon"
-      },
-      "itemmappers": {
-        "name": "itemMappers"
+        "name": "Icon",
+        "description": "Specifies the icon associated with this crafting recipe. The icon needs to be located in `media/textures`, for example `media/textures/myIcon.png` will be refered to as `Icon = myIcon,`.\n\nThis seems to be used only once in the vanilla recipes with the entry Icon = \"Item_WaterDrop\", as the icon usually defaults to the items that will be crafted. "
       },
       "metarecipe": {
-        "name": "MetaRecipe"
+        "name": "MetaRecipe",
+        "description": "A meta recipe is used to link two recipes so that if the meta recipe is known then this recipe will be known."
       },
       "needtobelearn": {
         "name": "NeedToBeLearn",
         "description": "Whether the recipe needs to be learned before it can be crafted."
       },
       "oncreate": {
-        "name": "OnCreate"
+        "name": "OnCreate",
+        "description": "The OnCreate parameter allows the referencing of a Lua function that will be called when the crafting recipe is finished. This can be used to add custom behavior to the crafting recipe when it gets finished. The Lua function needs to be a [global function](https://pzwiki.net/wiki/Lua_(language)#Local_and_global), it can also be in a global table. The vanilla game OnCreate's are stored in the [Java](https://pzwiki.net/wiki/Java).\n\nThe function should have the following structure:\n```lua\nfunction MyOnCreateFunction(craftRecipeData, character)\n    -- your custom code here\nend\n```\n\nThe `craftRecipeData` is a [java object](https://demiurgequantified.github.io/ProjectZomboidJavaDocs/zombie/entity/components/crafting/recipe/CraftRecipeData.html) that contains the data of the crafting recipe. The `character` is the player character who is crafting the recipe."
       },
       "ontest": {
-        "name": "OnTest"
+        "name": "OnTest",
+        "description": "The OnTest parameter is used to define a Lua function that will be called to verify if the recipe can be crafted. If the function returns true, the recipe can be crafted but if the function returns false, the recipe cannot be crafted. The Lua function needs to be a [global function](https://pzwiki.net/wiki/Lua_(language)#Local_and_global), it can also be in a global table. The vanilla game OnTest's are stored in the [Java](https://pzwiki.net/wiki/Java).\n\nThe function should have the following structure:\n```lua\nfunction MyOnTestFunction(item, character)\n    -- your custom code here\n    return logicTestResult  -- based on your logic test above\nend\n```\n\n`item` is an InventoryItem while `character` is the player trying to craft this recipe."
       },
       "overlaystyle": {
         "name": "overlayStyle"
@@ -4547,27 +4556,29 @@
       },
       "skillrequired": {
         "name": "SkillRequired",
-        "description": "The skill required to craft the item."
+        "description": "Specifies the skill level required to perform this crafting action. It should be formated this way:\n```cpp\n/* a single skill */\nskillRequired = <skill name>:<level>,\n\n/* multiple skills */\nskillRequired = <skill1 name>:<level>;<skill2 name>:<level>,\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nskillRequired = Blacksmith:3;Tailoring:2,\n```"
       },
       "tags": {
         "name": "tags",
-        "description": "Tags to define the special behavior of the recipe.",
+        "description": "Specifies specific conditions which need to be respected to craft this item. At least one crafting bench tag is necessary for the craft to be recognized, such as `AnySurfaceCraft`.",
         "required": true
       },
       "time": {
         "name": "time",
-        "description": "The time it takes to craft the item, not using a specific unit of time."
+        "description": "The time it takes to craft the item, not using a specific unit of time.",
+        "default": 50
       },
       "timedaction": {
         "name": "timedAction",
-        "description": "The timed action script to trigger during crafting. Used to trigger animations and/or sounds."
+        "description": "Refers to a timed action script block, used to trigger during the crafting process, for animations and/or sounds but also the calories burned and body heat generation."
       },
       "tooltip": {
-        "name": "Tooltip"
+        "name": "Tooltip",
+        "description": "Description of the crafting which is shown in the crafting menu."
       },
       "xpaward": {
         "name": "xpAward",
-        "description": "The amount of experience points awarded upon crafting the item."
+        "description": "Specifies the experience points awarded for crafting this item. The parameter should be formated this way:\n```cpp\n/* a single skill */\nxpAward = <skill name>:<xp amount>,\n\n/* multiple skills */\nxpAward = <skill1 name>:<xp amount>;<skill2 name>:<xp amount>,format\n```\nFor the list of available skills, see [this](https://pzwiki.net/wiki/CraftRecipe#Available_skills).\n\nFor example:\n```cpp\nxpAward = Blacksmith:10;Tailoring:5,\n```"
       }
     }
   },
