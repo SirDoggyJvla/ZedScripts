@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { MarkdownString, TextDocument, Diagnostic } from "vscode";
 import { scriptBlockRegex, parameterRegex, inputsOutputsRegex } from '../models/regexPatterns';
 import { 
     DOCUMENT_IDENTIFIER, 
@@ -11,10 +10,9 @@ import {
     DOCS_LINK
 } from '../models/enums';
 import { diagnostic } from '../providers/diagnostic';
-import { getColor, getFontStyle } from "../utils/themeColors";
+import { color } from "../utils/themeColors";
 import { ScriptBlockData } from './scriptsBlocksData';
 import { getScriptBlockData, getVariantTree, getMainVariant, isScriptBlock } from './scriptsBlocksUtility';
-import { colorText } from '../utils/htmlFormat';
 import { IndexRange, createIndexRange, replaceCommentsWithWhitespace } from '../utils/positions';
 import { ScriptParameter } from './scriptsBlocksParameter';
 import { InputsItemParameter, InputsFluidParameter } from './scriptsBlocksProperties';
@@ -25,8 +23,8 @@ import { InputsItemParameter, InputsFluidParameter } from './scriptsBlocksProper
 export class ScriptBlock {
 // MEMBERS
     // extra
-    document: TextDocument;
-    diagnostics: Diagnostic[];
+    document: vscode.TextDocument;
+    diagnostics: vscode.Diagnostic[];
     originalScriptBlock: string | null = null;
     
     // block data
@@ -44,12 +42,13 @@ export class ScriptBlock {
     lineEnd: number = 0;
     headerStart: number = 0;
 
+    colorCode: ThemeColorType = ThemeColorType.SCRIPT_BLOCK;
 
 
 // CONSTRUCTOR
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -133,12 +132,6 @@ export class ScriptBlock {
         return !blockData.noComma; // default is false, so should have comma by default
     }
 
-    private color(txt: string, colorType: ThemeColorType = ThemeColorType.SCRIPT_BLOCK): string {
-        const color = getColor(colorType);
-        const fontStyle = getFontStyle(colorType);
-        return colorText(txt, color, fontStyle);
-    }
-
     public getWikiPage(): string {
         const mainVariant = getMainVariant(this.scriptBlock);
         return WIKI_LINK + mainVariant.replace(' ', '_') + '_(scripts)';
@@ -150,7 +143,7 @@ export class ScriptBlock {
     }
 
     public getTree(children: boolean = false): string {
-        let scriptBlock = this.color(this.scriptBlock)
+        let scriptBlock = color(this.scriptBlock, this.colorCode);
         if (!children) {
             scriptBlock = "**" + scriptBlock + "**";
         }
@@ -159,7 +152,7 @@ export class ScriptBlock {
         // recursively collect parents
         let current = this.parent;
         while (current && current.scriptBlock !== DOCUMENT_IDENTIFIER) {
-            parents.unshift(this.color(current.scriptBlock));
+            parents.unshift(color(current.scriptBlock, current.colorCode));
             current = current.parent;
         }
         
@@ -169,7 +162,7 @@ export class ScriptBlock {
         return str;
     }
 
-    public getHoverText(): MarkdownString {
+    public getHoverText(): vscode.MarkdownString {
         const markdown = new vscode.MarkdownString();
         markdown.isTrusted = true; // needed for html rendering
 
@@ -604,8 +597,8 @@ export class ScriptBlock {
  */
 export class ComponentBlock extends ScriptBlock {
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -625,8 +618,8 @@ export class ComponentBlock extends ScriptBlock {
 
 export class ItemMapperBlock extends ScriptBlock {
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -647,8 +640,8 @@ export class ItemMapperBlock extends ScriptBlock {
 
 export class TemplateBlock extends ScriptBlock {
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -670,8 +663,8 @@ export class TemplateBlock extends ScriptBlock {
 
 export class InputsBlock extends ScriptBlock {
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -754,8 +747,8 @@ export class InputsBlock extends ScriptBlock {
 
 export class IgnoreAll extends ScriptBlock {
     constructor(
-        document: TextDocument,
-        diagnostics: Diagnostic[],
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[],
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -782,7 +775,7 @@ export class IgnoreAll extends ScriptBlock {
 export class DocumentBlock extends ScriptBlock {
     private static documentBlockCache: Map<string, DocumentBlock> = new Map();
     
-    constructor(document: TextDocument, diagnostics: Diagnostic[], type: string) {
+    constructor(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[], type: string) {
         // Only document is provided
         const parent = null;
         const id = null;
