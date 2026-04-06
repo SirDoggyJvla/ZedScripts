@@ -80,6 +80,7 @@ export interface InputProperty {
 export interface InputParameterData {
     oneOf?: string[];
     properties: { [key: string]: InputProperty };
+    description: string;
 }
 
 function mapScriptTypes(data: ScriptData): { [key: string]: ScriptBlockData } {
@@ -121,7 +122,6 @@ export let DEFAULT_ROOT_FILE = "ROOT-Scripts";
 export function testForScriptRootFile(filePath: string): string | null{
     filePath = filePath.replace(/\\/g, '/');
     filePath = path.posix.normalize(filePath);
-    console.debug(`Testing file path for script root file: ${filePath}`);
     for (const rootFile of ROOT_FILES) {
         for (const pattern of rootFile.pattern || []) {
             const regex = new RegExp(pattern);

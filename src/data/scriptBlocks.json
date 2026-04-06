@@ -601,7 +601,9 @@
     "description": "Not a script block, but serves as the root of the document. Blocks than need to be in the root of the document should have this as parent.",
     "shouldHaveParent": false,
     "parents": [],
-    "deprecated": true,
+    "deprecated": {
+      "replacedBy": "ROOT-Scripts"
+    },
     "parameters": {}
   },
   "alias": {
@@ -624,35 +626,46 @@
   },
   "clip": {
     "name": "clip",
-    "description": "",
+    "description": "Defines a clip to be used in a [sound script](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/sound.html), which is a single sound file with properties that determine how it is played in the game.\n\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}",
     "shouldHaveParent": true,
     "parents": [
       "sound"
     ],
     "parameters": {
       "event": {
-        "name": "event"
+        "name": "event",
+        "type": "string"
       },
       "distancemax": {
-        "name": "distanceMax"
+        "name": "distanceMax",
+        "type": "integer"
       },
       "file": {
-        "name": "file"
+        "name": "file",
+        "type": "string"
       },
       "distancemin": {
-        "name": "distanceMin"
+        "name": "distanceMin",
+        "type": "integer"
       },
       "volume": {
-        "name": "volume"
+        "name": "volume",
+        "type": "float"
       },
       "reverbfactor": {
-        "name": "reverbFactor"
+        "name": "reverbFactor",
+        "type": "float"
       },
       "pitch": {
-        "name": "pitch"
+        "name": "pitch",
+        "type": "float"
       },
       "reverbmaxrange": {
-        "name": "reverbMaxRange"
+        "name": "reverbMaxRange",
+        "type": "float"
+      },
+      "stopimmediate": {
+        "name": "stopImmediate"
       }
     }
   },
@@ -913,7 +926,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "basevolumerange": {
         "name": "BaseVolumeRange",
@@ -1288,7 +1301,7 @@
           "container"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "conditionaffectscapacity": {
         "name": "ConditionAffectsCapacity",
@@ -1382,7 +1395,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 20
+        "default": 20.0
       },
       "customcontextmenu": {
         "name": "CustomContextMenu",
@@ -1553,7 +1566,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "engineloudness": {
         "name": "engineLoudness",
@@ -1761,7 +1774,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "headconditionmax": {
         "name": "HeadConditionMax",
@@ -1775,7 +1788,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "herbalisttype": {
         "name": "HerbalistType",
@@ -2003,13 +2016,17 @@
       },
       "type": {
         "name": "Type",
-        "deprecated": true,
+        "deprecated": {
+          "replacedBy": "ItemType"
+        },
         "description": "This parameter was replaced by `ItemType` in Build 42.13."
       },
       "displayname": {
         "name": "DisplayName",
-        "deprecated": true,
-        "description": "This parameter was removed in Build 42.13, naming an item should be done with a translation entry. See the [wiki](https://pzwiki.net/wiki/DisplayName) page for more information."
+        "deprecated": {
+          "description": "This parameter was removed in Build 42.13, naming an item should be done with a translation entry. See the [wiki](https://pzwiki.net/wiki/DisplayName) page for more information."
+        },
+        "description": "Sets the name of the item which will be displayed in-game. It's recommended to use a translation entry for this parameter to allow localization of the item name."
       },
       "itemwhendry": {
         "name": "ItemWhenDry",
@@ -2023,7 +2040,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "keepondeplete": {
         "name": "KeepOnDeplete",
@@ -2044,7 +2061,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "learnedrecipes": {
         "name": "LearnedRecipes",
@@ -2169,7 +2186,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "maxrangemodifier": {
         "name": "MaxRangeModifier",
@@ -2232,7 +2249,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "minchannel": {
         "name": "MinChannel",
@@ -2273,7 +2290,7 @@
           "food"
         ],
         "type": "float",
-        "default": 120,
+        "default": 120.0,
         "description": "How many in-game minutes it takes to burn the food. This value must be higher than `MinutesToCook`."
       },
       "minutestocook": {
@@ -2282,7 +2299,7 @@
           "food"
         ],
         "type": "float",
-        "default": 60,
+        "default": 60.0,
         "description": "How many in-game minutes it takes to cook the food. This value must be smaller than `MinutesToBurn`."
       },
       "modelweaponpart": {
@@ -2318,7 +2335,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "needtobeclosedoncereload": {
         "name": "needtobeclosedoncereload",
@@ -2350,7 +2367,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "numberofpages": {
         "name": "NumberOfPages",
@@ -2551,7 +2568,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "protectfromrainwhenequipped": {
         "name": "ProtectFromRainWhenEquipped",
@@ -2573,7 +2590,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "putinsound": {
         "name": "PutInSound",
@@ -2776,7 +2793,7 @@
           "radio"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "scaleworldicon": {
         "name": "ScaleWorldIcon",
@@ -2784,7 +2801,7 @@
           "drainable"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "scratchdefense": {
         "name": "ScratchDefense",
@@ -2826,7 +2843,7 @@
           "normal"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "shouttype": {
         "name": "ShoutType",
@@ -2855,7 +2872,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "soundmap": {
         "name": "SoundMap",
@@ -2922,7 +2939,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "staticmodel": {
         "name": "StaticModel",
@@ -2953,7 +2970,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "stoppower": {
         "name": "StopPower",
@@ -2961,7 +2978,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 5
+        "default": 5.0
       },
       "stresschange": {
         "name": "StressChange",
@@ -3028,7 +3045,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "tags": {
         "name": "Tags",
@@ -3070,7 +3087,7 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "tooltip": {
         "name": "Tooltip",
@@ -3231,7 +3248,7 @@
           "clothing"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "visualaid": {
         "name": "VisualAid",
@@ -3283,12 +3300,12 @@
           "weapon"
         ],
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "weight": {
         "name": "Weight",
         "type": "float",
-        "default": 1
+        "default": 1.0
       },
       "weightempty": {
         "name": "WeightEmpty",
@@ -3437,6 +3454,7 @@
     ],
     "properties": {
       "item": {
+        "description": "Defines an item input needed for the recipe. Different properties can be provided for this singular input to define how the item is used in the recipe and how it impacts the crafting process.",
         "oneOf": [
           "itemList",
           "tags"
@@ -3479,6 +3497,7 @@
         }
       },
       "-fluid": {
+        "description": "",
         "oneOf": [
           "fluidList",
           "categories"
@@ -3513,6 +3532,7 @@
         }
       },
       "+fluid": {
+        "description": "",
         "oneOf": [
           "singleValue"
         ],
@@ -3915,7 +3935,8 @@
     "shouldHaveParent": true,
     "isVariant": "component",
     "parents": [
-      "item"
+      "item",
+      "entity"
     ],
     "needsChildren": [
       "contextEntry"
@@ -4255,7 +4276,7 @@
   },
   "sound": {
     "name": "sound",
-    "description": "Defines a sound properties.",
+    "description": "Makes one or more sound clips available for use in the game. Multiple clips can be added to a sound script, and the game will randomly select one of them to play when the sound is triggered.\n\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}",
     "shouldHaveParent": true,
     "parents": [
       "module",
@@ -4269,62 +4290,153 @@
       ]
     },
     "parameters": {
-      "category": {
-        "name": "category"
-      },
-      "loop": {
-        "name": "loop"
-      },
-      "master": {
-        "name": "master"
-      },
-      "maxinstancesperemitter": {
-        "name": "maxInstancesPerEmitter"
-      },
-      "is3d": {
-        "name": "is3D"
+      "alarm": {
+        "name": "alarm",
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "array"
       },
       "alarmloop": {
         "name": "alarmLoop",
-        "parentsOnly": [
-          "vehicle",
-          "template"
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
         ]
+      },
+      "backsignal": {
+        "name": "backSignal",
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
+      },
+      "category": {
+        "name": "category",
+        "type": "string"
       },
       "engine": {
         "name": "engine",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
       },
       "enginestart": {
         "name": "engineStart",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
       },
       "engineturnoff": {
         "name": "engineTurnOff",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
+      },
+      "handbrake": {
+        "name": "handBrake",
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
       },
       "horn": {
         "name": "horn",
-        "parentsOnly": [
-          "vehicle",
-          "template"
-        ]
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
       },
       "ignitionfail": {
         "name": "ignitionFail",
-        "parentsOnly": [
-          "vehicle",
-          "template"
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
         ]
+      },
+      "ignitionfailnopower": {
+        "name": "ignitionFailNoPower",
+        "needs": [
+          {
+            "parents": [
+              "vehicle",
+              "template"
+            ]
+          }
+        ],
+        "type": "string"
+      },
+      "is3d": {
+        "name": "is3D",
+        "type": "string",
+        "description": "This parameter looks unused.",
+        "isUseless": true
+      },
+      "loop": {
+        "name": "loop",
+        "description": "Whether the sound should loop or not. The sound plays until turned off or the emitter is destroyed.",
+        "type": "boolean"
+      },
+      "master": {
+        "name": "master",
+        "type": "string",
+        "description": "Links the sound to a master sound category, which controls the volume of all sounds linked to it.",
+        "values": [
+          "Primary",
+          "Ambient",
+          "Music",
+          "VehicleEngine"
+        ]
+      },
+      "maxinstancesperemitter": {
+        "name": "maxInstancesPerEmitter",
+        "type": "integer"
       }
     }
   },
@@ -4461,7 +4573,7 @@
   },
   "Fluids": {
     "name": "Fluids",
-    "description": "",
+    "description": "Used to make a list of fluids to appear in a [FluidContainer component](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/component/component_fluidcontainer.html).",
     "shouldHaveParent": true,
     "parents": [
       "component FluidContainer"
@@ -4469,7 +4581,8 @@
     "parameters": {
       "fluid": {
         "name": "fluid",
-        "allowedDuplicate": true
+        "allowedDuplicate": true,
+        "description": "Refers to a fluid script"
       }
     }
   },
@@ -4577,39 +4690,101 @@
   },
   "component FluidContainer": {
     "name": "component FluidContainer",
-    "description": "",
+    "description": "Adds a fluid container to an item",
     "shouldHaveParent": true,
     "isVariant": "component",
     "parents": [
-      "item"
+      "item",
+      "entity"
     ],
     "parameters": {
       "capacity": {
-        "name": "Capacity"
+        "name": "Capacity",
+        "type": "float",
+        "default": 1.0,
+        "description": "The fluid capacity of the container, the minimum value is `0.05`."
       },
       "containername": {
-        "name": "ContainerName"
+        "name": "ContainerName",
+        "type": "string",
+        "default": "FluidContainer",
+        "description": "The name of the fluid container, seems to be unused. The name cannot have whitespaces, the game will sanitize it to remove them and show an error in the console about it.",
+        "isUseless": true
       },
       "customdrinksound": {
-        "name": "CustomDrinkSound"
+        "name": "CustomDrinkSound",
+        "description": "Refers to a [sound block](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/sound.html) to trigger when drinking.",
+        "type": "string",
+        "default": "DrinkingFromGeneric"
+      },
+      "hiddenamount": {
+        "name": "HiddenAmount",
+        "type": "boolean",
+        "default": false,
+        "description": "When true, will hide the fluid quantity from the UI."
+      },
+      "initialpercent": {
+        "name": "InitialPercent",
+        "type": "float",
+        "incompatibleWith": [
+          "InitialPercentMin",
+          "InitialPercentMax"
+        ]
       },
       "initialpercentmax": {
-        "name": "InitialPercentMax"
+        "name": "InitialPercentMax",
+        "type": "float",
+        "default": 1.0,
+        "description": "The minimum amount of fluid which will appear in this container.",
+        "incompatibleWith": [
+          "InitialPercent"
+        ]
       },
       "initialpercentmin": {
-        "name": "InitialPercentMin"
+        "name": "InitialPercentMin",
+        "type": "float",
+        "default": 0.0,
+        "description": "The maximum amount of fluid which will appear in this container.",
+        "incompatibleWith": [
+          "InitialPercent"
+        ]
       },
       "inputlocked": {
-        "name": "InputLocked"
+        "name": "InputLocked",
+        "type": "boolean",
+        "default": false,
+        "description": "Unused."
       },
       "opened": {
-        "name": "Opened"
+        "name": "Opened",
+        "type": "boolean",
+        "default": true,
+        "description": "Unused."
       },
       "pickrandomfluid": {
-        "name": "PickRandomFluid"
+        "name": "PickRandomFluid",
+        "type": "boolean",
+        "default": false,
+        "description": "When set to true, the container will pick one of the available fluids in the [Fluids](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/fluids.html) child block at random when filling. If set to false, it will make every fluids appear.",
+        "needs": [
+          {
+            "children": [
+              "Fluids"
+            ]
+          }
+        ]
       },
       "rainfactor": {
-        "name": "RainFactor"
+        "name": "RainFactor",
+        "type": "float",
+        "default": 0.0,
+        "description": "Defines how much rain contributes to filling the container. A high value increases the rate of filling. A value of `0.0` means that rain will not fill the container, which is the default value of the parameter.\n\nIf the item is a weapon and `RainFactor` is set to a value above the default, when the player aims with the weapon it will empty it."
+      },
+      "fillswithcleanwater": {
+        "name": "FillsWithCleanWater",
+        "type": "boolean",
+        "default": false,
+        "description": "When set to true, the container will fill with clean water instead of tainted water when left outside in the rain."
       }
     }
   },

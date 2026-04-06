@@ -177,7 +177,7 @@ export class ScriptParameter {
 
     public getDescription(): string {
         const parameterData = this.getParameterData();
-        return parameterData?.description || DefaultText.SCRIPT_BLOCK_DESCRIPTION;
+        return parameterData?.description || DefaultText.PARAMETER_DESCRIPTION;
     }
 
     public getTypeOfValue(): string {
