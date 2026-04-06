@@ -2017,14 +2017,16 @@
       "type": {
         "name": "Type",
         "deprecated": {
-          "replacedBy": "ItemType"
+          "replacedBy": "ItemType",
+          "version": "42.13.0"
         },
-        "description": "This parameter was replaced by `ItemType` in Build 42.13."
+        "description": "Used to set the class of the item, which will influence parameters available."
       },
       "displayname": {
         "name": "DisplayName",
         "deprecated": {
-          "description": "This parameter was removed in Build 42.13, naming an item should be done with a translation entry. See the [wiki](https://pzwiki.net/wiki/DisplayName) page for more information."
+          "description": "Naming an item should be done with a translation entry. See the [wiki](https://pzwiki.net/wiki/DisplayName) page for more information.",
+          "version": "42.13.0"
         },
         "description": "Sets the name of the item which will be displayed in-game. It's recommended to use a translation entry for this parameter to allow localization of the item name."
       },

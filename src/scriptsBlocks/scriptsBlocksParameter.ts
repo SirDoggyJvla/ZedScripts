@@ -10,6 +10,7 @@ import {
 } from '../models/enums';
 import { diagnostic } from '../providers/diagnostic';
 import { 
+    DeprecatedInfo,
     ScriptBlockParameter, 
     VALUE_TYPES
 } from './scriptsBlocksData';
@@ -234,12 +235,36 @@ export class ScriptParameter {
         return false;
     }
 
-    public isDeprecated(): boolean {
+    public getDeprecated(): DeprecatedInfo | null {
         const parameterData = this.getParameterData();
         if (parameterData) {
-            return parameterData.deprecated === true;
+            return parameterData.deprecated || null;
         }
-        return false;
+        return null;
+    }
+
+    public getDeprecatedDescription(deprecatedInfo: DeprecatedInfo): string {
+        const replacement = deprecatedInfo.replacedBy
+        const description = deprecatedInfo.description;
+        const version = deprecatedInfo.version;
+        
+        // format deprecation based on available information
+        let txt = "";
+        if (replacement && version) {
+            txt = formatText(DefaultText.DEPRECATION_REPLACEMENT_VERSION, { replacement, version });
+        } else if (replacement) {
+            txt = formatText(DefaultText.DEPRECATION_REPLACEMENT, { replacement });
+        } else if (version) {
+            txt = formatText(DefaultText.DEPRECATION_VERSION, { version });
+        } else {
+            txt = "This parameter is deprecated.";
+        }
+
+        // add description if provided
+        if (description) {
+            txt += " " + description;
+        }
+        return txt;
     }
 
     public hasAcceptedValue(): boolean {
@@ -270,10 +295,12 @@ export class ScriptParameter {
         }
 
         // verify if parameter is deprecated
-        if (this.isDeprecated()) {
+        const depr = this.getDeprecated();
+        if (depr) {
+            const txt = this.getDeprecatedDescription(depr);
             this.diagnostic(
-                DiagnosticType.DEPRECATED_PARAMETER,
-                { parameter: name, scriptBlock: this.parent.scriptBlock },
+                txt,
+                {},
                 this.parameterRange.start, this.parameterRange.end,
                 vscode.DiagnosticSeverity.Warning
             );
@@ -448,7 +475,7 @@ export class ScriptParameter {
     }
 
     private diagnostic(
-        type: DiagnosticType,
+        type: DiagnosticType | string,
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error

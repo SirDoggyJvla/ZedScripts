@@ -93,7 +93,7 @@ export function formatText(message: string, params: Record<string, string>): str
 export function diagnostic(
     document: TextDocument,
     diagnostics: Diagnostic[],
-    type: DiagnosticType,
+    type: DiagnosticType | string,
     params: Record<string, string>,
     index_start: number, index_end: number = index_start,
     severity: DiagnosticSeverity = DiagnosticSeverity.Error

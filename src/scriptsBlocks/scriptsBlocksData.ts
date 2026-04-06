@@ -44,7 +44,7 @@ export interface ScriptBlockParameter {
     default?: (string | number | boolean)[];
     type?: "string" | "int" | "float" | "boolean" | "array";
     required?: boolean;
-    deprecated?: boolean;
+    deprecated?: DeprecatedInfo;
     values?: (string | number | boolean)[];
     needs?: ScriptBlockNeeds[];
 }
@@ -53,6 +53,12 @@ export interface ScriptBlockNeeds {
     name: string; // the dependent parameter
     values?: any[]; // list of possible values for the dependent parameter
     valueToType?: { [key: string]: string } // mapping of dependent parameter values to types (for dynamic typing based on other parameter's value)
+}
+
+export interface DeprecatedInfo {
+    replacedBy?: string;
+    description?: string;
+    version?: string;
 }
 
 export interface ScriptBlockID {
