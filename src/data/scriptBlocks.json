@@ -3899,6 +3899,22 @@
       }
     }
   },
+  "vehicleEngineRPM": {
+    "name": "vehicleEngineRPM",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {
+      "version": {
+        "name": "VERSION",
+        "type": "integer",
+        "description": "Unclear what this does, preferably keep it at 1."
+      }
+    }
+  },
   "component Durability": {
     "name": "component Durability",
     "description": "",
@@ -4072,7 +4088,7 @@
   },
   "attachment": {
     "name": "attachment",
-    "description": "-| Defines an attachment point on a model or vehicle block. The ID is the attachment name, it can be a custom ID or an existing one often used to define specific attachments. While manually modifying the attachment block is definitely possible, it is recommended to use the [attachment editor](https://pzwiki.net/wiki/Attachment_Editor) to create and edit those attachments.",
+    "description": "Defines an attachment point on a model or vehicle block. The ID is the attachment name, it can be a custom ID or an existing one often used to define specific attachments. While manually modifying the attachment block is definitely possible, it is recommended to use the [attachment editor](https://pzwiki.net/wiki/Attachment_Editor) to create and edit those attachments.",
     "shouldHaveParent": true,
     "parents": [
       "vehicle",
@@ -4457,6 +4473,24 @@
       },
       "sound": {
         "name": "sound"
+      }
+    }
+  },
+  "data": {
+    "name": "data",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "vehicleEngineRPM"
+    ],
+    "parameters": {
+      "aftergearchange": {
+        "name": "afterGearChange",
+        "type": "float"
+      },
+      "gearchange": {
+        "name": "gearChange",
+        "type": "float"
       }
     }
   },
