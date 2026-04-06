@@ -92,6 +92,11 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ### Changelog
 With each update, the extension fetches the latest data from the pz-scripts-data repository and make a local copy of it. If you're having issues, it might be because of outdated data, so make sure to fetch the latest data.
 
+1.9.5:
+- better deprecated parameter diagnostic handling. It now indicates the version, the replacement parameter if any, and a description which explains the deprecation
+- added quick fixes for some diagnostics. Currently only for: deprecated parameter with replacement, missing comma and wrong comma format
+- tweaked the highlight of blocks
+
 1.9.4:
 - swap config for forced local data to true by default, since the extension is actively being developped and worked on, should reduce problems when the format changes for the data
 
