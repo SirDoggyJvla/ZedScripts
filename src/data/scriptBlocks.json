@@ -626,7 +626,7 @@
   },
   "clip": {
     "name": "clip",
-    "description": "Defines a clip to be used in a [sound script](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/sound.html), which is a single sound file with properties that determine how it is played in the game.\n\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}",
+    "description": "Defines a clip to be used in a [sound script](https://sirdoggyjvla.github.io/pz-scripts-data/blocks/sound.html), which is a single sound file with properties that determine how it is played in the game.\n\n```cpp\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}\n```",
     "shouldHaveParent": true,
     "parents": [
       "sound"
@@ -4294,7 +4294,7 @@
   },
   "sound": {
     "name": "sound",
-    "description": "Makes one or more sound clips available for use in the game. Multiple clips can be added to a sound script, and the game will randomly select one of them to play when the sound is triggered.\n\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}",
+    "description": "Makes one or more sound clips available for use in the game. Multiple clips can be added to a sound script, and the game will randomly select one of them to play when the sound is triggered.\n\n```cpp\nmodule yourModule {\n  sound yourSound {\n    category = Animal,\n    loop = true,\n    is3D = true,\n    clip {\n      file = media/sound/RideOfTheValkyries.ogg,\n      distanceMin = 20,\n      distanceMax = 650,\n      reverbFactor = 0.1,\n      volume = 0.7,\n    }\n  }\n}\n```",
     "shouldHaveParent": true,
     "parents": [
       "module",

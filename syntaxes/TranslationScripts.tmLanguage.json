@@ -21,12 +21,8 @@
       "name": "entity.name.inputs.pz",
       "match": "\\b(item)(?:\\s+(\\d+))\\b",
       "captures": {
-        "1": {
-          "name": "variable.parameter"
-        },
-        "2": {
-          "name": "constant.numeric.pz"
-        }
+        "1": { "name": "variable.parameter" },
+        "2": { "name": "constant.numeric.pz" }
       }
     },
     {
