@@ -12,6 +12,7 @@ import { DefaultText, LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from "./models/
 // import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
 import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns"; // DEPRECATED
 
+import { DocumentBlock } from "./scriptsBlocks/scriptsBlocks";
 import { testForScriptRootFile } from "./scriptsBlocks/scriptsBlocksData";
 
 function handleOpenTextDocument(document: vscode.TextDocument) {
@@ -41,44 +42,14 @@ function handleOpenTextDocument(document: vscode.TextDocument) {
 export async function activate(context: vscode.ExtensionContext) {
     console.debug('Activating extension "pz-syntax-extension"...');
 
-    const activeEditorChangeDisposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
-        // console.debug(`Active editor changed: ${editor?.document.fileName}`);
-        if (!editor) { return; }
-        handleOpenTextDocument(editor.document);
-    });
-
-    const openDocumentDisposable = vscode.workspace.onDidOpenTextDocument((document) => {
-        // console.debug(`Document opened: ${document.fileName}`);
-        handleOpenTextDocument(document);
-    });
+    // try to fetch the latest scriptBlocks.json from the GitHub repository
+    await fetchData(context);
 
     // handle the initially active document on startup
     if (vscode.window.activeTextEditor) {
         // console.debug(`Active editor found on startup: ${vscode.window.activeTextEditor.document.fileName}`);
         handleOpenTextDocument(vscode.window.activeTextEditor.document);
     }
-
-    // try to fetch the latest scriptBlocks.json from the GitHub repository
-    await fetchData(context);
-
-
-    // add a force reset cache function
-    const resetScriptCacheCommand = vscode.commands.registerCommand(
-        "ZedScripts.resetScriptCache",
-        async () => {
-            const result = await fetchData(context, true);
-            if (result) {
-                vscode.window.showInformationMessage(
-                    DefaultText.CACHE_RESET
-                );
-            } else {
-                vscode.window.showWarningMessage(
-                    DefaultText.CACHE_RESET_FAILED
-                );
-            }
-        }
-    )
-
 
     const diagnosticProvider = new DiagnosticProvider();
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
@@ -98,10 +69,35 @@ export async function activate(context: vscode.ExtensionContext) {
     }
     
     context.subscriptions.push(
-        activeEditorChangeDisposable,
-        openDocumentDisposable,
-        resetScriptCacheCommand,
         watcher,
+
+        // add a force reset cache function
+        vscode.commands.registerCommand(
+            "ZedScripts.resetScriptCache",
+            async () => {
+                const result = await fetchData(context, true);
+                if (result) {
+                    vscode.window.showInformationMessage(
+                        DefaultText.CACHE_RESET
+                    );
+                } else {
+                    vscode.window.showWarningMessage(
+                        DefaultText.CACHE_RESET_FAILED
+                    );
+                }
+            }
+        ),
+
+        vscode.window.onDidChangeActiveTextEditor((editor) => {
+            // console.debug(`Active editor changed: ${editor?.document.fileName}`);
+            if (!editor) { return; }
+            handleOpenTextDocument(editor.document);
+        }),
+    
+        vscode.workspace.onDidOpenTextDocument((document) => {
+            // console.debug(`Document opened: ${document.fileName}`);
+            handleOpenTextDocument(document);
+        }),
 
         // diagnostics
         vscode.workspace.onDidOpenTextDocument((document) => {
@@ -110,6 +106,30 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidChangeTextDocument((event) => {
             diagnosticProvider.updateDiagnostics(event.document);
         }),
+
+
+        vscode.languages.registerCodeActionsProvider(
+            LANG_ZEDSCRIPTS,
+            {provideCodeActions(document, range, context) {
+                const actions: vscode.CodeAction[] = [];
+                // const fileDiagnostics = diagnosticProvider.diagnosticCollection.get(document.uri);
+                // if (!fileDiagnostics) { return actions; }
+
+                const documentBlock = DocumentBlock.getDocumentBlock(document);
+                if (!documentBlock) { return actions; }
+
+                // register document actions
+                const documentActions = documentBlock.getActionsForRange(range);
+                for (const [actionRange, diagnostic, action] of documentActions) {
+                    if (actionRange.contains(range)) {
+                        action.diagnostics = [diagnostic];
+                        actions.push(action);
+                    }
+                }
+
+                return actions;
+            }}
+        ),
 
 
         // extra handlers

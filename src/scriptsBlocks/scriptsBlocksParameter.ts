@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ScriptBlock } from "./scriptsBlocks";
+import { ScriptBlock, DocumentBlock } from "./scriptsBlocks";
 import { 
     ThemeColorType, 
     DiagnosticType, 
@@ -9,6 +9,7 @@ import {
     formatList
 } from '../models/enums';
 import { diagnostic } from '../providers/diagnostic';
+import { registerActionTextReplace } from '../providers/actions';
 import { 
     DeprecatedInfo,
     ScriptBlockParameter, 
@@ -16,13 +17,14 @@ import {
 } from './scriptsBlocksData';
 import { getScriptBlockData, getMainVariant } from "./scriptsBlocksUtility";
 import { color } from "../utils/themeColors";
-import { IndexRange } from '../utils/positions';
+import { IndexRange } from '../utils/positions'; 
 
 export class ScriptParameter {
 // MEMBERS
     // extra
     document: vscode.TextDocument;
     diagnostics: vscode.Diagnostic[];
+    actions: vscode.CodeAction[] = [];
     
     // param data
     parent: ScriptBlock;
@@ -75,7 +77,19 @@ export class ScriptParameter {
 // INFORMATION
 
     private getTree(): string {
-        let parameter = "**" + color(this.parameter, this.colorCode) + "**";
+        const depr = this.getDeprecated();
+        let parameter = color(this.parameter, this.colorCode);
+
+        if (depr) {
+            parameter = "~~" + parameter + "~~";
+            const replacement = depr.replacedBy ? "**" + color(depr.replacedBy, ThemeColorType.PARAMETER) + "**" : null;
+            if (replacement) {
+                parameter += ` ${replacement}`;
+            }
+        } else {
+            parameter = "**" + parameter + "**";
+        }
+
         const parameterData = this.getParameterData();
         if (parameterData) {
             const type = parameterData.type
@@ -85,7 +99,7 @@ export class ScriptParameter {
                 parameter += ` ${operator} ${typeColored}`;
             }
             const defaultValue = parameterData.default;
-            if (defaultValue !== undefined) {
+            if (defaultValue) {
                 const operator = `${color("=", ThemeColorType.OPERATOR)}`;
                 let text;
                 if (type) {
@@ -243,7 +257,7 @@ export class ScriptParameter {
         return null;
     }
 
-    public getDeprecatedDescription(deprecatedInfo: DeprecatedInfo): string {
+    public getDeprecatedInformation(deprecatedInfo: DeprecatedInfo): string {
         const replacement = deprecatedInfo.replacedBy
         const description = deprecatedInfo.description;
         const version = deprecatedInfo.version;
@@ -297,13 +311,30 @@ export class ScriptParameter {
         // verify if parameter is deprecated
         const depr = this.getDeprecated();
         if (depr) {
-            const txt = this.getDeprecatedDescription(depr);
-            this.diagnostic(
+            const txt = this.getDeprecatedInformation(depr);
+            const diagnosticOutput = this.diagnostic(
                 txt,
                 {},
                 this.parameterRange.start, this.parameterRange.end,
                 vscode.DiagnosticSeverity.Warning
             );
+
+            // provide deprecation replacement fix if available
+            if (diagnosticOutput && depr.replacedBy) {
+                const fix = registerActionTextReplace(
+                    this.document,
+                    new vscode.Range(
+                        this.document.positionAt(this.parameterRange.start),
+                        this.document.positionAt(this.parameterRange.end)
+                    ),
+                    depr.replacedBy,
+                    `Replace deprecated parameter '${name}' with '${depr.replacedBy}'`
+                );
+                this.registerFix(fix, diagnosticOutput, new vscode.Range(
+                    this.document.positionAt(this.parameterRange.start),
+                    this.document.positionAt(this.valueRange.end)
+                ));
+            }
         }
 
         // check for duplicate
@@ -346,22 +377,53 @@ export class ScriptParameter {
         // check if missing comma at the end
         if (this.parent.shouldParameterHaveComma()) {
             if (this.comma === "") {
-                if (this.diagnostic(
+                const diagnostic = this.diagnostic(
                     DiagnosticType.MISSING_COMMA,
                     {},
                     this.parameterRange.start,
                     this.valueRange.end
-                )) {
+                );
+
+                // provide quick fix by replacing the value with the value + comma
+                if (diagnostic) {
+                    const fix = registerActionTextReplace(
+                        this.document,
+                        new vscode.Range(
+                            this.document.positionAt(this.valueRange.start),
+                            this.document.positionAt(this.valueRange.end)
+                        ),
+                        this.value + ",",
+                        `Add missing comma for parameter-value pair`
+                    );
+                    this.registerFix(fix, diagnostic, new vscode.Range(
+                        this.document.positionAt(this.parameterRange.start),
+                        this.document.positionAt(this.valueRange.end)
+                    ));
                     return false;
                 }
             } 
             if (this.comma !== ",") {
-                if (this.diagnostic(
+                const diagnostic = this.diagnostic(
                     DiagnosticType.INVALID_COMMA,
                     {},
                     this.parameterRange.start,
                     this.valueRange.end + this.comma.length
-                )) {
+                );
+                if (diagnostic) {
+                    // provide quick fix by replacing the invalid comma with a correct one
+                    const fix = registerActionTextReplace(
+                        this.document,
+                        new vscode.Range(
+                            this.document.positionAt(this.valueRange.end),
+                            this.document.positionAt(this.valueRange.end + this.comma.length)
+                        ),
+                        ",",
+                        `Replace invalid comma with a correct one`
+                    );
+                    this.registerFix(fix, diagnostic, new vscode.Range(
+                        this.document.positionAt(this.parameterRange.start),
+                        this.document.positionAt(this.valueRange.end + this.comma.length)
+                    ));
                     return false;
                 }
             }
@@ -464,7 +526,7 @@ export class ScriptParameter {
         }
     }
 
-    private diagnosticDuplicate(): boolean {
+    private diagnosticDuplicate(): vscode.Diagnostic | false {
         return this.diagnostic(
             DiagnosticType.DUPLICATE_PARAMETER,
             { parameter: this.parameter, scriptBlock: this.parent.scriptBlock },
@@ -479,7 +541,7 @@ export class ScriptParameter {
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
-    ): boolean {
+    ): vscode.Diagnostic | false {
         return diagnostic(
             this.document,
             this.diagnostics,
@@ -489,5 +551,12 @@ export class ScriptParameter {
             index_end,
             severity
         );
+    }
+
+    private registerFix(
+        fix: vscode.CodeAction, diagnostic: vscode.Diagnostic, range: vscode.Range
+    ): void {
+        const documentBlock = DocumentBlock.getDocumentBlock(this.document);
+        documentBlock?.addAction(range, diagnostic, fix);
     }
 }

@@ -15,7 +15,7 @@ import { isTranslationBlock } from "../translationBlocks/translationBlocksUtilit
 
 export class DiagnosticProvider {
     // Static cache for DocumentBlock instances
-    private diagnosticCollection: vscode.DiagnosticCollection;
+    public diagnosticCollection: vscode.DiagnosticCollection;
     
     constructor() {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection(EXTENSION_ID);
@@ -97,7 +97,7 @@ export function diagnostic(
     params: Record<string, string>,
     index_start: number, index_end: number = index_start,
     severity: DiagnosticSeverity = DiagnosticSeverity.Error
-): boolean {
+): vscode.Diagnostic | false {
     const config = vscode.workspace.getConfiguration(EXTENSION_ID);
 
     // Skip all diagnostics if the master switch is on
@@ -124,5 +124,5 @@ export function diagnostic(
     );
     diagnostics.push(diagnostic);
     // console.warn(message);
-    return true;
+    return diagnostic;
 }

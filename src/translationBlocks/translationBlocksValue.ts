@@ -150,7 +150,7 @@ export class TranslationKeyValue {
         }
     }
 
-    private diagnosticDuplicate(): boolean {
+    private diagnosticDuplicate(): vscode.Diagnostic | false {
         return diagnostic(
             this.document,
             this.diagnostics,

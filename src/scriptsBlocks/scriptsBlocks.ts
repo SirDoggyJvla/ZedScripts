@@ -34,6 +34,7 @@ export class ScriptBlock {
     children: ScriptBlock[] = []; // children script blocks
     parameters: ScriptParameter[] = []; // parameters of the block
     isTemplate: boolean = false; // whether this block is a template block
+    isValid: boolean = true;
 
     // positions
     start: number = 0;
@@ -68,11 +69,8 @@ export class ScriptBlock {
         this.lineEnd = document.positionAt(this.end).line;
 
         if (!this.validateBlock()) {
-            return;
+            this.isValid = false;
         }
-        this.children = this.findChildBlocks();
-        this.validateChildren();
-        this.parameters = this.findParameters();
     }
 
 
@@ -229,6 +227,13 @@ export class ScriptBlock {
 
 // SEARCHERS
 
+    public search(): void {
+        this.children = this.findChildBlocks();
+        this.validateChildren();
+        this.parameters = this.findParameters();
+    }
+
+
     protected findChildBlocks(): ScriptBlock[] {
         const children: ScriptBlock[] = [];
 
@@ -300,6 +305,11 @@ export class ScriptBlock {
             if (searchPos >= this.end) {
                 break;
             }
+        }
+
+        // search recursively in children blocks
+        for (const child of children) {
+            child.search();
         }
 
         return children;
@@ -578,7 +588,7 @@ export class ScriptBlock {
         params: Record<string, string>,
         index_start: number,index_end?: number,
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error
-    ): boolean {
+    ): vscode.Diagnostic | false {
         return diagnostic(
             this.document,
             this.diagnostics,
@@ -774,7 +784,8 @@ export class IgnoreAll extends ScriptBlock {
  */
 export class DocumentBlock extends ScriptBlock {
     private static documentBlockCache: Map<string, DocumentBlock> = new Map();
-    
+    public actions: [vscode.Range, vscode.Diagnostic, vscode.CodeAction][] = []; // [range, diagnostic, action]
+
     constructor(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[], type: string) {
         // Only document is provided
         const parent = null;
@@ -785,6 +796,8 @@ export class DocumentBlock extends ScriptBlock {
 
         // cache this document block
         DocumentBlock.documentBlockCache.set(document.uri.toString(), this);
+
+        this.search(); // search for the blocks and parameters in the document
     }
 
 
@@ -801,6 +814,23 @@ export class DocumentBlock extends ScriptBlock {
 
     public static clearCache(): void {
         DocumentBlock.documentBlockCache.clear();
+    }
+
+
+// ACTIONS
+
+    public addAction(range: vscode.Range, diagnostic: vscode.Diagnostic, action: vscode.CodeAction): void {
+        this.actions.push([range, diagnostic, action]);
+    }
+
+    public getActionsForRange(range: vscode.Range): [vscode.Range, vscode.Diagnostic, vscode.CodeAction][] {
+        const actions: [vscode.Range, vscode.Diagnostic, vscode.CodeAction][] = [];
+        for (const [actionRange, diagnostic, action] of this.actions) {
+            if (actionRange.contains(range)) {
+                actions.push([actionRange, diagnostic, action]);
+            }
+        }
+        return actions;
     }
 
 
