@@ -1866,6 +1866,9 @@
       },
       "iconsfortexture": {
         "name": "IconsForTexture",
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "itemTypes": [
           "clothing",
           "container",
@@ -2771,6 +2774,9 @@
       },
       "researchablerecipes": {
         "name": "Researchablerecipes",
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "itemTypes": [
           "clothing",
           "container",
@@ -2963,6 +2969,9 @@
       },
       "staticmodelsbyindex": {
         "name": "StaticModelsByIndex",
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "itemTypes": [
           "food",
           "literature",
@@ -3054,6 +3063,9 @@
       },
       "tags": {
         "name": "Tags",
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "itemTypes": [
           "alarmclock",
           "alarmclockclothing",
@@ -3069,8 +3081,7 @@
           "radio",
           "weapon",
           "weaponpart"
-        ],
-        "type": "array"
+        ]
       },
       "thirstchange": {
         "name": "ThirstChange",
@@ -3382,6 +3393,9 @@
       },
       "worldstaticmodelsbyindex": {
         "name": "WorldStaticModelsByIndex",
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "itemTypes": [
           "container",
           "food",

@@ -81,6 +81,7 @@ export enum DiagnosticType {
     INVALID_PARAMETER_VALUE = "'{parameter}' has an invalid value '{value}'.",
     DEPRECATED_PARAMETER = "'{parameter}' parameter in '{scriptBlock}' block is deprecated.",
     WRONG_VALUE = "'{value}' is not a valid value for parameter '{parameter}'. Valid values are: {validValues}.",
+    WRONG_VALUES = "Invalid values for parameter '{parameter}' ({invalidValues}). Valid values are: {validValues}.",
     MISSING_DEPENDENT_PARAMETER = "'{parameter}' parameter requires dependent parameter '{dependentParameter}' to be present.",
     DEPENDENT_PARAMETER_WRONG_VALUE = "'{parameter}' requires dependent parameter '{dependentParameter}' to have a valid value. Current value is '{value}' but valid values are: {dependentValues}.",
     INVALID_TYPE_FOR_VALUE = "Type '{type}' of '{parameter}' is invalid for value '{value}'. Expected type is '{expectedType}'.",

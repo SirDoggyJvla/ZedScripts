@@ -13,6 +13,7 @@ import { registerActionTextReplace } from '../providers/actions';
 import { 
     DeprecatedInfo,
     ScriptBlockParameter, 
+    ScriptBlockValue, 
     VALUE_TYPES
 } from './scriptsBlocksData';
 import { getScriptBlockData, getMainVariant } from "./scriptsBlocksUtility";
@@ -281,11 +282,49 @@ export class ScriptParameter {
         return txt;
     }
 
-    public hasAcceptedValue(): boolean {
+    /**
+     * Considers that the value are simply a list, and if no value is present then it returns null.
+     * This is used in combination with the accepted values list to verify if the provided value/values are correct.
+     */
+    public getValues(): ScriptBlockValue[] | null {
+        const parameterData = this.getParameterData();
+        const type = this.getTypeOfValue();
+
+        // handle array case
+        if (type === VALUE_TYPES.ARRAY) {
+            const separator = parameterData?.separator || ";";
+            const values = this.value.split(separator).map(v => v.trim());
+            return values;
+
+        // simple value case
+        } else if (this.value !== "") {
+            return [this.value];
+        }
+        return null;
+    }
+
+    /**
+     * This function is used to retrieve the values of the parameter-value pair that are invalid. 
+    */
+    public getForbiddenValues(): ScriptBlockValue[] {
+        const values: ScriptBlockValue[] = this.getValues() || [];
         const parameterData = this.getParameterData();
         if (parameterData && parameterData.values) {
             const acceptedValues = parameterData.values;
-            return acceptedValues.includes(this.value);
+            const forbiddenValues = values.filter(value => !acceptedValues.includes(value));
+            return forbiddenValues;
+        }
+        return values;
+    }
+
+    /**
+     * Verifies if the provided value is a valid value.
+     */
+    public isAcceptedValue(value: string): boolean {
+        const parameterData = this.getParameterData();
+        if (parameterData && parameterData.values) {
+            const acceptedValues = parameterData.values;
+            return acceptedValues.includes(value);
         }
         return false;
     }
@@ -293,6 +332,10 @@ export class ScriptParameter {
 
 // CHECKERS
 
+    /**
+     * This function will validate the parameter-value pair by verifying different conditions.
+     * If something is wrong, it adds a diagnostic and, if possible, a quick fix to solve the issue.
+     */
     protected validateParameter(): boolean {
         const name = this.parameter;
 
@@ -359,13 +402,18 @@ export class ScriptParameter {
         }
 
         // verify if parameter has accepted value
-        if (this.value !== "" && !this.hasAcceptedValue()) {
+        const forbiddenValues = this.getForbiddenValues();
+        if (forbiddenValues.length > 0) {
             const parameterData = this.getParameterData();
             const values = parameterData?.values;
             if (values) {
                 if (this.diagnostic(
-                    DiagnosticType.WRONG_VALUE,
-                    { value: this.value, parameter: name, validValues: formatList(values) },
+                    DiagnosticType.WRONG_VALUES,
+                    {
+                        invalidValues: formatList(forbiddenValues),
+                        parameter: name, 
+                        validValues: formatList(values) 
+                    },
                     this.valueRange.start,
                     this.valueRange.end
                 )) {

@@ -36,22 +36,26 @@ export interface IndexRange {
     end: number;
 }
 
+export type ScriptBlockValue = string | number | boolean;
+
 export interface ScriptBlockParameter {
     name: string;
     description?: string;
     allowedDuplicate?: boolean;
     canBeEmpty?: boolean;
-    default?: (string | number | boolean)[];
+    default?: ScriptBlockValue[];
     type?: "string" | "int" | "float" | "boolean" | "array";
+    arrayType?: "string" | "int" | "float" | "boolean"; // if type is array, the type of the values in the array
+    separator?: string; // if type is array, the separator used to split values (default is ;)
     required?: boolean;
     deprecated?: DeprecatedInfo;
-    values?: (string | number | boolean)[];
+    values?: ScriptBlockValue[];
     needs?: ScriptBlockNeeds[];
 }
 
 export interface ScriptBlockNeeds {
     name: string; // the dependent parameter
-    values?: any[]; // list of possible values for the dependent parameter
+    values?: ScriptBlockValue[]; // list of possible values for the dependent parameter
     valueToType?: { [key: string]: string } // mapping of dependent parameter values to types (for dynamic typing based on other parameter's value)
 }
 
