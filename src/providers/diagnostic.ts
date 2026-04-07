@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
-import * as path from "path";
 
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { testForScriptRootFile, DEFAULT_ROOT_FILE } from "../scriptsBlocks/scriptsBlocksData";

@@ -21,7 +21,7 @@ export async function provideDefinition(
 
 
 
-    // return;
+    return;
 
 
     const fullItemName = document.getText(range);

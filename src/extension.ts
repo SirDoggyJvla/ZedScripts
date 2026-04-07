@@ -6,6 +6,7 @@ import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
+import { loadLibraries } from "./providers/libraries";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from "./models/enums";
 
@@ -158,6 +159,8 @@ export async function activate(context: vscode.ExtensionContext) {
             provideDefinition,
         })
     );
+
+    await loadLibraries(diagnosticProvider);
 
     console.log('Extension "pz-syntax-extension" is now active!');
 }

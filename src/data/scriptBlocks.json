@@ -948,6 +948,9 @@
           "normal",
           "radio"
         ],
+        "type": "array",
+        "arrayType": "string",
+        "separator": ";",
         "values": [
           "Apron",
           "ShirtNoSleeves",
@@ -3971,10 +3974,12 @@
     "ID": {},
     "parameters": {
       "animationdirectory": {
-        "name": "animationDirectory"
+        "name": "animationDirectory",
+        "allowedDuplicate": true
       },
       "animationprefix": {
-        "name": "animationPrefix"
+        "name": "animationPrefix",
+        "allowedDuplicate": true
       },
       "keepmeshanimations": {
         "name": "keepMeshAnimations"
@@ -5188,12 +5193,22 @@
   },
   "CraftLogic": {
     "name": "CraftLogic",
-    "description": "",
+    "description": "While present in the vanilla files, there seems to be no reference to this block in the Java. It is likely they are not used, or even parsed.",
     "shouldHaveParent": true,
     "parents": [
       "components"
     ],
-    "parameters": {}
+    "parameters": {
+      "luapanelclass": {
+        "name": "LuaPanelClass"
+      },
+      "displayname": {
+        "name": "DisplayName"
+      },
+      "icon": {
+        "name": "Icon"
+      }
+    }
   },
   "CopyFrames": {
     "name": "CopyFrames",
