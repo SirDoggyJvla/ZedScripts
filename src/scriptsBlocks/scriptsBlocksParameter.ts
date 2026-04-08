@@ -234,6 +234,31 @@ export class ScriptParameter {
         return type;
     }
 
+    public getBlockTypeOfValue(): [string | null, string] | null {
+        const value = this.value;
+
+        let module: string;
+        let block: string;
+
+        // split by . to separate module and block
+        const parts = value.split(".");
+        if (parts.length === 2) {
+            [module, block] = parts;
+            return [module, block];
+        } else if (parts.length === 1) {
+            block = parts[0];
+
+            // verify it's not an empty value
+            if (block === "") {
+                return null;
+            }
+            return [null, block];
+        }
+        
+        // if we reach here, it means there's no value provided and the split did nothing
+        return null;
+    }
+
     public canBeDuplicate(): boolean {
         const parameterData = this.getParameterData();
         if (parameterData) {
@@ -483,7 +508,8 @@ export class ScriptParameter {
             const needs = parameterData.needs;
             for (const need of needs) {
                 const name = need.name;
-                
+                if (!name) { continue; }
+
                 // verify the block has the dependent parameter
                 const dependentParameter = this.parent.getParameter(name);
                 if (!dependentParameter) {
@@ -557,6 +583,66 @@ export class ScriptParameter {
                     this.valueRange.end,
                     vscode.DiagnosticSeverity.Error
                 );
+            }
+        }
+
+        return true;
+    }
+
+    public validateLater(): boolean {
+        const parameterData = this.getParameterData();
+
+        // verify the block reference if any
+        // this needs to be ran after all blocks from libs have been
+        if (parameterData && parameterData.blockType) {
+            // try to access to the module and block from the value
+            const blockTypeOfValue = this.getBlockTypeOfValue();
+            if (!blockTypeOfValue) {
+                this.diagnostic(
+                    DiagnosticType.NO_BLOCK_REF,
+                    { value: this.value, parameter: this.parameter },
+                    this.valueRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Error
+                );
+                return false;
+            }
+            const blockType = parameterData.blockType;
+            const canFullType = blockType.fullType;
+            
+            let [module, block] = blockTypeOfValue;
+
+            // if full type is not allowed, then module should be null
+            // this usually means the game considers it as Base by default
+            if (!canFullType && module !== null) {
+                this.diagnostic(
+                    DiagnosticType.CANNOT_PROVIDE_MODULE,
+                    { parameter: this.parameter },
+                    this.valueRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Error
+                );
+                return false;
+            }
+
+            if (block === "") {
+                this.diagnostic(
+                    DiagnosticType.NO_BLOCK_REF,
+                    { value: this.value, parameter: this.parameter },
+                    this.valueRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Error
+                );
+                return false;
+            }
+
+            // set default module to Base if not provided
+            module = module || "Base";
+
+            const expectedBlock = blockType.block;
+            const refBlock = DocumentBlock.findBlockFromFullType(expectedBlock, [module, block]);
+            if (!refBlock) {
+                console.debug('')
             }
         }
 

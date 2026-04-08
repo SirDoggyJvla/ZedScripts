@@ -45,6 +45,7 @@ export interface ScriptBlockParameter {
     canBeEmpty?: boolean;
     default?: ScriptBlockValue[];
     type?: "string" | "int" | "float" | "boolean" | "array";
+    blockType?: ScriptBlockType;
     arrayType?: "string" | "int" | "float" | "boolean"; // if type is array, the type of the values in the array
     separator?: string; // if type is array, the separator used to split values (default is ;)
     required?: boolean;
@@ -54,7 +55,7 @@ export interface ScriptBlockParameter {
 }
 
 export interface ScriptBlockNeeds {
-    name: string; // the dependent parameter
+    name?: string; // the dependent parameter
     values?: ScriptBlockValue[]; // list of possible values for the dependent parameter
     valueToType?: { [key: string]: string } // mapping of dependent parameter values to types (for dynamic typing based on other parameter's value)
 }
@@ -71,6 +72,12 @@ export interface ScriptBlockID {
     asType?: boolean;
     optional?: string[];
 }
+
+export interface ScriptBlockType {
+    block: string;
+    fullType: boolean; // if true, this can use the module to reference the block
+}
+
 
 export interface InputAnalysisProperty {
     source: string,

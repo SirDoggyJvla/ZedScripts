@@ -243,6 +243,10 @@ export class InputsParameter {
         return true;
     }
 
+    // FIXME: this is really shitty but necessary with the current structure of the code
+    // the reason is that InputsParameter instances get stored alongside the classic ScriptsBlocksParameters
+    public validateLater(): void {}
+
 // UTILITY
     protected findMatches(
         regex: RegExp,

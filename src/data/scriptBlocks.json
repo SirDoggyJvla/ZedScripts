@@ -269,6 +269,15 @@
       }
     }
   },
+  "ISBaseComponentPanel": {
+    "name": "ISBaseComponentPanel",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "xuiSkin"
+    ],
+    "parameters": {}
+  },
   "BlendWhiteList": {
     "name": "BlendWhiteList",
     "description": "Seems to define blend properties with other fluids.",
@@ -365,6 +374,16 @@
         "description": "[Video file](https://pzwiki.net/wiki/File_formats#Video_format) used to showcase the map when selecting it."
       }
     }
+  },
+  "clock": {
+    "name": "clock",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "module"
+    ],
+    "ID": {},
+    "parameters": {}
   },
   "Poison": {
     "name": "Poison",
@@ -3389,7 +3408,11 @@
         ]
       },
       "worldstaticmodel": {
-        "name": "WorldStaticModel"
+        "name": "WorldStaticModel",
+        "blockType": {
+          "fullType": true,
+          "block": "model"
+        }
       },
       "worldstaticmodelsbyindex": {
         "name": "WorldStaticModelsByIndex",
@@ -5079,6 +5102,16 @@
     "softOverride": true,
     "parameters": {}
   },
+  "hand": {
+    "name": "hand",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "clock"
+    ],
+    "ID": {},
+    "parameters": {}
+  },
   "face": {
     "name": "face",
     "description": "",
@@ -5121,6 +5154,20 @@
         "name": "sourceFrame"
       }
     }
+  },
+  "ISTableLayoutCell": {
+    "name": "ISTableLayoutCell",
+    "description": "",
+    "shouldHaveParent": true,
+    "parents": [
+      "xuiSkin"
+    ],
+    "ID": {
+      "optional": [
+        "xuiSkin"
+      ]
+    },
+    "parameters": {}
   },
   "component SpriteConfig": {
     "name": "component SpriteConfig",

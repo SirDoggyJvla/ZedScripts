@@ -86,6 +86,9 @@ export enum DiagnosticType {
     DEPENDENT_PARAMETER_WRONG_VALUE = "'{parameter}' requires dependent parameter '{dependentParameter}' to have a valid value. Current value is '{value}' but valid values are: {dependentValues}.",
     INVALID_TYPE_FOR_VALUE = "Type '{type}' of '{parameter}' is invalid for value '{value}'. Expected type is '{expectedType}'.",
 
+    NO_BLOCK_REF = "No block reference found in value '{value}' for parameter '{parameter}'. Something might be wrong with the value or the parameter data definition.",
+    CANNOT_PROVIDE_MODULE = "Referencing a block cannot be done with the full type (module.block) for '{parameter}'. Make sure the value only contains the ID of the block to reference. This usually means the game defaults to a 'Base' module.",
+
     // craftRecipe related diagnostics
     INVALID_AMOUNT = "'{amount}' is not a valid amount for '{type}'.",
     INTEGER_AMOUNT = "'{amount}' should be an integer for '{type}'.",

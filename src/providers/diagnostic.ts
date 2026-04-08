@@ -12,6 +12,14 @@ import { LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS, EXTENSION_ID, DiagnosticType 
 import { isTranslationBlock } from "../translationBlocks/translationBlocksUtility";
 
 
+export function diagnosticNonLibrary(document: TextDocument, diagnosticProvider: DiagnosticProvider): void {
+    const block = diagnosticProvider.updateDiagnostics(document);
+    if (block instanceof DocumentBlock) {
+        block.validateRecursiveLater();
+    }
+}
+
+
 export class DiagnosticProvider {
     // Static cache for DocumentBlock instances
     public diagnosticCollection: vscode.DiagnosticCollection;
@@ -20,27 +28,28 @@ export class DiagnosticProvider {
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection(EXTENSION_ID);
     }
     
-    public updateDiagnostics(document: vscode.TextDocument): void {
+    public updateDiagnostics(document: vscode.TextDocument): DocumentBlock | void {
     // console.debug(`Updating diagnostics for document: ${document.fileName}`);
         if (document.languageId === LANG_ZEDSCRIPTS) {
-            this.updateDiagnosticsZedScripts(document);
+            return this.updateDiagnosticsZedScripts(document);
         } else if (document.languageId === LANG_TRANSLATIONSCRIPTS) {
             this.updateDiagnosticsTranslationScripts(document);
         } else {
             // Clear diagnostics for unsupported languages
             this.diagnosticCollection.delete(document.uri);
         }
+        return;
     }
 
-    private updateDiagnosticsZedScripts(document: vscode.TextDocument): void {
+    private updateDiagnosticsZedScripts(document: vscode.TextDocument): DocumentBlock {
         const diagnostics: vscode.Diagnostic[] = [];
 
         const path = document.fileName;
         const type = testForScriptRootFile(path) || DEFAULT_ROOT_FILE;
 
-        new DocumentBlock(document, diagnostics, type);
-
+        const block = new DocumentBlock(document, diagnostics, type);
         this.diagnosticCollection.set(document.uri, diagnostics);
+        return block;
     }
 
     private updateDiagnosticsTranslationScripts(document: vscode.TextDocument): void {

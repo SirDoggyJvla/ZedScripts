@@ -309,7 +309,9 @@ export class ScriptBlock {
 
         // search recursively in children blocks
         for (const child of children) {
-            child.search();
+            if (child.isValid) {
+                child.search();
+            }
         }
 
         return children;
@@ -385,13 +387,12 @@ export class ScriptBlock {
 
         // verify it's a script block
         if (!isScriptBlock(type)) {
-            if (this.diagnostic(
+            this.diagnostic(
                 DiagnosticType.NOT_VALID_BLOCK,
                 { scriptBlock: type },
                 this.headerStart
-            )) {
-                return false;
-            }
+            );
+            return false;
         }
 
         // verify ID
@@ -459,7 +460,7 @@ export class ScriptBlock {
     }
 
     protected validateChildren(): boolean {
-        const blockData = getScriptBlockData(this.scriptBlock) as ScriptBlockData;
+        const blockData = getScriptBlockData(this.scriptBlock);
 
         const validChildren = blockData.needsChildren;
         if (validChildren) {
@@ -578,6 +579,20 @@ export class ScriptBlock {
         }
         
         return true;
+    }
+
+    public validateRecursiveLater(): void {
+        // recursively run validate later on children parameters
+        for (const child of this.children) {
+            for (const parameter of child.parameters) {
+                if (!parameter.validateLater) {
+                    continue;
+                }
+                parameter.validateLater();
+            }
+
+            child.validateRecursiveLater();
+        }
     }
 
 
@@ -783,7 +798,7 @@ export class IgnoreAll extends ScriptBlock {
  * A ScriptBlock that represents the entire document. This is more a convenience class to handle everything easily.
  */
 export class DocumentBlock extends ScriptBlock {
-    private static documentBlockCache: Map<string, DocumentBlock> = new Map();
+    public static documentBlockCache: Map<string, DocumentBlock> = new Map();
     public actions: [vscode.Range, vscode.Diagnostic, vscode.CodeAction][] = []; // [range, diagnostic, action]
 
     constructor(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[], type: string) {
@@ -860,6 +875,59 @@ export class DocumentBlock extends ScriptBlock {
         return searchBlock(this);
     }
 
+    public static findBlockFromFullType(expectedBlock: string, fullType: [string, string]): ScriptBlock | null {
+        // expectedBlock is the type of block we are looking for (ex: "model")
+        // fullType is the module and ID of the block we are looking for (ex: ["Base", "WoodenTable"])
+
+        // search for the block with the expected type and full type
+        for (const documentBlock of DocumentBlock.documentBlockCache.values()) {
+            const found = documentBlock.findBlockFromFullTypeInBlock(expectedBlock, fullType);
+            if (found) {
+                return found;
+            }
+        }
+        
+        return null; // no block found with the expected type and full type
+    }
+
+    public findBlockFromFullTypeInBlock(expectedBlock: string, fullType: [string, string]): ScriptBlock | null {
+        // in children, find a module block
+        let moduleBlock: ScriptBlock | null = null;
+        for (const child of this.children) {
+            if (child.scriptBlock === "module") {
+                const id = child.id;
+                if (id && id === fullType[0]) {
+                    moduleBlock = child;
+                    break;
+                }
+            }
+        }
+
+        if (!moduleBlock) {
+            return null; // no module block found with the expected module name
+        }
+
+        // in the module block, find a block with the expected type and ID
+        for (const child of moduleBlock.children) {
+            if (child.scriptBlock === expectedBlock && child.id === fullType[1]) {
+                return child; // found the block with the expected type and full type
+            }
+        }
+
+        return null; // no block found with the expected type and full type in the module block
+    }
+
+
+// VALIDATORS
+    public static validateLaterDocuments(): void {
+        // run validateRecursiveLater on all cached document blocks
+        for (const documentBlock of DocumentBlock.documentBlockCache.values()) {
+            documentBlock.validateRecursiveLater();
+        }
+    }
+
+
+// OVERWRITES
     // overwrite validates for this class since the rules aren't the same
     protected validateBlock(): boolean { return true; }
     protected validateChildren(): boolean { return true; }

@@ -1,50 +1,25 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { DiagnosticProvider } from "./providers/diagnostic";
+import { diagnosticNonLibrary, DiagnosticProvider } from "./providers/diagnostic";
 import { provideDefinition } from "./providers/definition";
 import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-import { loadLibraries } from "./providers/libraries";
+import { loadLibraries, handleOpenTextDocument } from "./providers/libraries";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from "./models/enums";
-
-// import { SCRIPT_FILE_REGEX } from "./models/regexPatterns";
-import { LANGUAGE_FILE_REGEX } from "./models/regexPatterns"; // DEPRECATED
-
 import { DocumentBlock } from "./scriptsBlocks/scriptsBlocks";
-import { testForScriptRootFile } from "./scriptsBlocks/scriptsBlocksData";
-
-function handleOpenTextDocument(document: vscode.TextDocument) {
-    // console.debug(`Handling opened document: ${document.fileName} with languageId: ${document.languageId}`);
-    if (
-        document.languageId === LANG_ZEDSCRIPTS
-        || document.languageId === LANG_TRANSLATIONSCRIPTS
-    ) { return; }
-
-    const filePath = path.posix.normalize(document.fileName);
-
-    if (testForScriptRootFile(filePath)) {
-        // console.debug(`The opened file is identified as a script file: `, filePath);
-        
-        // set the file to ZedScripts
-        vscode.languages.setTextDocumentLanguage(document, LANG_ZEDSCRIPTS);
-
-    // DEPRECATED
-    } else if (LANGUAGE_FILE_REGEX.test(filePath)) {
-        // console.debug(`The opened file is identified as a translation file: `, filePath);
-        
-        // set the file to TranslationScripts
-        vscode.languages.setTextDocumentLanguage(document, LANG_TRANSLATIONSCRIPTS);
-    }
-}
 
 export async function activate(context: vscode.ExtensionContext) {
     console.debug('Activating extension "pz-syntax-extension"...');
+    const diagnosticProvider = new DiagnosticProvider();
 
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await fetchData(context);
+
+    // load libraries and their diagnostics
+    await loadLibraries(diagnosticProvider);
 
     // handle the initially active document on startup
     if (vscode.window.activeTextEditor) {
@@ -52,7 +27,6 @@ export async function activate(context: vscode.ExtensionContext) {
         handleOpenTextDocument(vscode.window.activeTextEditor.document);
     }
 
-    const diagnosticProvider = new DiagnosticProvider();
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
     watcher.onDidChange((uri) => {
         itemCache.clearForFile(uri.fsPath);
@@ -64,8 +38,9 @@ export async function activate(context: vscode.ExtensionContext) {
         console.debug(`Invalidated cache for : ${uri.fsPath}`);
     });
     if (vscode.window.activeTextEditor) {
-        diagnosticProvider.updateDiagnostics(
-            vscode.window.activeTextEditor.document
+        diagnosticNonLibrary(
+            vscode.window.activeTextEditor.document,
+            diagnosticProvider
         );
     }
     
@@ -102,10 +77,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
         // diagnostics
         vscode.workspace.onDidOpenTextDocument((document) => {
-            diagnosticProvider.updateDiagnostics(document);
+            diagnosticNonLibrary(document, diagnosticProvider);
         }),
         vscode.workspace.onDidChangeTextDocument((event) => {
-            diagnosticProvider.updateDiagnostics(event.document);
+            diagnosticNonLibrary(event.document, diagnosticProvider);
         }),
 
 
@@ -159,8 +134,6 @@ export async function activate(context: vscode.ExtensionContext) {
             provideDefinition,
         })
     );
-
-    await loadLibraries(diagnosticProvider);
 
     console.log('Extension "pz-syntax-extension" is now active!');
 }
