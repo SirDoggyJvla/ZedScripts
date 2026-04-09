@@ -525,23 +525,28 @@ export class ScriptParameter {
                     const valueToType = need.valueToType;
 
                     // check if the dependent parameter needs a specific value
-                    if (values && !values.includes(dependentParameter.value)) {
-                        this.diagnostic(
-                            DiagnosticType.DEPENDENT_PARAMETER_WRONG_VALUE,
-                            { 
-                                parameter: name, 
-                                dependentParameter: dependentParameter.parameter,
-                                scriptBlock: this.parent.scriptBlock, 
-                                value: dependentParameter.value, 
-                                validValues: formatList(values)
-                            },
-                            this.parameterRange.start,
-                            this.valueRange.end,
-                            vscode.DiagnosticSeverity.Error
-                        );
+                    if (values) {
+                        // make sure the value of the dependent parameter is among the accepted values
+                        if (!values.includes(dependentParameter.value)) {
+                            this.diagnostic(
+                                DiagnosticType.DEPENDENT_PARAMETER_WRONG_VALUE,
+                                { 
+                                    parameter: name, 
+                                    dependentParameter: dependentParameter.parameter,
+                                    scriptBlock: this.parent.scriptBlock, 
+                                    value: dependentParameter.value, 
+                                    validValues: formatList(values)
+                                },
+                                this.parameterRange.start,
+                                this.valueRange.end,
+                                vscode.DiagnosticSeverity.Error
+                            );
+                        }
+                    } 
 
                     // the parameter can be of different type based on the value of the dependent parameter
-                    } else if (valueToType) {
+                    if (valueToType) {
+                        // verify the type of the parameter based on the value of the dependent parameter
                         const expectedType = valueToType[dependentParameter.value];
                         const actualType = this.getTypeOfValue();
                         if (expectedType && actualType !== expectedType) {
