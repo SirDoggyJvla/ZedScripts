@@ -1270,6 +1270,11 @@
           "alarmclockclothing",
           "clothing",
           "container"
+        ],
+        "needs": [
+          {
+            "name": "ClothingItemExtraOption"
+          }
         ]
       },
       "clothingitemextraoption": {
@@ -1278,6 +1283,11 @@
           "alarmclockclothing",
           "clothing",
           "container"
+        ],
+        "needs": [
+          {
+            "name": "ClothingItemExtra"
+          }
         ]
       },
       "colorblue": {

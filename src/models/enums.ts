@@ -6,7 +6,7 @@ export const LANG_ZEDSCRIPTS = "ZedScripts";
 export const LANG_TRANSLATIONSCRIPTS = "TranslationScripts";
 export const DOCUMENT_IDENTIFIER = "_DOCUMENT";
 
-export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/data/scriptBlocks.json";
+export const SCRIPT_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-scripts-data/refs/heads/main/out/scriptBlocks.json";
 export const TRANSLATION_FILES_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-translation-data/refs/tags/pre-42.15/data/translationFiles.json";
 export const LANGUAGE_CODES_DATA_LINK = "https://raw.githubusercontent.com/SirDoggyJvla/pz-translation-data/refs/tags/pre-42.15/data/languageCodes.json";
 
