@@ -4,12 +4,7 @@ import { TextDocument, DiagnosticSeverity, Diagnostic, Range } from "vscode";
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { testForScriptRootFile, DEFAULT_ROOT_FILE } from "../scriptsBlocks/scriptsBlocksData";
 
-import { TranslationBlock } from "../translationBlocks/translationBlocks";
-import { TRANSLATION_FILE_PREFIXES } from "../translationBlocks/translationBlocksData";
-
-import { LANGUAGE_FILE_REGEX } from "../models/regexPatterns";
-import { LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS, EXTENSION_ID, DiagnosticType } from "../models/enums";
-import { isTranslationBlock } from "../translationBlocks/translationBlocksUtility";
+import { LANG_ZEDSCRIPTS, EXTENSION_ID, DiagnosticType } from "../models/enums";
 
 
 export function diagnosticNonLibrary(document: TextDocument, diagnosticProvider: DiagnosticProvider): void {
@@ -32,8 +27,6 @@ export class DiagnosticProvider {
     // console.debug(`Updating diagnostics for document: ${document.fileName}`);
         if (document.languageId === LANG_ZEDSCRIPTS) {
             return this.updateDiagnosticsZedScripts(document);
-        } else if (document.languageId === LANG_TRANSLATIONSCRIPTS) {
-            this.updateDiagnosticsTranslationScripts(document);
         } else {
             // Clear diagnostics for unsupported languages
             this.diagnosticCollection.delete(document.uri);
@@ -50,37 +43,6 @@ export class DiagnosticProvider {
         const block = new DocumentBlock(document, diagnostics, type);
         this.diagnosticCollection.set(document.uri, diagnostics);
         return block;
-    }
-
-    private updateDiagnosticsTranslationScripts(document: vscode.TextDocument): void {
-        const diagnostics: vscode.Diagnostic[] = [];
-
-        const translationMatch = document.fileName.match(LANGUAGE_FILE_REGEX);
-        if (translationMatch && translationMatch.groups) {
-            const groups = translationMatch.groups;
-            const folderCode = groups.folderCode;
-            const fileCode = groups.fileCode;
-            const filePrefix = groups.filePrefix;
-
-            // verify file prefix is a valid one
-            if (!isTranslationBlock(filePrefix)) {
-                diagnostic(
-                    document,
-                    diagnostics,
-                    DiagnosticType.INVALID_FILE_PREFIX,
-                    { filePrefix: filePrefix, validPrefixes: Object.keys(TRANSLATION_FILE_PREFIXES).map(p => `'${p}'`).join(", ") },
-                    0,
-                    document.getText().length,
-                    vscode.DiagnosticSeverity.Error
-                );
-            } else {
-                const translationBlock = TRANSLATION_FILE_PREFIXES[filePrefix];
-
-                new TranslationBlock(document, diagnostics, translationBlock, folderCode, fileCode, filePrefix);
-            }
-        }
-
-        this.diagnosticCollection.set(document.uri, diagnostics);
     }
 
     public dispose(): void {

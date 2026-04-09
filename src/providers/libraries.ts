@@ -4,8 +4,7 @@ import * as path from 'path';
 
 import { DiagnosticProvider } from './diagnostic';
 import { DocumentBlock } from '../scriptsBlocks/scriptsBlocks';
-import { LANG_ZEDSCRIPTS, LANG_TRANSLATIONSCRIPTS } from '../models/enums';
-import { LANGUAGE_FILE_REGEX } from '../models/regexPatterns';
+import { LANG_ZEDSCRIPTS } from '../models/enums';
 import { testForScriptRootFile } from '../scriptsBlocks/scriptsBlocksData';
 
 
@@ -13,7 +12,6 @@ export function handleOpenTextDocument(document: vscode.TextDocument): Thenable<
     // console.debug(`Handling opened document: ${document.fileName} with languageId: ${document.languageId}`);
     if (
         document.languageId === LANG_ZEDSCRIPTS
-        || document.languageId === LANG_TRANSLATIONSCRIPTS
     ) { return document; }
 
     const filePath = path.posix.normalize(document.fileName);
@@ -23,14 +21,8 @@ export function handleOpenTextDocument(document: vscode.TextDocument): Thenable<
         
         // set the file to ZedScripts
         return vscode.languages.setTextDocumentLanguage(document, LANG_ZEDSCRIPTS);
-
-    // DEPRECATED
-    } else if (LANGUAGE_FILE_REGEX.test(filePath)) {
-        // console.debug(`The opened file is identified as a translation file: `, filePath);
-        
-        // set the file to TranslationScripts
-        return vscode.languages.setTextDocumentLanguage(document, LANG_TRANSLATIONSCRIPTS);
     }
+
     return document;
 }
 
