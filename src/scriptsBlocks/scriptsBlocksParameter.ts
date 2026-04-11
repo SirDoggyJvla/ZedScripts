@@ -502,74 +502,8 @@ export class ScriptParameter {
             }
         }
 
-        // validate dependent parameters based on 'needs' property
-        const parameterData = this.getParameterData();
-        if (parameterData && parameterData.needs) {
-            const needs = parameterData.needs;
-            for (const need of needs) {
-                const name = need.name;
-                if (!name) { continue; }
-
-                // verify the block has the dependent parameter
-                const dependentParameter = this.parent.getParameter(name);
-                if (!dependentParameter) {
-                    this.diagnostic(
-                        DiagnosticType.MISSING_DEPENDENT_PARAMETER,
-                        { parameter: name, scriptBlock: this.parent.scriptBlock },
-                        this.parameterRange.start,
-                        this.valueRange.end,
-                        vscode.DiagnosticSeverity.Error
-                    );
-                } else {
-                    const values = need.values;
-                    const valueToType = need.valueToType;
-
-                    // check if the dependent parameter needs a specific value
-                    if (values) {
-                        // make sure the value of the dependent parameter is among the accepted values
-                        if (!values.includes(dependentParameter.value)) {
-                            this.diagnostic(
-                                DiagnosticType.DEPENDENT_PARAMETER_WRONG_VALUE,
-                                { 
-                                    parameter: name, 
-                                    dependentParameter: dependentParameter.parameter,
-                                    scriptBlock: this.parent.scriptBlock, 
-                                    value: dependentParameter.value, 
-                                    validValues: formatList(values)
-                                },
-                                this.parameterRange.start,
-                                this.valueRange.end,
-                                vscode.DiagnosticSeverity.Error
-                            );
-                        }
-                    } 
-
-                    // the parameter can be of different type based on the value of the dependent parameter
-                    if (valueToType) {
-                        // verify the type of the parameter based on the value of the dependent parameter
-                        const expectedType = valueToType[dependentParameter.value];
-                        const actualType = this.getTypeOfValue();
-                        if (expectedType && actualType !== expectedType) {
-                            this.diagnostic(
-                                DiagnosticType.INVALID_TYPE_FOR_VALUE,
-                                {
-                                    parameter: this.parameter,
-                                    scriptBlock: this.parent.scriptBlock,
-                                    value: this.value,
-                                    expectedType: expectedType,
-                                    type: actualType? actualType : "undefined",
-                                },
-                                this.parameterRange.start,
-                                this.valueRange.end,
-                                vscode.DiagnosticSeverity.Error
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
         // verify the type
+        const parameterData = this.getParameterData();
         if (parameterData && parameterData.type) {
             const expectedType = parameterData.type;
             const actualType = this.getTypeOfValue();
@@ -648,6 +582,76 @@ export class ScriptParameter {
             const refBlock = DocumentBlock.findBlockFromFullType(expectedBlock, [module, block]);
             if (!refBlock) {
                 console.debug('')
+            }
+        }
+
+        // validate dependent parameters based on 'needs' property
+        if (parameterData && parameterData.needs) {
+            const needs = parameterData.needs;
+            for (const need of needs) {
+                const name = need.name;
+                if (!name) { continue; }
+
+                // verify the block has the dependent parameter
+                const dependentParameter = this.parent.getParameter(name);
+                if (!dependentParameter) {
+                    this.diagnostic(
+                        DiagnosticType.MISSING_DEPENDENT_PARAMETER,
+                        { 
+                            parameter: name, 
+                            scriptBlock: this.parent.scriptBlock,
+                            dependentParameter: name
+                        },
+                        this.parameterRange.start,
+                        this.valueRange.end,
+                        vscode.DiagnosticSeverity.Error
+                    );
+                } else {
+                    const values = need.values;
+                    const valueToType = need.valueToType;
+
+                    // check if the dependent parameter needs a specific value
+                    if (values) {
+                        // make sure the value of the dependent parameter is among the accepted values
+                        if (!values.includes(dependentParameter.value)) {
+                            this.diagnostic(
+                                DiagnosticType.DEPENDENT_PARAMETER_WRONG_VALUE,
+                                { 
+                                    parameter: name, 
+                                    dependentParameter: dependentParameter.parameter,
+                                    scriptBlock: this.parent.scriptBlock, 
+                                    value: dependentParameter.value, 
+                                    validValues: formatList(values)
+                                },
+                                this.parameterRange.start,
+                                this.valueRange.end,
+                                vscode.DiagnosticSeverity.Error
+                            );
+                        }
+                    } 
+
+                    // the parameter can be of different type based on the value of the dependent parameter
+                    if (valueToType) {
+                        // verify the type of the parameter based on the value of the dependent parameter
+                        const expectedType = valueToType[dependentParameter.value];
+                        const actualType = this.getTypeOfValue();
+                        if (expectedType && actualType !== expectedType) {
+                            this.diagnostic(
+                                DiagnosticType.INVALID_TYPE_FOR_VALUE,
+                                {
+                                    parameter: this.parameter,
+                                    scriptBlock: this.parent.scriptBlock,
+                                    value: this.value,
+                                    expectedType: expectedType,
+                                    type: actualType? actualType : "undefined",
+                                },
+                                this.parameterRange.start,
+                                this.valueRange.end,
+                                vscode.DiagnosticSeverity.Error
+                            );
+                        }
+                    }
+                }
             }
         }
 
