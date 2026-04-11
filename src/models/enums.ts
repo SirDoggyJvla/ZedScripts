@@ -24,7 +24,7 @@ export enum ThemeColorType {
     NUMBER = "constant.numeric",
     STRING = "string.quoted.double",
     FULLTYPE = "string.quoted.double",
-    TYPE = "support.type.property-name",
+    TYPE = "entity.name.class",
     OPERATOR = "keyword.operator.assignment",
 }
 
