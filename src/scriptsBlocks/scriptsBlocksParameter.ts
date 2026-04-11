@@ -33,6 +33,7 @@ export class ScriptParameter {
     value: string;
     comma: string;
     isDuplicate: boolean;
+    ref: ScriptBlock[] | undefined = undefined;
 
     // positions
     parameterRange: IndexRange;
@@ -245,8 +246,8 @@ export class ScriptParameter {
         return parameterData?.description || DefaultText.PARAMETER_DESCRIPTION;
     }
 
-    public getTypeOfValue(): string {
-        const expectedType = this.getParameterData()?.type;
+    public getTypeOfValue(expectedType: string | undefined = undefined): string {
+        expectedType = expectedType || this.getParameterData()?.type;
 
         // I don't know how I feel about that lol 
         // but that's kind of the problem with scripts
@@ -676,7 +677,13 @@ export class ScriptParameter {
 
             // retrieve searchable modules
             const documentBlock = this.getRoot();
-            const searchableModules = documentBlock.getImports();
+            if (!module) {
+                var searchableModules = documentBlock.getImports();
+
+            // since the module is provided, only search in that specific module
+            } else {
+                var searchableModules = [module];
+            }
 
             const expectedBlock = blockType.block;
             const refBlocks = DocumentBlock.findBlockFromFullType(expectedBlock, searchableModules, block);
@@ -697,8 +704,11 @@ export class ScriptParameter {
                     this.valueRange.end,
                     vscode.DiagnosticSeverity.Warning
                 );
-                return false;
+                // return false;
             }
+            
+            // assign the reference to the parameter for later use in hovers and go to definition
+            this.ref = refBlocks;
         }
 
         // validate dependent parameters based on 'needs' property
@@ -750,7 +760,7 @@ export class ScriptParameter {
                     if (valueToType) {
                         // verify the type of the parameter based on the value of the dependent parameter
                         const expectedType = valueToType[dependentParameter.value];
-                        const actualType = this.getTypeOfValue();
+                        const actualType = this.getTypeOfValue(expectedType);
                         if (expectedType && actualType !== expectedType) {
                             this.diagnostic(
                                 DiagnosticType.INVALID_TYPE_FOR_VALUE,

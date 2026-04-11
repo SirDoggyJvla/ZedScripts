@@ -80,6 +80,16 @@ export class ScriptBlock {
         return documentBlock!;
     }
 
+    public getDefinitionLocation(): vscode.Location {
+        return new vscode.Location(
+            this.document.uri,
+            new vscode.Range(
+                this.document.positionAt(this.start),
+                this.document.positionAt(this.end)
+            )
+        );
+    }
+
 
 // INFORMATION
 
@@ -112,6 +122,13 @@ export class ScriptBlock {
         if (searchByName) { return searchByName; }
 
         return null;
+    }
+
+    public getParameterByIndex(index: number): ScriptParameter | undefined {
+        // search for the parameter-value pair at the index
+        const param = this.parameters
+            .find(param => index >= param.parameterRange.start && index < param.valueRange.end);
+        return param;
     }
 
     public isParameterOf(name: string): boolean {

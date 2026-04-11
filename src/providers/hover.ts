@@ -5,14 +5,15 @@ import path from "path";
 import { itemBlockRegex } from "../models/regexPatterns";
 import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 
+
 export class PZHoverProvider implements vscode.HoverProvider {
     async provideHover(
         document: TextDocument,
         position: Position,
         token: vscode.CancellationToken
-    ): Promise<vscode.Hover | null> {
+    ): Promise<vscode.Hover | undefined> {
         const range = document.getWordRangeAtPosition(position);
-        if (!range) return null;
+        if (!range) return;
         
         const word = document.getText(range);
         // const lowerWord = word.toLowerCase();
@@ -20,15 +21,11 @@ export class PZHoverProvider implements vscode.HoverProvider {
 
         // only proceed if the document has been diagnosed and parsed
         const documentBlock = DocumentBlock.getDocumentBlock(document);
-        if (!documentBlock) {
-            return null;
-        }
+        if (!documentBlock) return;
 
         // retrieve the block at the position of the word
         const block = documentBlock.getBlock(document.offsetAt(position));
-        if (!block) {
-            return null;
-        }
+        if (!block) return;
 
         // 1. Word is the script block
         if (block.isWord(word)) {
@@ -85,7 +82,7 @@ export class PZHoverProvider implements vscode.HoverProvider {
             return new vscode.Hover(contents);
         }
         
-        return null;
+        return;
     }
 
     private extractItemContent(
