@@ -4147,7 +4147,11 @@
         "description": "A list of experience boosts granted by this profession. Each entry should contain a skill name and the corresponding boost amount.\n\nFor example:\n```cpp\nXPBoosts = Axe=1;Blunt=1,\n```",
         "type": "object",
         "separator": ";",
-        "keyValueSeparator": "="
+        "object": {
+          "keyValueSeparator": "=",
+          "keyType": "string",
+          "valueType": "integer"
+        }
       },
       "grantedrecipes": {
         "name": "GrantedRecipes",

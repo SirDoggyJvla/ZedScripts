@@ -37,7 +37,7 @@ export interface IndexRange {
     end: number;
 }
 
-export type ScriptBlockValue = string;
+export type ScriptBlockValue = string | number | boolean;
 
 export interface ScriptBlockParameter {
     name: string;
@@ -45,11 +45,11 @@ export interface ScriptBlockParameter {
     allowedDuplicate?: boolean;
     canBeEmpty?: boolean;
     default?: ScriptBlockValue[];
-    type?: "string" | "int" | "float" | "boolean" | "array" | "object";
+    type?: "string" | "integer" | "float" | "boolean" | "array" | "object";
     blockType?: ScriptBlockType;
-    arrayType?: "string" | "int" | "float" | "boolean"; // if type is array, the type of the values in the array
+    arrayType?: "string" | "integer" | "float" | "boolean"; // if type is array, the type of the values in the array
     separator?: string; // if type is array, the separator used to split values (default is ;)
-    keyValueSeparator?: string; // if type is object, the separator used to split key and value (default is :)
+    object?: ScriptBlockObject; // if type is object, the expected structure of the object
     required?: boolean;
     deprecated?: DeprecatedInfo;
     values?: ScriptBlockValue[];
@@ -79,6 +79,12 @@ export interface ScriptBlockID {
 export interface ScriptBlockType {
     block: string;
     fullType: boolean; // if true, this can use the module to reference the block
+}
+
+export interface ScriptBlockObject {
+    keyValueSeparator?: string; // the separator used to split key and value (default is :)
+    keyType?: "string" | "integer" | "float" | "boolean"; // the expected type of the keys in the object
+    valueType?: "string" | "integer" | "float" | "boolean"; // the expected type of the values in the object
 }
 
 
