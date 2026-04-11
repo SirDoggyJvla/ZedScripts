@@ -113,6 +113,7 @@ With each update, the extension fetches the latest data from the pz-scripts-data
   - An option for the extension allows you to link to libraries that contain scripts. These will be parsed when launching the extension
   - These parsed libraries provide access to blocks that are referenced to (see following point)
   - Later down the line, diagnostics for duplicate blocks across libraries and workspace will be added (ignoring those that accept [soft overrides](https://pzwiki.net/wiki/Scripts#Soft_overrides))
+  - Your whole workspace is parsed now too when launching the extension
 - Added block refs for parameters
   - diagnostics for block refs not found, multiple block refs found
   - go to definition for block refs (CTRL + click on the value)
