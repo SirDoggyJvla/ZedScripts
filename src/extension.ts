@@ -6,7 +6,7 @@ import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-import { loadLibraries, handleOpenTextDocument } from "./providers/libraries";
+import { loadEnvironment, handleOpenTextDocument } from "./providers/libraries";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, LANG_ZEDSCRIPTS } from "./models/enums";
 import { DocumentBlock } from "./scriptsBlocks/scriptsBlocks";
@@ -18,8 +18,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await fetchData(context);
 
-    // load libraries and their diagnostics
-    await loadLibraries(diagnosticProvider);
+    // load libraries and the workspace
+    await loadEnvironment(diagnosticProvider);
 
     // handle the initially active document on startup
     if (vscode.window.activeTextEditor) {

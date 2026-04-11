@@ -25,30 +25,44 @@ export class DiagnosticProvider {
     
     public updateDiagnostics(document: vscode.TextDocument): DocumentBlock | void {
     // console.debug(`Updating diagnostics for document: ${document.fileName}`);
-        if (document.languageId === LANG_ZEDSCRIPTS) {
-            return this.updateDiagnosticsZedScripts(document);
-        } else {
-            // Clear diagnostics for unsupported languages
-            this.diagnosticCollection.delete(document.uri);
-        }
-        return;
-    }
-
-    private updateDiagnosticsZedScripts(document: vscode.TextDocument): DocumentBlock {
-        const diagnostics: vscode.Diagnostic[] = [];
-
-        const path = document.fileName;
-        const type = testForScriptRootFile(path) || DEFAULT_ROOT_FILE;
-
-        const block = new DocumentBlock(document, diagnostics, type);
-        this.diagnosticCollection.set(document.uri, diagnostics);
-        return block;
+        return updateDiagnostics(document, this);
     }
 
     public dispose(): void {
         this.diagnosticCollection.dispose();
     }
 }
+
+/**
+ * Updates diagnostics for a given document. If the document is of the correct language, it creates a DocumentBlock
+ * and validates it, which will populate the diagnostics. If the document is not of the correct language,
+ * it clears any existing diagnostics for that document.
+ * 
+ * If no diagnosticProvider is provided, it will not store any diagnostics
+ * but will still parse the document
+ */
+export function updateDiagnostics(
+    document: vscode.TextDocument, 
+    diagnosticProvider: DiagnosticProvider|undefined = undefined
+): DocumentBlock | void {
+    if (document.languageId === LANG_ZEDSCRIPTS) {
+        const diagnostics: vscode.Diagnostic[] | undefined = diagnosticProvider ? [] : undefined;
+
+        const path = document.fileName;
+        const type = testForScriptRootFile(path) || DEFAULT_ROOT_FILE;
+
+        const block = new DocumentBlock(document, diagnostics, type);
+        diagnosticProvider?.diagnosticCollection.set(document.uri, diagnostics);
+        return block;
+    } else {
+        // Clear diagnostics for unsupported languages
+        diagnosticProvider?.diagnosticCollection.delete(document.uri);
+    }
+    return;
+}
+
+
+
 
 
 
@@ -62,12 +76,17 @@ export function formatText(message: string, params: Record<string, string>): str
 
 export function diagnostic(
     document: TextDocument,
-    diagnostics: Diagnostic[],
+    diagnostics: Diagnostic[] | undefined,
     type: DiagnosticType | string,
     params: Record<string, string>,
     index_start: number, index_end: number = index_start,
     severity: DiagnosticSeverity = DiagnosticSeverity.Error
 ): vscode.Diagnostic | false {
+    // skip diagnostics if no diagnostics array is provided
+    // used to not store any diagnostics for files that need to be parsed without the intention of showing diagnostics
+    // such as library files
+    if (!diagnostics) { return false; }
+
     const config = vscode.workspace.getConfiguration(EXTENSION_ID);
 
     // Skip all diagnostics if the master switch is on

@@ -24,7 +24,7 @@ export class ScriptParameter {
 // MEMBERS
     // extra
     document: vscode.TextDocument;
-    diagnostics: vscode.Diagnostic[];
+    diagnostics: vscode.Diagnostic[] | undefined;
     actions: vscode.CodeAction[] = [];
     
     // param data
@@ -44,7 +44,7 @@ export class ScriptParameter {
     constructor(
         document: vscode.TextDocument,
         parent: ScriptBlock,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         name: string,
         value: string,
         parameterRange: IndexRange,

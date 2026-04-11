@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DiagnosticProvider } from './diagnostic';
+import { DiagnosticProvider, updateDiagnostics } from './diagnostic';
 import { DocumentBlock } from '../scriptsBlocks/scriptsBlocks';
 import { LANG_ZEDSCRIPTS } from '../models/enums';
 import { testForScriptRootFile } from '../scriptsBlocks/scriptsBlocksData';
@@ -26,14 +26,60 @@ export function handleOpenTextDocument(document: vscode.TextDocument): Thenable<
     return document;
 }
 
-export async function loadLibraries(diagnosticProvider: DiagnosticProvider): Promise<void> {
-    console.debug("Loading libraries...");
+export async function loadEnvironment(diagnosticProvider: DiagnosticProvider): Promise<void> {
+    console.debug("Loading libraries and workspace...");
+
+    // list the folders of the workspace
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    const workspacePaths = workspaceFolders ? workspaceFolders.map(folder => folder.uri.fsPath) : [];
+    const validWorkspaceDirs = filterDirs(workspacePaths);
 
     const config = vscode.workspace.getConfiguration("ZedScripts");
-    const searchDirectories: string[] = config.get("searchDirectories", []);
+    const libraryDirs: string[] = config.get("searchDirectories", []);
 
     // filter by verifying the directory exists and is accessible
-    const validDirs: string[] = searchDirectories.filter(dir => {
+    const validLibraryDirs: string[] = filterDirs(libraryDirs);
+
+
+    // get workspace files
+    const workspaceFiles = await getTxtFiles(validWorkspaceDirs);
+
+    // get library files
+    const libraryFiles = await getTxtFiles(validLibraryDirs);
+
+    // remove files that are in the workspaceFiles from libraryFiles
+    const nonWorkspaceLibraryFiles = libraryFiles
+        .filter(file => !workspaceFiles.some(workspaceFile => workspaceFile.fsPath === file.fsPath));
+
+    // parse libraries
+    parseDir(nonWorkspaceLibraryFiles)
+        .catch(error => {
+            console.error(`Error parsing library files:`, error);
+        });
+    console.debug(`Finished parsing library files.`);
+
+    // parse workspace
+    parseDir(workspaceFiles, diagnosticProvider)
+        .catch(error => {
+            console.error(`Error parsing workspace files:`, error);
+        });
+    console.debug(`Finished parsing workspace files.`);
+
+    // run validate later for all docs that were just updated
+    DocumentBlock.validateLaterDocuments();
+}
+
+
+
+
+
+
+
+/**
+ * Pre filter the directories by verifying they exist and are accessible
+ */
+export function filterDirs(dirs: string[]): string[] {
+    return dirs.filter(dir => {
         const normalizedDir = path.normalize(dir);
         try {
             if (!fs.existsSync(normalizedDir)) {
@@ -46,54 +92,56 @@ export async function loadLibraries(diagnosticProvider: DiagnosticProvider): Pro
             }
             return true;
         } catch {
-            console.warn(`Directory does not exist or is not accessible: ${normalizedDir}`);
+            vscode.window.showWarningMessage(`Directory does not exist or is not accessible: ${normalizedDir}`);
             return false;
         }
     });
-    if (validDirs.length === 0) { return }
+}
 
-    // parse libraries
-    for (const dir of validDirs) {
-        try {
-            // find all .txt files in the directory and subdirectories
-            const files = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(dir, "**/*.txt")
-            );
-            
-            // parse each file
-            let i = 0;
-            let lastR = 0;
-            const totalFiles = files.length;
-            for (const file of files) {
-                const document = await vscode.workspace.openTextDocument(file);
-                // handleOpenTextDocument(document);
-                const result = handleOpenTextDocument(document);
-                const resolvedDocument = result instanceof Promise ? await result : result;
-                try {
-                    diagnosticProvider.updateDiagnostics(resolvedDocument);
-                } catch (error) {
-                    const errorMessage = error instanceof Error ? error.message : String(error);
-                    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
-                    console.error(
-                        `Error updating diagnostics for file ${file.fsPath}:\n` +
-                        `Message: ${errorMessage}\n` +
-                        `Stack: ${errorStack}`
-                    );
-                }
-                // console.debug(`Loaded library file: ${file.fsPath}`);
-                i++;
-                const r = Math.round((i / totalFiles) * 100);
-                if (r > lastR+10) {
-                    console.debug(`${r}%`);
-                    lastR = r;
-                }
-            }
-        } catch (error) {
-            console.error(`Error with directory ${dir}:`, error);
-        }
-        console.debug(`Finished loading libraries from directory: ${dir}`);
+async function getTxtFiles(dirs: string[]): Promise<vscode.Uri[]> {
+    const files: vscode.Uri[] = [];
+    for (const dir of dirs) {
+        const dirFiles = await vscode.workspace.findFiles(
+            new vscode.RelativePattern(dir, "**/*.txt")
+        );
+        files.push(...dirFiles);
     }
+    return files;
+}
 
-    // run validate later for all docs that were just updated
-    DocumentBlock.validateLaterDocuments();
+/**
+ * Parse all .txt files in the given directory and its subdirectories
+ */
+export async function parseDir(files: vscode.Uri[], diagnosticProvider?: DiagnosticProvider): Promise<void> {
+    // parse each file
+    let i = 0;
+    let lastR = 0;
+    const totalFiles = files.length;
+    for (const file of files) {
+        // update the file language if it is a valid script file
+        const document = await vscode.workspace.openTextDocument(file);
+        const result = handleOpenTextDocument(document);
+        const resolvedDocument = result instanceof Promise ? await result : result;
+
+        // if the file is a script file, parse it
+        try {
+            updateDiagnostics(resolvedDocument, diagnosticProvider);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorStack = error instanceof Error ? error.stack : 'No stack trace';
+            console.error(
+                `Error updating diagnostics for file ${file.fsPath}:\n` +
+                `Message: ${errorMessage}\n` +
+                `Stack: ${errorStack}`
+            );
+        }
+
+        // log progress every 10%
+        i++;
+        const r = Math.round((i / totalFiles) * 100);
+        if (r > lastR+10) {
+            console.debug(`${r}%`);
+            lastR = r;
+        }
+    }
 }

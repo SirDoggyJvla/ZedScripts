@@ -24,7 +24,7 @@ export class ScriptBlock {
 // MEMBERS
     // extra
     document: vscode.TextDocument;
-    diagnostics: vscode.Diagnostic[];
+    diagnostics: vscode.Diagnostic[] | undefined;
     originalScriptBlock: string | null = null;
     
     // block data
@@ -49,7 +49,7 @@ export class ScriptBlock {
 // CONSTRUCTOR
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -382,7 +382,16 @@ export class ScriptBlock {
 
 // CHECKERS
 
+    public shouldValidate(): boolean {
+        if (this.diagnostics === undefined) {
+            return false;
+        }
+        return true;
+    }
+
     protected validateBlock(): boolean {
+        if (!this.shouldValidate()) { return true; }
+
         const type = this.scriptBlock;
 
         // verify it's a script block
@@ -409,6 +418,8 @@ export class ScriptBlock {
     }
 
     protected validateParent(): boolean {
+        if (!this.shouldValidate()) { return true; }
+
         const blockData = getScriptBlockData(this.scriptBlock) as ScriptBlockData;
 
         // check should have parent
@@ -460,6 +471,8 @@ export class ScriptBlock {
     }
 
     protected validateChildren(): boolean {
+        if (!this.shouldValidate()) { return true; }
+
         const blockData = getScriptBlockData(this.scriptBlock);
 
         const validChildren = blockData.needsChildren;
@@ -623,7 +636,7 @@ export class ScriptBlock {
 export class ComponentBlock extends ScriptBlock {
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -644,7 +657,7 @@ export class ComponentBlock extends ScriptBlock {
 export class ItemMapperBlock extends ScriptBlock {
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -666,7 +679,7 @@ export class ItemMapperBlock extends ScriptBlock {
 export class TemplateBlock extends ScriptBlock {
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -689,7 +702,7 @@ export class TemplateBlock extends ScriptBlock {
 export class InputsBlock extends ScriptBlock {
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -773,7 +786,7 @@ export class InputsBlock extends ScriptBlock {
 export class IgnoreAll extends ScriptBlock {
     constructor(
         document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parent: ScriptBlock | null,
         type: string,
         id: string | null,
@@ -801,7 +814,7 @@ export class DocumentBlock extends ScriptBlock {
     public static documentBlockCache: Map<string, DocumentBlock> = new Map();
     public actions: [vscode.Range, vscode.Diagnostic, vscode.CodeAction][] = []; // [range, diagnostic, action]
 
-    constructor(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[], type: string) {
+    constructor(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[] | undefined, type: string) {
         // Only document is provided
         const parent = null;
         const id = null;
@@ -930,7 +943,7 @@ export class DocumentBlock extends ScriptBlock {
 // OVERWRITES
     // overwrite validates for this class since the rules aren't the same
     protected validateBlock(): boolean { return true; }
-    protected validateChildren(): boolean { return true; }
+    // protected validateChildren(): boolean { return true; } // some documents might need children
     protected validateID(): boolean { return true; }
     // protected findParameters(): ScriptParameter[] { return []; }
 }

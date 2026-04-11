@@ -26,7 +26,7 @@ export class InputsParameter {
 // MEMBERS
     // extra
     document: vscode.TextDocument;
-    diagnostics: vscode.Diagnostic[];
+    diagnostics: vscode.Diagnostic[] | undefined;
     
     // param data
     parent: ScriptBlock;
@@ -46,7 +46,7 @@ export class InputsParameter {
     constructor(
         document: vscode.TextDocument,
         parent: ScriptBlock,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parameter: string,
         values: string,
         amount: string,
@@ -149,6 +149,13 @@ export class InputsParameter {
     }
 
 // CHECKERS
+
+    public shouldValidate(): boolean {
+        if (this.diagnostics === undefined) {
+            return false;
+        }
+        return true;
+    }
 
     protected validateOneOf(parameterData: InputParameterData): boolean {
         const oneOf = parameterData.oneOf;
@@ -323,7 +330,7 @@ export class InputsItemParameter extends InputsParameter {
     constructor(
         document: vscode.TextDocument,
         parent: ScriptBlock,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parameter: string,
         values: string,
         amount: string,
@@ -392,6 +399,8 @@ export class InputsItemParameter extends InputsParameter {
 // CHECKERS
 
     protected validateProperties(): boolean {
+        if (!this.shouldValidate()) { return true; }
+
         const parameterData = this.getParameterData(this.parameter);
         if (!parameterData) {
             return false; // that would be weird if we got there with an invalid parameter
@@ -546,7 +555,7 @@ export class InputsFluidParameter extends InputsParameter {
     constructor(
         document: vscode.TextDocument,
         parent: ScriptBlock,
-        diagnostics: vscode.Diagnostic[],
+        diagnostics: vscode.Diagnostic[] | undefined,
         parameter: string,
         values: string,
         amount: string,
@@ -597,6 +606,8 @@ export class InputsFluidParameter extends InputsParameter {
 // CHECKERS
 
     protected validateProperties(): boolean {
+        if (!this.shouldValidate()) { return true; }
+
         const parameterData = this.getParameterData(this.parameter);
         if (!parameterData) {
             return false; // that would be weird if we got there with an invalid parameter
