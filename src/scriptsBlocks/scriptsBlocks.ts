@@ -16,6 +16,7 @@ import { getScriptBlockData, getVariantTree, getMainVariant, isScriptBlock } fro
 import { IndexRange, createIndexRange, replaceCommentsWithWhitespace } from '../utils/positions';
 import { ScriptParameter } from './scriptsBlocksParameter';
 import { InputsItemParameter, InputsFluidParameter } from './scriptsBlocksProperties';
+import Module from 'node:module';
 
 /**
  * Represents a script block in a PZ script file. Handles nested blocks and diagnostics.
@@ -73,6 +74,11 @@ export class ScriptBlock {
         }
     }
 
+    /** A document root will always be found */
+    public getRoot(): DocumentBlock {
+        const documentBlock = DocumentBlock.getDocumentBlock(this.document);
+        return documentBlock!;
+    }
 
 
 // INFORMATION
@@ -137,7 +143,7 @@ export class ScriptBlock {
 
     public getScriptsDocPage(): string {
         const tree = getVariantTree(this.scriptBlock);
-        return (DOCS_LINK + 'blocks/' + (tree.join('/')).replace(' ', '_')).toLowerCase() + '.html';
+        return (DOCS_LINK + 'blocks/' + (tree.join('/')).replace(' ', '-')).toLowerCase() + '.html';
     }
 
     public getTree(children: boolean = false): string {
@@ -609,9 +615,6 @@ export class ScriptBlock {
         // recursively run validate later on children parameters
         for (const child of this.children) {
             for (const parameter of child.parameters) {
-                if (!parameter.validateLater) {
-                    continue;
-                }
                 parameter.validateLater();
             }
 
@@ -706,6 +709,41 @@ export class TemplateBlock extends ScriptBlock {
         
         super(document, diagnostics, parent, type, id, start, end, headerStart);
         this.isTemplate = true;
+    }
+}
+
+
+export class ImportsBlock extends ScriptBlock {
+    imports: string[] = [];
+
+    constructor(
+        document: vscode.TextDocument,
+        diagnostics: vscode.Diagnostic[] | undefined,
+        parent: ScriptBlock | null,
+        type: string,
+        id: string | null,
+        start: number,
+        end: number,
+        headerStart: number
+    ) {
+        super(document, diagnostics, parent, type, id, start, end, headerStart);
+    
+        this.findImports();
+    }
+
+    private findImports(): void {
+        const text = this.document.getText().slice(this.start, this.end);
+        
+        // split by whitespace
+        const parts = text.split(/\s+/);
+        
+        // filter out empty parts and add to imports
+        this.imports = parts.filter(part => part.trim() !== "");
+        //
+    }
+
+    public getImports(): string[] {
+        return this.imports;
     }
 }
 
@@ -899,28 +937,31 @@ export class DocumentBlock extends ScriptBlock {
         return searchBlock(this);
     }
 
-    public static findBlockFromFullType(expectedBlock: string, fullType: [string, string]): ScriptBlock | null {
+    public static findBlockFromFullType(
+        expectedBlock: string, modules: string[], id: string
+    ): ScriptBlock[] {
         // expectedBlock is the type of block we are looking for (ex: "model")
         // fullType is the module and ID of the block we are looking for (ex: ["Base", "WoodenTable"])
 
         // search for the block with the expected type and full type
+        const foundBlocks: ScriptBlock[] = [];
         for (const documentBlock of DocumentBlock.documentBlockCache.values()) {
-            const found = documentBlock.findBlockFromFullTypeInBlock(expectedBlock, fullType);
+            const found = documentBlock.findBlockFromFullTypeInBlock(expectedBlock, modules, id);
             if (found) {
-                return found;
+                foundBlocks.push(...found);
             }
         }
         
-        return null; // no block found with the expected type and full type
+        return foundBlocks; // return all found blocks
     }
 
-    public findBlockFromFullTypeInBlock(expectedBlock: string, fullType: [string, string]): ScriptBlock | null {
+    public findBlockFromFullTypeInBlock(expectedBlock: string, modules: string[], id: string): ScriptBlock[] {
         // in children, find a module block
         let moduleBlock: ScriptBlock | null = null;
         for (const child of this.children) {
             if (child.scriptBlock === "module") {
-                const id = child.id;
-                if (id && id === fullType[0]) {
+                const childId = child.id;
+                if (childId && modules.includes(childId)) {
                     moduleBlock = child;
                     break;
                 }
@@ -928,17 +969,40 @@ export class DocumentBlock extends ScriptBlock {
         }
 
         if (!moduleBlock) {
-            return null; // no module block found with the expected module name
+            return []; // no module block found with the expected module name
         }
 
         // in the module block, find a block with the expected type and ID
+        const found: ScriptBlock[] = [];
         for (const child of moduleBlock.children) {
-            if (child.scriptBlock === expectedBlock && child.id === fullType[1]) {
-                return child; // found the block with the expected type and full type
+            if (child.scriptBlock === expectedBlock) {
+                if (child.id === id) {
+                    // found a block with the expected type and full type
+                    found.push(child);
+                }
             }
         }
 
-        return null; // no block found with the expected type and full type in the module block
+        return found; // return all found blocks
+    }
+
+
+    public getImports(): string[] {
+        // retrieve imports block modules
+        const imports: string[] = ['Base']; // Base is always implicitly imported
+        for (const child of this.children) {
+            if (child instanceof ImportsBlock) {
+                imports.push(...child.getImports());
+            }
+        }
+
+        // also consider direct module children as imports
+        for (const child of this.children) {
+            if (child.scriptBlock === "module" && child.id && !imports.includes(child.id)) {
+                imports.push(child.id);
+            }
+        }
+        return imports;
     }
 
 
@@ -966,6 +1030,7 @@ const assignedClasses = new Map<string, typeof ScriptBlock>();
 assignedClasses.set("component", ComponentBlock);
 assignedClasses.set("template", TemplateBlock);
 assignedClasses.set("itemMapper", ItemMapperBlock);
+assignedClasses.set("imports", ImportsBlock);
 assignedClasses.set("inputs", InputsBlock);
 
 assignedClasses.set("table", IgnoreAll);

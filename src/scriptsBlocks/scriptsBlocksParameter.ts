@@ -75,6 +75,12 @@ export class ScriptParameter {
         return this.document.offsetAt(lineEndPosition);
     }
 
+    /** A document root will always be found */
+    public getRoot(): DocumentBlock {
+        const documentBlock = DocumentBlock.getDocumentBlock(this.document);
+        return documentBlock!;
+    }
+
 // INFORMATION
 
     private getTree(): string {
@@ -173,7 +179,7 @@ export class ScriptParameter {
     }
 
     protected getScriptsDocPage(): string {
-        return this.parent.getScriptsDocPage();
+        return this.parent.getScriptsDocPage() + '#' + this.parameter.toLowerCase().replace(' ', '-');
     }
 
     public getHoverText(): vscode.MarkdownString {
@@ -414,6 +420,8 @@ export class ScriptParameter {
      * If something is wrong, it adds a diagnostic and, if possible, a quick fix to solve the issue.
      */
     protected validateParameter(): boolean {
+        if (this.diagnostics === undefined) { return true }
+
         const name = this.parameter;
 
         // check if parameter exists in this block
@@ -618,6 +626,8 @@ export class ScriptParameter {
     }
 
     public validateLater(): boolean {
+        if (this.diagnostics === undefined) { return true }
+
         const parameterData = this.getParameterData();
 
         // verify the block reference if any
@@ -664,13 +674,30 @@ export class ScriptParameter {
                 return false;
             }
 
-            // set default module to Base if not provided
-            module = module || "Base";
+            // retrieve searchable modules
+            const documentBlock = this.getRoot();
+            const searchableModules = documentBlock.getImports();
 
             const expectedBlock = blockType.block;
-            const refBlock = DocumentBlock.findBlockFromFullType(expectedBlock, [module, block]);
-            if (!refBlock) {
-                console.debug('')
+            const refBlocks = DocumentBlock.findBlockFromFullType(expectedBlock, searchableModules, block);
+            if (refBlocks.length === 0) {
+                this.diagnostic(
+                    DiagnosticType.INVALID_BLOCK_REF,
+                    { value: this.value, parameter: this.parameter },
+                    this.valueRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Error
+                );
+                return false;
+            } else if (refBlocks.length > 1) {
+                this.diagnostic(
+                    DiagnosticType.MULTIPLE_BLOCK_REFS,
+                    { value: this.value, parameter: this.parameter },
+                    this.valueRange.start,
+                    this.valueRange.end,
+                    vscode.DiagnosticSeverity.Warning
+                );
+                return false;
             }
         }
 
@@ -788,7 +815,7 @@ export class ScriptParameter {
     private registerFix(
         fix: vscode.CodeAction, diagnostic: vscode.Diagnostic, range: vscode.Range
     ): void {
-        const documentBlock = DocumentBlock.getDocumentBlock(this.document);
-        documentBlock?.addAction(range, diagnostic, fix);
+        const documentBlock = this.getRoot();
+        documentBlock.addAction(range, diagnostic, fix);
     }
 }

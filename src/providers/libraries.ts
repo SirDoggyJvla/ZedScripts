@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DiagnosticProvider, updateDiagnostics } from './diagnostic';
+import { DiagnosticProvider, updateDiagnostics, validateLaterDocuments } from './diagnostic';
 import { DocumentBlock } from '../scriptsBlocks/scriptsBlocks';
 import { LANG_ZEDSCRIPTS } from '../models/enums';
 import { testForScriptRootFile } from '../scriptsBlocks/scriptsBlocksData';
@@ -52,21 +52,21 @@ export async function loadEnvironment(diagnosticProvider: DiagnosticProvider): P
         .filter(file => !workspaceFiles.some(workspaceFile => workspaceFile.fsPath === file.fsPath));
 
     // parse libraries
-    parseDir(nonWorkspaceLibraryFiles)
+    await parseFiles(nonWorkspaceLibraryFiles)
         .catch(error => {
             console.error(`Error parsing library files:`, error);
         });
-    console.debug(`Finished parsing library files.`);
+    console.debug(`Finished parsing library files (${nonWorkspaceLibraryFiles.length}).`);
 
     // parse workspace
-    parseDir(workspaceFiles, diagnosticProvider)
+    await parseFiles(workspaceFiles, diagnosticProvider)
         .catch(error => {
             console.error(`Error parsing workspace files:`, error);
         });
-    console.debug(`Finished parsing workspace files.`);
+    console.debug(`Finished parsing workspace files (${workspaceFiles.length}).`);
 
     // run validate later for all docs that were just updated
-    DocumentBlock.validateLaterDocuments();
+    validateLaterDocuments();
 }
 
 
@@ -112,7 +112,7 @@ async function getTxtFiles(dirs: string[]): Promise<vscode.Uri[]> {
 /**
  * Parse all .txt files in the given directory and its subdirectories
  */
-export async function parseDir(files: vscode.Uri[], diagnosticProvider?: DiagnosticProvider): Promise<void> {
+export async function parseFiles(files: vscode.Uri[], diagnosticProvider?: DiagnosticProvider): Promise<void> {
     // parse each file
     let i = 0;
     let lastR = 0;
@@ -141,7 +141,7 @@ export async function parseDir(files: vscode.Uri[], diagnosticProvider?: Diagnos
         const r = Math.round((i / totalFiles) * 100);
         if (r > lastR+10) {
             console.debug(`${r}%`);
-            lastR = r;
+            lastR += 10;
         }
     }
 }

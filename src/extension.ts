@@ -1,30 +1,31 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { diagnosticNonLibrary, DiagnosticProvider } from "./providers/diagnostic";
+import { diagnosticNonLibrary, DIAGNOSTIC_PROVIDER } from "./providers/diagnostic";
 import { provideDefinition } from "./providers/definition";
 import { provideDocumentFormattingEdits } from "./providers/editing";
 import { PZCompletionItemProvider } from "./providers/completion";
 import { PZHoverProvider } from "./providers/hover";
 import { itemCache } from "./providers/cache";
-import { loadEnvironment, handleOpenTextDocument } from "./providers/libraries";
+import { loadEnvironment } from "./providers/libraries";
 import { fetchData } from "./utils/fetchData";
 import { DefaultText, LANG_ZEDSCRIPTS } from "./models/enums";
 import { DocumentBlock } from "./scriptsBlocks/scriptsBlocks";
 
 export async function activate(context: vscode.ExtensionContext) {
     console.debug('Activating extension "pz-syntax-extension"...');
-    const diagnosticProvider = new DiagnosticProvider();
 
     // try to fetch the latest scriptBlocks.json from the GitHub repository
     await fetchData(context);
 
     // load libraries and the workspace
-    await loadEnvironment(diagnosticProvider);
+    await loadEnvironment(DIAGNOSTIC_PROVIDER);
 
     // handle the initially active document on startup
     if (vscode.window.activeTextEditor) {
-        // console.debug(`Active editor found on startup: ${vscode.window.activeTextEditor.document.fileName}`);
-        handleOpenTextDocument(vscode.window.activeTextEditor.document);
+        diagnosticNonLibrary(
+            vscode.window.activeTextEditor.document,
+            DIAGNOSTIC_PROVIDER
+        );
     }
 
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.txt");
@@ -40,7 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
     if (vscode.window.activeTextEditor) {
         diagnosticNonLibrary(
             vscode.window.activeTextEditor.document,
-            diagnosticProvider
+            DIAGNOSTIC_PROVIDER
         );
     }
     
@@ -67,20 +68,15 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.onDidChangeActiveTextEditor((editor) => {
             // console.debug(`Active editor changed: ${editor?.document.fileName}`);
             if (!editor) { return; }
-            handleOpenTextDocument(editor.document);
-        }),
-    
-        vscode.workspace.onDidOpenTextDocument((document) => {
-            // console.debug(`Document opened: ${document.fileName}`);
-            handleOpenTextDocument(document);
+            diagnosticNonLibrary(editor.document, DIAGNOSTIC_PROVIDER);
         }),
 
         // diagnostics
         vscode.workspace.onDidOpenTextDocument((document) => {
-            diagnosticNonLibrary(document, diagnosticProvider);
+            diagnosticNonLibrary(document, DIAGNOSTIC_PROVIDER);
         }),
         vscode.workspace.onDidChangeTextDocument((event) => {
-            diagnosticNonLibrary(event.document, diagnosticProvider);
+            diagnosticNonLibrary(event.document, DIAGNOSTIC_PROVIDER);
         }),
 
 

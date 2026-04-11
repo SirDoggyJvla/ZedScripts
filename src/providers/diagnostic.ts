@@ -5,12 +5,19 @@ import { DocumentBlock } from "../scriptsBlocks/scriptsBlocks";
 import { testForScriptRootFile, DEFAULT_ROOT_FILE } from "../scriptsBlocks/scriptsBlocksData";
 
 import { LANG_ZEDSCRIPTS, EXTENSION_ID, DiagnosticType } from "../models/enums";
+import { handleOpenTextDocument } from "./libraries";
 
 
 export function diagnosticNonLibrary(document: TextDocument, diagnosticProvider: DiagnosticProvider): void {
+    handleOpenTextDocument(document);
     const block = diagnosticProvider.updateDiagnostics(document);
     if (block instanceof DocumentBlock) {
         block.validateRecursiveLater();
+        // set diagnostics after validateRecursiveLater completes so validateLater diagnostics are included
+        const diagnostics = block.diagnostics;
+        if (diagnostics) {
+            diagnosticProvider.diagnosticCollection.set(document.uri, diagnostics);
+        }
     }
 }
 
@@ -32,6 +39,7 @@ export class DiagnosticProvider {
         this.diagnosticCollection.dispose();
     }
 }
+export const DIAGNOSTIC_PROVIDER = new DiagnosticProvider();
 
 /**
  * Updates diagnostics for a given document. If the document is of the correct language, it creates a DocumentBlock
@@ -52,7 +60,9 @@ export function updateDiagnostics(
         const type = testForScriptRootFile(path) || DEFAULT_ROOT_FILE;
 
         const block = new DocumentBlock(document, diagnostics, type);
-        diagnosticProvider?.diagnosticCollection.set(document.uri, diagnostics);
+        if (diagnostics) {
+            diagnosticProvider?.diagnosticCollection.set(document.uri, diagnostics);
+        }
         return block;
     } else {
         // Clear diagnostics for unsupported languages
@@ -114,4 +124,16 @@ export function diagnostic(
     diagnostics.push(diagnostic);
     // console.warn(message);
     return diagnostic;
+}
+
+export function validateLaterDocuments(): void {
+    // run validateRecursiveLater on all cached document blocks
+    for (const documentBlock of DocumentBlock.documentBlockCache.values()) {
+        documentBlock.validateRecursiveLater();
+        const document = documentBlock.document;
+        const diagnostics = documentBlock.diagnostics;
+        if (diagnostics) {
+            DIAGNOSTIC_PROVIDER.diagnosticCollection.set(document.uri, diagnostics);
+        }
+    }
 }
