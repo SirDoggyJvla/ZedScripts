@@ -255,8 +255,14 @@ export class ScriptParameter {
         // find the most fitting type
         let type = undefined;
 
+        // a value or a boolean could be used as a string
+        // so we need to force to string
+        if (expectedType === VALUE_TYPES.STRING) {
+            return VALUE_TYPES.STRING;
+        }
+
         // check if boolean
-        if (value === "true" || value === "false") {
+        if (value.toLowerCase() === "true" || value.toLowerCase() === "false") {
             type = VALUE_TYPES.BOOLEAN;
 
         // check if number
