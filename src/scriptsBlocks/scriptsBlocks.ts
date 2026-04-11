@@ -567,6 +567,17 @@ export class ScriptBlock {
                 }
             }
 
+            // make sure the ID doesn't contain spaces if it isn't considered as part of the type
+            if (!IDData.canHaveSpace && id && id.includes(" ")) {
+                if (this.diagnostic(
+                    DiagnosticType.ID_CANNOT_CONTAIN_SPACES,
+                    { scriptBlock: this.scriptBlock, id: id },
+                    this.headerStart
+                )) {
+                    return false;
+                }
+            }
+
             // check if the ID has one or more valid value
             const validIDs = IDData.values;
             if (validIDs) {

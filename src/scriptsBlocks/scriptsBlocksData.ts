@@ -71,6 +71,7 @@ export interface ScriptBlockID {
     values?: string[];
     asType?: boolean;
     optional?: string[];
+    canHaveSpace?: boolean;
 }
 
 export interface ScriptBlockType {

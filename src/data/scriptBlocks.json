@@ -721,7 +721,9 @@
     "parents": [
       "module"
     ],
-    "ID": {},
+    "ID": {
+      "canHaveSpace": true
+    },
     "parameters": {
       "isprofessiontrait": {
         "name": "IsProfessionTrait",
@@ -778,7 +780,7 @@
   },
   "imports": {
     "name": "imports",
-    "description": "By importing the Base module or any other module, you give your scripts direct access to the elements from these modules, and you can use item IDs directly without the module prefix (for example, you can use Nails instead of Base.Nails).\n\nIt is overall suggested to not import modules and instead directly reference the IDs with their module.",
+    "description": "By importing a module, you give your scripts direct access to the elements from these modules, and you can use item IDs directly without the module prefix (for example, you can use `ThatModItem` instead of `ThisMod.ThatModItem`). The `Base` module is by default already parsed, so you don't need to import it. It is overall suggested to not import modules and instead directly reference the IDs with their module.",
     "shouldHaveParent": true,
     "parents": [
       "module"
@@ -908,7 +910,9 @@
     "parents": [
       "module"
     ],
-    "ID": {},
+    "ID": {
+      "canHaveSpace": true
+    },
     "parameters": {
       "fixer": {
         "name": "Fixer",
@@ -4159,7 +4163,9 @@
     "parents": [
       "module"
     ],
-    "ID": {},
+    "ID": {
+      "canHaveSpace": true
+    },
     "parameters": {
       "addingredientifcooked": {
         "name": "AddIngredientIfCooked"
@@ -4733,7 +4739,11 @@
       "module",
       "xuiSkin"
     ],
-    "ID": {},
+    "ID": {
+      "parentsWithout": [
+        "xuiSkin"
+      ]
+    },
     "parameters": {
       "luawindowclass": {
         "name": "LuaWindowClass"

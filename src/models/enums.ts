@@ -69,6 +69,7 @@ export enum DiagnosticType {
     HAS_ID = "'{scriptBlock}' block cannot have an ID.",
     INVALID_ID = "'{scriptBlock}' block has an invalid ID '{id}'. Valid IDs are: {validIDs}.",
     HAS_ID_IN_PARENT = "'{scriptBlock}' block cannot have an ID when inside parent block '{parentBlock}', only for: {invalidBlocks}.",
+    ID_CANNOT_CONTAIN_SPACES = "ID '{id}' of '{scriptBlock}' block cannot contain spaces.",
 
     // parameter related diagnostics
     UNKNOWN_PARAMETER = "'{parameter}' is an unknown parameter for '{scriptBlock}' block. [WIP: not every parameters are documented yet]",
