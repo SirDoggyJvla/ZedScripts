@@ -15,7 +15,7 @@
     },
     {
       "name": "entity.name.property.pz",
-      "match": "(\\S+[\\S\\/ ]*)(?:\\s*([=])\\s*)",
+      "match": "(\\S+[\\S\\/ ]*?)(?:\\s*([=])\\s*)",
       "captures": {
         "1": { "name": "variable.parameter" },
         "2": { "name": "keyword.operator.assignment" }

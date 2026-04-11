@@ -4740,7 +4740,7 @@
       "xuiSkin"
     ],
     "ID": {
-      "parentsWithout": [
+      "optional": [
         "xuiSkin"
       ]
     },
