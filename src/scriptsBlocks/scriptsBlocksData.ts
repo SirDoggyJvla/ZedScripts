@@ -11,6 +11,7 @@ export enum VALUE_TYPES {
     FLOAT = "float",
     BOOLEAN = "boolean",
     ARRAY = "array",
+    OBJECT = "object",
 }
 
 
@@ -36,7 +37,7 @@ export interface IndexRange {
     end: number;
 }
 
-export type ScriptBlockValue = string | number | boolean;
+export type ScriptBlockValue = string;
 
 export interface ScriptBlockParameter {
     name: string;
@@ -44,10 +45,11 @@ export interface ScriptBlockParameter {
     allowedDuplicate?: boolean;
     canBeEmpty?: boolean;
     default?: ScriptBlockValue[];
-    type?: "string" | "int" | "float" | "boolean" | "array";
+    type?: "string" | "int" | "float" | "boolean" | "array" | "object";
     blockType?: ScriptBlockType;
     arrayType?: "string" | "int" | "float" | "boolean"; // if type is array, the type of the values in the array
     separator?: string; // if type is array, the separator used to split values (default is ;)
+    keyValueSeparator?: string; // if type is object, the separator used to split key and value (default is :)
     required?: boolean;
     deprecated?: DeprecatedInfo;
     values?: ScriptBlockValue[];

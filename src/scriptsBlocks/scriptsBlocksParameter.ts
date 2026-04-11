@@ -13,7 +13,6 @@ import { registerActionTextReplace } from '../providers/actions';
 import { 
     DeprecatedInfo,
     ScriptBlockParameter, 
-    ScriptBlockValue, 
     VALUE_TYPES
 } from './scriptsBlocksData';
 import { getScriptBlockData, getMainVariant } from "./scriptsBlocksUtility";
@@ -115,6 +114,7 @@ export class ScriptParameter {
                             text = color(String(defaultValue), ThemeColorType.BOOLEAN);
                             break;
                         case "array":
+                        case "object":
                             // color array elements first
                             if (Array.isArray(defaultValue) && defaultValue.length > 1) {
                                 const coloredElements = (defaultValue as string[]).map(elem => color(elem, ThemeColorType.STRING));
@@ -201,8 +201,8 @@ export class ScriptParameter {
 
         // I don't know how I feel about that lol 
         // but that's kind of the problem with scripts
-        if (expectedType === VALUE_TYPES.ARRAY) {
-            return VALUE_TYPES.ARRAY;
+        if (expectedType === VALUE_TYPES.ARRAY || expectedType === VALUE_TYPES.OBJECT) {
+            return expectedType;
         }
 
         // find the most fitting type
@@ -311,12 +311,12 @@ export class ScriptParameter {
      * Considers that the value are simply a list, and if no value is present then it returns null.
      * This is used in combination with the accepted values list to verify if the provided value/values are correct.
      */
-    public getValues(): ScriptBlockValue[] | null {
+    public getValues(): string[] {
         const parameterData = this.getParameterData();
         const type = this.getTypeOfValue();
 
         // handle array case
-        if (type === VALUE_TYPES.ARRAY) {
+        if (type === VALUE_TYPES.ARRAY || type === VALUE_TYPES.OBJECT) {
             const separator = parameterData?.separator || ";";
             const values = this.value.split(separator).map(v => v.trim());
             return values;
@@ -325,14 +325,14 @@ export class ScriptParameter {
         } else if (this.value !== "") {
             return [this.value];
         }
-        return null;
+        return [];
     }
 
     /**
      * This function is used to retrieve the values of the parameter-value pair that are invalid. 
     */
-    public getForbiddenValues(): ScriptBlockValue[] {
-        const values: ScriptBlockValue[] = this.getValues() || [];
+    public getForbiddenValues(): string[] {
+        const values = this.getValues();
         const parameterData = this.getParameterData();
         if (parameterData && parameterData.values) {
             const acceptedValues = parameterData.values;
@@ -439,6 +439,24 @@ export class ScriptParameter {
                         parameter: name, 
                         validValues: formatList(values) 
                     },
+                    this.valueRange.start,
+                    this.valueRange.end
+                )) {
+                    return false;
+                }
+            }
+        }
+
+        // make sure the values if it's an object type properly use the correct separator
+        if (this.getTypeOfValue() === VALUE_TYPES.OBJECT) {
+            const values = this.getValues();
+            const parameterData = this.getParameterData();
+            const keyValueSeparator = parameterData?.keyValueSeparator || ":";
+            const invalidFormatValues = values.filter(value => !value.includes(keyValueSeparator));
+            if (invalidFormatValues.length > 0) {
+                if (this.diagnostic(
+                    DiagnosticType.INVALID_OBJECT_FORMAT,
+                    { parameter: name, values: formatList(invalidFormatValues), keyValueSeparator: keyValueSeparator },
                     this.valueRange.start,
                     this.valueRange.end
                 )) {
