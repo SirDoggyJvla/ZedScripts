@@ -83,6 +83,7 @@ export enum DiagnosticType {
     MISSING_DEPENDENT_PARAMETER = "'{parameter}' parameter requires dependent parameter '{dependentParameter}' to be present.",
     DEPENDENT_PARAMETER_WRONG_VALUE = "'{parameter}' requires dependent parameter '{dependentParameter}' to have a valid value. Current value is '{value}' but valid values are: {dependentValues}.",
     INVALID_TYPE_FOR_VALUE = "Type '{type}' of '{parameter}' is invalid for value '{value}'. Expected type is '{expectedType}'.",
+    INVALID_TYPE_FOR_VALUES_OBJECT = "Values {invalidTypeValues} of '{parameter}' don't have a valid type. Expected types are '{keyType}' for keys and '{valueType}' for values, with '{keyValueSeparator}' as separator.",
     INVALID_OBJECT_FORMAT = "Values {values} for parameter '{parameter}' do not follow the expected 'key{keyValueSeparator}value' format.",
 
     NO_BLOCK_REF = "No block reference found in value '{value}' for parameter '{parameter}'. Something might be wrong with the value or the parameter data definition.",

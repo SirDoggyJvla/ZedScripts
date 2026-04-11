@@ -248,8 +248,11 @@ export class ScriptParameter {
             return expectedType;
         }
 
+        return this.tryTypeOfValue(this.value, expectedType || "");
+    }
+
+    public tryTypeOfValue(value: string, expectedType: string): string {
         // find the most fitting type
-        const value = this.value;
         let type = undefined;
 
         // check if boolean
@@ -490,7 +493,7 @@ export class ScriptParameter {
             }
         }
 
-        // make sure the values if it's an object type properly use the correct separator
+        // make sure the values if it's an object type properly use the correct separator and types
         if (this.getTypeOfValue() === VALUE_TYPES.OBJECT) {
             const values = this.getValues();
             const objectData = this.getObjectData();
@@ -500,6 +503,25 @@ export class ScriptParameter {
                 if (this.diagnostic(
                     DiagnosticType.INVALID_OBJECT_FORMAT,
                     { parameter: name, values: formatList(invalidFormatValues), keyValueSeparator: keyValueSeparator },
+                    this.valueRange.start,
+                    this.valueRange.end
+                )) {
+                    return false;
+                }
+            }
+
+            const keyType = objectData.keyType || "string";
+            const valueType = objectData.valueType || "string";
+            const invalidTypeValues = values.filter(value => {
+                const [key, val] = value.split(keyValueSeparator).map(v => v.trim());
+                const kType = this.tryTypeOfValue(key, keyType);
+                const vType = this.tryTypeOfValue(val, valueType);
+                return kType !== keyType || vType !== valueType;
+            });
+            if (invalidTypeValues.length > 0) {
+                if (this.diagnostic(
+                    DiagnosticType.INVALID_TYPE_FOR_VALUES_OBJECT,
+                    { parameter: name, invalidTypeValues: formatList(invalidTypeValues), keyType: keyType, valueType: valueType, keyValueSeparator: keyValueSeparator },
                     this.valueRange.start,
                     this.valueRange.end
                 )) {
