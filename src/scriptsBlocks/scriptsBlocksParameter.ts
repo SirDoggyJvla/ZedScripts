@@ -180,12 +180,16 @@ export class ScriptParameter {
     }
 
     protected getScriptsDocPage(): string {
-        return this.parent.getScriptsDocPage() + '#' + this.parameter.toLowerCase().replace(' ', '-');
+        return this.parent.getScriptsDocPage() 
+            + '#' 
+            + this.parent.scriptBlock.toLowerCase().replace(' ', '-') + '-' 
+            + this.parameter.toLowerCase().replace(' ', '-');
     }
 
     public getHoverText(): vscode.MarkdownString {
         const markdown = new vscode.MarkdownString();
         markdown.isTrusted = true; // needed for html rendering
+        markdown.supportHtml = true;
 
         // retrieve tree and description
         const tree = this.getTree();
