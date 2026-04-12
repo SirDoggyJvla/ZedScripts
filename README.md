@@ -108,6 +108,9 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Changelog
 With each update, the extension fetches the latest data from the pz-scripts-data repository and make a local copy of it. If you're having issues, it might be because of outdated data, so make sure to fetch the latest data.
 
+1.10.1:
+- fix documentation link for parameters
+
 1.10.0:
 - Proper libraries handling
   - An option for the extension allows you to link to libraries that contain scripts. These will be parsed when launching the extension
